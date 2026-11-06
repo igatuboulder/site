@@ -3,7 +3,7 @@ import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import FormInscricao from '../components/FormInscricao.astro';
 import { EVENTO } from '../config/evento';
-import { formatarReais, precoEmCentavos, TAXA_CARTAO } from '../lib/preco';
+import { formatarReais, PRECO_PASSAPORTE } from '../lib/preco';
 ---
 <Base titulo="Inscrição" descricao={`Garanta seu passaporte para o ${EVENTO.edicao}º Festival IgatuBoulder.`}>
   <Cabecalho rotulo="Inscrição" titulo="Garanta seu passaporte" />
@@ -12,10 +12,9 @@ import { formatarReais, precoEmCentavos, TAXA_CARTAO } from '../lib/preco';
       <div class="texto">
         <p>O passaporte vale para os 3 dias de festival, de {EVENTO.datas}.</p>
         <dl class="precos">
-          <div><dt>Pix</dt><dd class="display">{formatarReais(precoEmCentavos('pix'))}</dd></div>
-          <div><dt>Cartão</dt><dd class="display">{formatarReais(precoEmCentavos('cartao'))}</dd></div>
+          <div><dt>Passaporte</dt><dd class="display">{formatarReais(PRECO_PASSAPORTE)}</dd></div>
         </dl>
-        <p class="nota">No cartão o valor inclui a taxa da maquininha ({(TAXA_CARTAO * 100).toLocaleString('pt-BR')}%). O pagamento é feito pela InfinitePay, em ambiente seguro.</p>
+        <p class="nota">Você escolhe Pix ou cartão na hora de pagar. No cartão, a taxa é acrescentada ao valor. O pagamento é feito pela InfinitePay, em ambiente seguro.</p>
         <p class="nota">Dúvidas? <a href="/contato">Fale com a gente</a></p>
       </div>
       <FormInscricao />
@@ -23,7 +22,7 @@ import { formatarReais, precoEmCentavos, TAXA_CARTAO } from '../lib/preco';
   </section>
 </Base>
 <style>
-  .precos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
+  .precos { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 320px; gap: 12px; margin: 24px 0; }
   .precos div { border: 2px solid var(--verde); padding: 14px 16px; }
   dt { font-size: 11px; letter-spacing: .16em; font-weight: 600; text-transform: uppercase; }
   dd { margin: 4px 0 0; font-size: clamp(30px, 9vw, 44px); white-space: nowrap; color: var(--verde); }

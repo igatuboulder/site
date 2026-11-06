@@ -1,12 +1,15 @@
 import { describe, it, expect } from 'vitest';
 import { montarCheckout } from '../src/lib/checkout';
 
-const dados = { nome: 'Ana Souza', cpf: '52998224725', email: 'ana@exemplo.com', telefone: '75981707643', camiseta: 'M', pagamento: 'pix' as const, aceite: true as const };
+const dados = { nome: 'Ana Souza', cpf: '52998224725', email: 'ana@exemplo.com', telefone: '75981707643', camiseta: 'M', aceite: true as const };
 
 describe('montarCheckout', () => {
   const c = montarCheckout(dados, { pedido: 'IGB27-0001', baseUrl: 'https://igatuboulder.com.br' });
-  it('cobra um passaporte pelo preço da forma de pagamento', () => {
+  it('cobra um passaporte pelo preço único de R$ 160', () => {
     expect(c.items).toEqual([{ quantity: 1, price: 16000, description: 'Passaporte Festival IgatuBoulder 2027' }]);
+  });
+  it('repassa a taxa do cartão ao comprador em qualquer parcelamento', () => {
+    expect(c.options).toEqual({ assured_installments: 0 });
   });
   it('identifica o pedido e volta para o site', () => {
     expect(c.order_nsu).toBe('IGB27-0001');
