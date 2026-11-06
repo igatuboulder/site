@@ -1,0 +1,58 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import fVila from '../assets/fotos/IMG_1092.jpg';
+import fGente from '../assets/fotos/IMG_1322.jpg';
+const marcos = [
+  { ano: 'Séc. XIX', t: 'O garimpo', d: 'A descoberta de diamantes na Serra do Sincorá atrai garimpeiros para a região. Nasce o povoado de Xique-Xique, hoje Xique-Xique do Igatu.' },
+  { ano: 'Auge', t: 'Cidade de pedra', d: 'Sem madeira por perto, as casas, muros e caminhos são feitos de pedra empilhada. A vila cresce com o diamante e chega a ter milhares de moradores.' },
+  { ano: 'Declínio', t: 'O fim do diamante', d: 'Com o esgotamento do garimpo, a maior parte da população vai embora. Ficam as ruínas, que hoje são a marca de Igatu.' },
+  { ano: '2000', t: 'Patrimônio', d: 'O conjunto arquitetônico, urbanístico e paisagístico de Igatu é tombado pelo IPHAN, com cerca de 200 edificações de pedra.' },
+  { ano: 'Hoje', t: 'Vila viva', d: 'Distrito de Andaraí, com algumas centenas de moradores, Igatu vive do turismo, da arte e da escalada, guardando a memória do garimpo.' },
+];
+---
+<Base titulo="A vila" descricao="A história de Igatu, a vila de pedra do garimpo na Chapada Diamantina.">
+  <Cabecalho rotulo="A vila" titulo="Igatu" />
+  <section class="secao papel">
+    <div class="conteudo duas">
+      <div class="texto revela">
+        <p class="lead">Igatu é uma vila de pedra no alto da Serra do Sincorá, distrito de Andaraí, no coração da Chapada Diamantina.</p>
+        <p>Ela nasceu com o garimpo de diamantes no século XIX. As casas, os muros e os caminhos foram erguidos com as pedras da própria serra, e muitas dessas construções estão de pé até hoje, inteiras ou em ruínas. Por isso a vila ganhou apelidos como Cidade de Pedra e Machu Picchu baiana.</p>
+        <p>É nessa paisagem, entre ruínas e blocos de quartzito, que acontece o IgatuBoulder.</p>
+      </div>
+      <Image class="foto revela" src={fVila} alt="Fachada colonial azul em Igatu com a bandeira do IgatuBoulder" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+    </div>
+  </section>
+  <section class="secao grade">
+    <div class="conteudo">
+      <p class="rotulo">Linha do tempo</p>
+      <h2 class="display h2">Do diamante à escalada</h2>
+      <ol class="marcos">
+        {marcos.map((m) => <li class="revela"><span class="display ano">{m.ano}</span><div><h3 class="rotulo">{m.t}</h3><p>{m.d}</p></div></li>)}
+      </ol>
+    </div>
+  </section>
+  <section class="secao papel">
+    <div class="conteudo duas">
+      <Image class="foto revela" src={fGente} alt="Moradores e escaladores reunidos no festival" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+      <div class="texto revela">
+        <p class="rotulo">Preservar</p>
+        <h2 class="display h2">A vila é a casa de quem mora aqui</h2>
+        <p>As ruínas são patrimônio tombado. Não suba, não retire nem mude pedras de lugar, e não risque as paredes.</p>
+        <p>Respeite o silêncio à noite, leve seu lixo de volta e prefira comprar dos moradores: pousadas, restaurantes, guias e artesãos.</p>
+        <p>O festival existe para a vila. Cada edição deixa um pouco na comunidade, e é isso que mantém o IgatuBoulder vivo.</p>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .lead { font-size: 22px; line-height: 1.4; }
+  .foto { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); }
+  .marcos { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--verde); }
+  .marcos li { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--verde); align-items: baseline; }
+  .ano { font-size: 40px; color: var(--laranja); text-transform: uppercase; }
+  .marcos h3 { margin: 0 0 6px; color: var(--verde); }
+  .marcos p { margin: 0; max-width: 62ch; }
+  @media (max-width: 600px) { .marcos li { grid-template-columns: 1fr; gap: 6px; } }
+</style>

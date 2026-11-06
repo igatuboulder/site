@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import IconeInstagram from '../components/IconeInstagram.astro';
 import { EVENTO } from '../config/evento';
 import { PAGINAS } from '../data/navegacao';
 interface Props { titulo?: string; descricao?: string }
@@ -48,7 +49,7 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
     <div class="base">
       <img class="logo-ib" src="/img/logos/igatuboulder.png" alt="IgatuBoulder Festival" width="660" height="282" loading="lazy" />
       <img class="logo-id" src="/img/id-ig-completo.png" alt="IgatuBoulder" width="693" height="604" loading="lazy" />
-      <p><a href={`mailto:${EVENTO.email}`}>{EVENTO.email}</a><br /><a href={`https://instagram.com/${EVENTO.instagram}`} target="_blank" rel="noopener">@{EVENTO.instagram}</a></p>
+      <p><a class="ig" href={`https://instagram.com/${EVENTO.instagram}`} target="_blank" rel="noopener"><IconeInstagram /> @{EVENTO.instagram}</a></p>
       <p>{EVENTO.datas}<br />{EVENTO.local}</p>
     </div>
   </footer>
@@ -71,13 +72,13 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
   .pular { position: absolute; left: -9999px; }
   .pular:focus { left: 16px; top: 16px; z-index: 10; background: var(--papel); padding: 8px 12px; }
   .nav { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 24px; padding: 12px var(--margem); background: var(--amarelo); border-bottom: 2px solid var(--verde); }
-  .marca { display: flex; align-items: center; gap: 10px; }
+  .marca { display: flex; align-items: center; gap: 10px; text-decoration: none; }
   .marca img { width: 64px; height: auto; }
   .marca-txt { display: flex; flex-direction: column; text-decoration: none; font-family: var(--display); font-weight: 900; font-stretch: 62%; font-size: 20px; line-height: .85; color: var(--verde); }
   .links { display: flex; gap: 22px; list-style: none; margin: 0 0 0 auto; padding: 0; }
   .links a, .menu a { text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 6px 0; border-bottom: 2px solid transparent; }
   .links a:hover, .links a[aria-current] { border-bottom-color: var(--verde); }
-  .inscreva { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; text-decoration: none; background: var(--verde); color: var(--papel); padding: 8px 16px; transition: transform .2s cubic-bezier(.2,.8,.2,1.2); }
+  .inscreva { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; text-decoration: none; background: var(--verde); color: var(--papel); padding: 8px 16px; white-space: nowrap; transition: transform .2s cubic-bezier(.2,.8,.2,1.2); }
   .inscreva:hover { transform: translateY(-2px); }
   .menu { display: none; margin-left: auto; }
   .menu summary { list-style: none; cursor: pointer; font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; border: 2px solid var(--verde); padding: 6px 12px; }
@@ -85,6 +86,7 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
   .menu ul { position: absolute; left: 0; right: 0; top: 100%; background: var(--amarelo); border-bottom: 2px solid var(--verde); list-style: none; margin: 0; padding: 8px var(--margem) 16px; }
   .menu li a { display: block; padding: 12px 0; font-size: 16px; }
   @media (max-width: 900px) { .links { display: none; } .menu { display: block; } }
+  @media (max-width: 480px) { .nav { gap: 12px; } .marca img { width: 44px; } .inscreva { font-size: 17px; padding: 8px 12px; } }
   .rodape { padding: 48px var(--margem) 32px; border-top: 2px solid var(--verde); }
   .parceiros { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr .8fr 2fr; gap: 24px; padding-bottom: 32px; border-bottom: 1px solid var(--verde); }
   .grupo .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
@@ -92,6 +94,7 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
   .fullgrip { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; color: var(--verde); }
   .base { max-width: 1100px; margin: 0 auto; padding-top: 28px; display: grid; grid-template-columns: 180px 110px 1fr 1fr; gap: 24px; align-items: center; font-size: 14px; }
   .base p { margin: 0; }
+  .ig { display: inline-flex; align-items: center; gap: 8px; }
   .logo-ib, .logo-id { width: 100%; height: auto; }
   @media (max-width: 760px) { .parceiros, .base { grid-template-columns: 1fr; } .logo-ib { max-width: 160px; } .logo-id { max-width: 110px; } }
 </style>

@@ -32,7 +32,7 @@ a { color: inherit; }
 .papel { background: var(--papel); }
 .conteudo { max-width: 1100px; margin: 0 auto; }
 .duas { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
-.h2 { font-size: clamp(40px, 6vw, 72px); color: var(--verde); margin: 8px 0 20px; text-transform: uppercase; }
+.h2 { line-height: .95; font-size: clamp(40px, 6vw, 72px); color: var(--verde); margin: 8px 0 20px; text-transform: uppercase; }
 .texto { max-width: 62ch; font-size: 17px; }
 .texto p { margin: 0 0 1em; }
 .link { font-weight: 600; color: var(--laranja); }

@@ -2,30 +2,61 @@
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
+import IconeInstagram from '../components/IconeInstagram.astro';
 import { EVENTO } from '../config/evento';
+import { FOTOS } from '../data/fotos';
+import { agruparFotos, type Secao } from '../lib/fotos';
 const arquivos = import.meta.glob<{ default: ImageMetadata }>('../assets/fotos/*.jpg', { eager: true });
-const fotos = Object.values(arquivos).map((m) => m.default);
+const img = (nome: string) => arquivos[`../assets/fotos/${nome}.jpg`].default;
+const TITULOS: Record<Secao, string> = { social: 'IgatuBoulder Social', escalada: 'Escalada', festival: 'O festival' };
+const secoes = agruparFotos(FOTOS);
 ---
-<Base titulo="Fotos" descricao="Fotos das edições do Festival IgatuBoulder.">
-  <Cabecalho rotulo="Fotos" titulo="Na pedra" />
+<Base titulo="Fotos" descricao="Fotos do Festival IgatuBoulder: IgatuBoulder Social, escalada e festival.">
+  <Cabecalho rotulo="Fotos" titulo="Na pedra">
+    <nav class="atalhos" aria-label="Seções de fotos">
+      {secoes.map((s) => <a href={`#${s.secao}`}>{TITULOS[s.secao]}</a>)}
+    </nav>
+  </Cabecalho>
+  {secoes.map((s, i) => (
+    <section id={s.secao} class:list={['secao', i % 2 ? 'grade' : 'papel']}>
+      <div class="conteudo">
+        <h2 class="display h2">{TITULOS[s.secao]}</h2>
+        {s.grupos.map((g) => (
+          <div class="grupo">
+            {g.setor && <h3 class="rotulo setor">Setor {g.setor}</h3>}
+            <ul class="galeria">
+              {g.fotos.map((f) => (
+                <li class="revela">
+                  <a href={img(f.arquivo).src} target="_blank" rel="noopener">
+                    <Image src={img(f.arquivo)} alt={f.alt} widths={[400, 800]} sizes="(max-width: 760px) 50vw, 33vw" loading="lazy" />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </section>
+  ))}
   <section class="secao papel">
     <div class="conteudo">
-      <ul class="galeria">
-        {fotos.map((f, i) => (
-          <li class="revela">
-            <a href={f.src} target="_blank" rel="noopener">
-              <Image src={f} alt={`Festival IgatuBoulder, foto ${i + 1}`} widths={[400, 800]} sizes="(max-width: 760px) 50vw, 33vw" loading="lazy" />
-            </a>
-          </li>
-        ))}
-      </ul>
-      <p class="texto mais">Mais fotos no Instagram <a class="link" href={`https://instagram.com/${EVENTO.instagram}`}>@{EVENTO.instagram}</a>.</p>
+      <a class="insta" href={`https://instagram.com/${EVENTO.instagram}`} target="_blank" rel="noopener">
+        <IconeInstagram tamanho={32} />
+        <span>Mais fotos no Instagram <strong>@{EVENTO.instagram}</strong></span>
+      </a>
     </div>
   </section>
 </Base>
 <style>
-  .galeria { list-style: none; margin: 0; padding: 0; columns: 3 260px; column-gap: 12px; }
+  .atalhos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .atalhos a { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; color: var(--verde); border: 2px solid var(--verde); padding: 8px 12px; background: var(--papel); }
+  .atalhos a:hover { background: var(--verde); color: var(--papel); }
+  .grupo + .grupo { margin-top: 40px; }
+  .setor { color: var(--verde); margin: 0 0 12px; }
+  .galeria { list-style: none; margin: 0; padding: 0; columns: 3 240px; column-gap: 12px; }
   .galeria li { break-inside: avoid; margin: 0 0 12px; }
   .galeria img { width: 100%; height: auto; border: 2px solid var(--verde); }
-  .mais { margin-top: 32px; }
+  .insta { display: inline-flex; align-items: center; gap: 14px; font-size: 18px; color: var(--verde); text-decoration: none; }
+  .insta strong { color: var(--laranja); }
+  .insta:hover strong { text-decoration: underline; }
 </style>
