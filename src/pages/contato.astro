@@ -2,11 +2,12 @@
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import IconeInstagram from '../components/IconeInstagram.astro';
+import IconeWhatsapp from '../components/IconeWhatsapp.astro';
 import { EVENTO } from '../config/evento';
 const canais = [
   { r: 'Instagram', v: `@${EVENTO.instagram}`, href: `https://instagram.com/${EVENTO.instagram}`, ig: true },
-  { r: 'WhatsApp', v: '(75) 98170-7643', href: 'https://wa.me/5575981707643' },
-  { r: 'WhatsApp', v: '(75) 98315-1657', href: 'https://wa.me/5575983151657' },
+  { r: 'WhatsApp', v: '(75) 98170-7643', href: 'https://wa.me/5575981707643', wa: true },
+  { r: 'WhatsApp', v: '(75) 98315-1657', href: 'https://wa.me/5575983151657', wa: true },
 ];
 ---
 <Base titulo="Contato" descricao="Fale com a organização do Festival IgatuBoulder.">
@@ -14,7 +15,7 @@ const canais = [
   <section class="secao papel">
     <div class="conteudo duas">
       <ul class="canais revela">
-        {canais.map((c) => <li><span class="rotulo">{c.r}</span><a class="display" href={c.href}>{c.ig && <IconeInstagram tamanho={36} />}{c.v}</a></li>)}
+        {canais.map((c) => <li><span class="rotulo">{c.r}</span><a class="display" href={c.href}>{c.ig && <IconeInstagram tamanho={36} />}{c.wa && <IconeWhatsapp tamanho={36} />}{c.v}</a></li>)}
       </ul>
       <div class="texto revela">
         <p>Dúvidas sobre inscrição, kit, hospedagem ou o IgatuBoulder Social? Escreva para a gente.</p>
