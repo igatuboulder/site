@@ -1,0 +1,19 @@
+{
+  "name": "igatuboulder-site",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@astrojs/netlify": "^6.6.5",
+    "astro": "^5.18.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.7"
+  }
+}
