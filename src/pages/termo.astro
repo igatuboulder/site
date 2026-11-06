@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+import { EVENTO } from '../config/evento';
+const clausulas = [
+  `Participo do ${EVENTO.nome} ${EVENTO.ano} por livre e espontânea vontade e declaro que estou em boas condições de saúde para praticar escalada e as demais atividades do festival.`,
+  'Sei que a escalada em blocos (boulder) e as trilhas em ambiente natural são atividades de risco, que podem causar lesões graves, inclusive permanentes, ou morte, e assumo integralmente esses riscos.',
+  'A organização do festival oferece apenas a programação. As atividades que eu escolher fazer, incluindo escalada, trilhas, deslocamentos, banhos de rio e uso de equipamentos, são de minha inteira responsabilidade.',
+  'Sou responsável pelo meu próprio equipamento (sapatilha, crash pad, entre outros), pela minha segurança e pela segurança de quem eu acompanhar ou der segurança (spot).',
+  'Isento a organização, os realizadores, patrocinadores, apoiadores, voluntários e proprietários das áreas de qualquer responsabilidade por acidentes, lesões, danos materiais, perdas ou furtos que eu venha a sofrer ou causar durante o festival.',
+  'Comprometo-me a respeitar a comunidade de Igatu, o meio ambiente, as áreas de escalada e as orientações da organização, e a não deixar lixo nos setores.',
+  'Menores de 18 anos só podem participar com autorização e acompanhamento de um responsável legal, que assina este termo em nome do menor.',
+  'Autorizo o uso gratuito da minha imagem e voz, captadas durante o festival, em materiais de divulgação do IgatuBoulder.',
+  'Declaro que li e entendi este termo e que o aceito ao concluir minha inscrição.',
+];
+---
+<Base titulo="Termo de responsabilidade" descricao="Termo de responsabilidade e assunção de riscos do Festival IgatuBoulder.">
+  <Cabecalho rotulo="Termo de responsabilidade" titulo="O termo" />
+  <section class="secao papel">
+    <div class="conteudo texto">
+      <p class="lead">Ao me inscrever no {EVENTO.nome} ({EVENTO.datas}, {EVENTO.local}), declaro que:</p>
+      <ol class="clausulas">{clausulas.map((c) => <li>{c}</li>)}</ol>
+    </div>
+  </section>
+</Base>
+<style>
+  .lead { font-size: 20px; }
+  .clausulas { padding-left: 1.4em; }
+  .clausulas li { margin-bottom: 1em; }
+  .clausulas li::marker { font-weight: 600; color: var(--laranja); }
+</style>

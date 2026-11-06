@@ -1,0 +1,33 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+const passos = [
+  { t: 'Salvador → Andaraí', d: 'Cerca de 400 km pela BR-242 e BA-142. De ônibus, há linhas de Salvador para Andaraí.' },
+  { t: 'Lençóis → Andaraí', d: 'Cerca de 100 km. Quem chega de avião pode usar o aeroporto de Lençóis.' },
+  { t: 'Andaraí → Igatu', d: 'São 14 km de estrada de pedra até a vila. Dá para ir de carro com cuidado, de mototáxi ou combinar transporte no centro de Andaraí.' },
+];
+---
+<Base titulo="Como chegar" descricao="Como chegar em Igatu, Andaraí, Chapada Diamantina.">
+  <Cabecalho rotulo="Como chegar" titulo="Até Igatu" />
+  <section class="secao papel">
+    <div class="conteudo duas">
+      <ol class="passos revela">
+        {passos.map((p, i) => <li><span class="display n">{i + 1}</span><div><h2 class="rotulo">{p.t}</h2><p>{p.d}</p></div></li>)}
+      </ol>
+      <div class="texto revela">
+        <p class="rotulo">Onde ficar</p>
+        <p>A vila tem pousadas, casas de moradores e camping. Reserve cedo: em janeiro a vila enche.</p>
+        <p class="rotulo">Leve</p>
+        <p>Sapatilha, crash pad se tiver, lanterna, protetor solar, garrafa d'água e dinheiro em espécie (sinal de celular e maquininha falham).</p>
+        <p><a class="link" href="https://www.google.com/maps/search/?api=1&query=Igatu+Andara%C3%AD+BA" target="_blank" rel="noopener">Abrir Igatu no mapa →</a></p>
+      </div>
+    </div>
+  </section>
+</Base>
+<style>
+  .passos { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--verde); }
+  .passos li { display: grid; grid-template-columns: 56px 1fr; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--verde); }
+  .n { font-size: 64px; color: var(--laranja); }
+  .passos h2 { margin: 6px 0 6px; color: var(--verde); }
+  .passos p { margin: 0; }
+</style>

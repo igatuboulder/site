@@ -1,6 +1,6 @@
 ---
 import { EVENTO } from '../config/evento';
-import { formatarReais } from '../lib/preco';
+import { formatarReais, precoEmCentavos } from '../lib/preco';
 ---
 <form id="form-inscricao" class="form" novalidate>
   <div class="campo">
@@ -37,13 +37,13 @@ import { formatarReais } from '../lib/preco';
   <fieldset class="campo">
     <legend>Pagamento</legend>
     <div class="opcoes">
-      <label class="chip grande"><input type="radio" name="pagamento" value="pix" checked /><span>Pix · {formatarReais(EVENTO.precos.pix)}</span></label>
-      <label class="chip grande"><input type="radio" name="pagamento" value="cartao" /><span>Cartão · {formatarReais(EVENTO.precos.cartao)}</span></label>
+      <label class="chip grande"><input type="radio" name="pagamento" value="pix" checked /><span>Pix · {formatarReais(precoEmCentavos('pix'))}</span></label>
+      <label class="chip grande"><input type="radio" name="pagamento" value="cartao" /><span>Cartão · {formatarReais(precoEmCentavos('cartao'))}</span></label>
     </div>
     <p class="erro" id="erro-pagamento" aria-live="polite"></p>
   </fieldset>
   <div class="campo">
-    <label class="aceite"><input type="checkbox" name="aceite" /> <span>Li e aceito o termo de responsabilidade do festival.</span></label>
+    <label class="aceite"><input type="checkbox" name="aceite" /> <span>Li e aceito o <a href="/termo" target="_blank">termo de responsabilidade</a> do festival.</span></label>
     <p class="erro" id="erro-aceite" aria-live="polite"></p>
   </div>
   <button type="submit" class="botao">Ir para o pagamento →</button>

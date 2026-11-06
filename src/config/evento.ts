@@ -8,8 +8,8 @@ export const EVENTO = {
   local: 'Igatu · Chapada Diamantina · BA',
   email: 'boulderigatu@gmail.com',
   instagram: 'igatuboulder2027',
-  // Preços em centavos. Pix confirmado. Cartão: PENDENTE de confirmação com a contratante
-  // (proposta R$ 167 para cobrir a taxa). Enquanto isso, igual ao Pix.
-  precos: { pix: 16000, cartao: 16000 },
+  // Preço do passaporte no Pix, em centavos. O preço do cartão é calculado em src/lib/preco.ts
+  // para cobrir a taxa da InfinitePay (o festival não arca com ela).
+  precoPix: 16000,
   camisetas: ['PP', 'P', 'M', 'G', 'GG', 'XG'] as const,
 } as const;

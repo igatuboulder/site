@@ -1,0 +1,30 @@
+---
+import Base from '../layouts/Base.astro';
+import Cabecalho from '../components/Cabecalho.astro';
+const dias = [
+  { dia: 'Qui', data: '07.01' },
+  { dia: 'Sex', data: '08.01' },
+  { dia: 'Sáb', data: '09.01' },
+];
+---
+<Base titulo="Programação" descricao="Programação do 14º Festival IgatuBoulder.">
+  <Cabecalho rotulo="Programação" titulo="Três dias em Igatu">
+    <p class="intro">A programação completa sai em breve. Acompanhe pelo Instagram.</p>
+  </Cabecalho>
+  <section class="secao papel">
+    <div class="conteudo dias">
+      {dias.map((d) => (
+        <article class="dia revela"><p class="display nome">{d.dia}</p><p class="data">{d.data}.2027</p><p class="breve">Em breve</p></article>
+      ))}
+    </div>
+  </section>
+</Base>
+<style>
+  .intro { font-size: 18px; margin-top: 24px; }
+  .dias { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .dia { border: 2px solid var(--verde); padding: 24px; min-height: 240px; display: flex; flex-direction: column; }
+  .nome { font-size: 96px; color: var(--verde); text-transform: uppercase; margin: 0; }
+  .data { font-weight: 600; letter-spacing: .1em; margin: 8px 0 0; }
+  .breve { margin-top: auto; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
+  @media (max-width: 760px) { .dias { grid-template-columns: 1fr; } .dia { min-height: 0; } }
+</style>

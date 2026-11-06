@@ -24,3 +24,15 @@ a { color: inherit; }
 .display { font-family: var(--display); font-weight: 900; font-stretch: 62%; line-height: 0.85; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+/* blocos de página */
+.secao { padding: clamp(56px, 9vw, 112px) var(--margem); }
+.papel { background: var(--papel); }
+.conteudo { max-width: 1100px; margin: 0 auto; }
+.duas { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+.h2 { font-size: clamp(40px, 6vw, 72px); color: var(--verde); margin: 8px 0 20px; text-transform: uppercase; }
+.texto { max-width: 62ch; font-size: 17px; }
+.texto p { margin: 0 0 1em; }
+.link { font-weight: 600; color: var(--laranja); }
+.revisar { background: rgba(196, 87, 46, .12); outline: 1px dashed var(--laranja); }
+@media (max-width: 760px) { .duas { grid-template-columns: 1fr; } }
