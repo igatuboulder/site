@@ -24,7 +24,7 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
 <body>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
   <nav class="nav" aria-label="Principal">
-    <a class="marca" href="/" aria-label="Início"><span>IGATU</span><span>BOULDER</span></a>
+    <a class="marca" href="/" aria-label="Início"><img src="/img/id-ig-simbolo.png" alt="" width="693" height="369" /><span class="marca-txt"><span>IGATU</span><span>BOULDER</span></span></a>
     <details class="menu">
       <summary>Menu</summary>
       <ul>
@@ -47,6 +47,7 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
     </div>
     <div class="base">
       <img class="logo-ib" src="/img/logos/igatuboulder.png" alt="IgatuBoulder Festival" width="660" height="282" loading="lazy" />
+      <img class="logo-id" src="/img/id-ig-completo.png" alt="IgatuBoulder" width="693" height="604" loading="lazy" />
       <p><a href={`mailto:${EVENTO.email}`}>{EVENTO.email}</a><br /><a href={`https://instagram.com/${EVENTO.instagram}`} target="_blank" rel="noopener">@{EVENTO.instagram}</a></p>
       <p>{EVENTO.datas}<br />{EVENTO.local}</p>
     </div>
@@ -57,6 +58,7 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
     gsap.registerPlugin(ScrollTrigger);
     gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.from('.cab .sol', { yPercent: 45, duration: 1.4, ease: 'power3.out' });
       gsap.utils.toArray<HTMLElement>('.revela').forEach((el) => {
         gsap.from(el, { y: 28, opacity: 0, duration: 0.7, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
       });
@@ -69,7 +71,9 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
   .pular { position: absolute; left: -9999px; }
   .pular:focus { left: 16px; top: 16px; z-index: 10; background: var(--papel); padding: 8px 12px; }
   .nav { position: sticky; top: 0; z-index: 5; display: flex; align-items: center; gap: 24px; padding: 12px var(--margem); background: var(--amarelo); border-bottom: 2px solid var(--verde); }
-  .marca { display: flex; flex-direction: column; text-decoration: none; font-family: var(--display); font-weight: 900; font-stretch: 62%; font-size: 20px; line-height: .85; color: var(--verde); }
+  .marca { display: flex; align-items: center; gap: 10px; }
+  .marca img { width: 64px; height: auto; }
+  .marca-txt { display: flex; flex-direction: column; text-decoration: none; font-family: var(--display); font-weight: 900; font-stretch: 62%; font-size: 20px; line-height: .85; color: var(--verde); }
   .links { display: flex; gap: 22px; list-style: none; margin: 0 0 0 auto; padding: 0; }
   .links a, .menu a { text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 6px 0; border-bottom: 2px solid transparent; }
   .links a:hover, .links a[aria-current] { border-bottom-color: var(--verde); }
@@ -86,8 +90,8 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
   .grupo .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
   .grupo img { height: 46px; width: auto; }
   .fullgrip { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; color: var(--verde); }
-  .base { max-width: 1100px; margin: 0 auto; padding-top: 28px; display: grid; grid-template-columns: 180px 1fr 1fr; gap: 24px; align-items: center; font-size: 14px; }
+  .base { max-width: 1100px; margin: 0 auto; padding-top: 28px; display: grid; grid-template-columns: 180px 110px 1fr 1fr; gap: 24px; align-items: center; font-size: 14px; }
   .base p { margin: 0; }
-  .logo-ib { width: 100%; height: auto; }
-  @media (max-width: 760px) { .parceiros, .base { grid-template-columns: 1fr; } .logo-ib { max-width: 160px; } }
+  .logo-ib, .logo-id { width: 100%; height: auto; }
+  @media (max-width: 760px) { .parceiros, .base { grid-template-columns: 1fr; } .logo-ib { max-width: 160px; } .logo-id { max-width: 110px; } }
 </style>
