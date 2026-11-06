@@ -33,8 +33,10 @@ const { href = '#inscricao' } = Astro.props;
   .acao { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 34px; color: var(--laranja); line-height: 1; }
   @media (max-width: 640px) {
     .ticket { grid-template-columns: 1fr 1fr; }
-    .cta { grid-column: 1 / -1; border-left: 0 !important; border-top: 2px dotted var(--verde); align-items: center; }
+    .cta { grid-column: 1 / -1; border-left: 0 !important; align-items: center; background: radial-gradient(circle, var(--verde) 1px, transparent 1.4px) 0 0 / 6px 3px repeat-x; }
+    .preco::after { display: none; }
     .cta::before, .cta::after { display: none; }
     .valor { font-size: 52px; }
   }
+  @media (max-width: 400px) { .parte { padding: 16px 14px; } .valor { font-size: 42px; } .valor small { font-size: 20px; } .valor sup { font-size: 22px; } .titulo { font-size: 17px; } }
 </style>

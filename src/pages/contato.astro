@@ -1,10 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
+import IconeInstagram from '../components/IconeInstagram.astro';
 import { EVENTO } from '../config/evento';
 const canais = [
-  { r: 'E-mail', v: EVENTO.email, href: `mailto:${EVENTO.email}`, min: true },
-  { r: 'Instagram', v: `@${EVENTO.instagram}`, href: `https://instagram.com/${EVENTO.instagram}` },
+  { r: 'Instagram', v: `@${EVENTO.instagram}`, href: `https://instagram.com/${EVENTO.instagram}`, ig: true },
   { r: 'WhatsApp', v: '(75) 98170-7643', href: 'https://wa.me/5575981707643' },
   { r: 'WhatsApp', v: '(75) 98315-1657', href: 'https://wa.me/5575983151657' },
 ];
@@ -14,11 +14,11 @@ const canais = [
   <section class="secao papel">
     <div class="conteudo duas">
       <ul class="canais revela">
-        {canais.map((c) => <li><span class="rotulo">{c.r}</span><a class:list={["display", { min: c.min }]} href={c.href}>{c.v}</a></li>)}
+        {canais.map((c) => <li><span class="rotulo">{c.r}</span><a class="display" href={c.href}>{c.ig && <IconeInstagram tamanho={36} />}{c.v}</a></li>)}
       </ul>
       <div class="texto revela">
         <p>Dúvidas sobre inscrição, kit, hospedagem ou o IgatuBoulder Social? Escreva para a gente.</p>
-        <p>Quer apoiar ou patrocinar o festival? Mande um e-mail com o assunto “Apoio”.</p>
+        <p>Quer apoiar ou patrocinar o festival? Chame a gente no Instagram ou no WhatsApp.</p>
       </div>
     </div>
   </section>
@@ -26,7 +26,6 @@ const canais = [
 <style>
   .canais { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--verde); }
   .canais li { display: flex; flex-direction: column; gap: 4px; padding: 18px 0; border-bottom: 1px solid var(--verde); }
-  .canais a { font-size: clamp(28px, 4vw, 44px); color: var(--verde); text-decoration: none; text-transform: uppercase; overflow-wrap: anywhere; }
-  .canais a.min { text-transform: none; font-stretch: 75%; font-size: clamp(22px, 3vw, 32px); }
+  .canais a { display: inline-flex; align-items: center; gap: 12px; font-size: clamp(28px, 4vw, 44px); color: var(--verde); text-decoration: none; text-transform: uppercase; overflow-wrap: anywhere; }
   .canais a:hover { color: var(--laranja); }
 </style>

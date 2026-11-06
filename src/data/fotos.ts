@@ -1,0 +1,33 @@
+import type { Foto } from '../lib/fotos';
+
+// Para colocar uma foto num setor, preencha `setor` com o nome do setor (igual à lista em Sobre).
+export const FOTOS: Foto[] = [
+  { arquivo: 'IMG_1105', secao: 'social', alt: 'Aula de yoga do IgatuBoulder Social' },
+  { arquivo: 'IMG_1106', secao: 'social', alt: 'Aula de yoga na praça coberta da vila' },
+  { arquivo: 'IMG_1134', secao: 'social', alt: 'Crianças da vila assistindo à atividade do Social' },
+  { arquivo: 'IMG_1144', secao: 'social', alt: 'Apresentação para as crianças' },
+  { arquivo: 'IMG_1152', secao: 'social', alt: 'Crianças e educadoras na atividade' },
+  { arquivo: 'IMG_1159', secao: 'social', alt: 'Atividade com as crianças sob a bandeira da IgatuLands' },
+  { arquivo: 'IMG_1173', secao: 'social', alt: 'Educadoras fantasiadas com as crianças' },
+  { arquivo: 'IMG_1178', secao: 'social', alt: 'Roda com as crianças da vila' },
+  { arquivo: 'IMG_1199', secao: 'social', alt: 'Crianças e educadora na atividade ao ar livre' },
+  { arquivo: 'IMG_1230', secao: 'escalada', alt: 'Bloco de pedra sob céu nublado' },
+  { arquivo: 'IMG_6376', secao: 'escalada', alt: 'Escalador num bloco' },
+  { arquivo: 'IMG_6380', secao: 'escalada', alt: 'Face de um bloco de quartzito' },
+  { arquivo: 'IMG_6389', secao: 'escalada', alt: 'Escaladora na trilha com crash pad' },
+  { arquivo: 'IMG_6394', secao: 'escalada', alt: 'Escaladores chegando ao setor' },
+  { arquivo: 'IMG_6396', secao: 'escalada', alt: 'Trilha entre os blocos' },
+  { arquivo: 'IMG_6406', secao: 'escalada', alt: 'Escalador no alto de um bloco grande' },
+  { arquivo: 'IMG_6410', secao: 'escalada', alt: 'Escaladora observando a via' },
+  { arquivo: 'IMG_6432', secao: 'escalada', alt: 'Escaladora num teto' },
+  { arquivo: 'IMG_6444', secao: 'escalada', alt: 'Escaladores no pé de um bloco' },
+  { arquivo: 'IMG_6446', secao: 'escalada', alt: 'Escaladora num teto com crash pads' },
+  { arquivo: 'IMG_6449', secao: 'escalada', alt: 'Escaladora saindo de um teto' },
+  { arquivo: 'IMG_6462', secao: 'escalada', alt: 'Escalador numa fenda' },
+  { arquivo: 'IMG_6467', secao: 'escalada', alt: 'Escalador em oposição entre blocos' },
+  { arquivo: 'IMG_6479', secao: 'escalada', alt: 'Escalador num bloco negativo' },
+  { arquivo: 'IMG_1092', secao: 'festival', alt: 'Bandeira do IgatuBoulder na fachada da vila' },
+  { arquivo: 'IMG_1093', secao: 'festival', alt: 'Participantes na frente da casa do festival' },
+  { arquivo: 'IMG_1294', secao: 'festival', alt: 'Encontro do festival à noite' },
+  { arquivo: 'IMG_1322', secao: 'festival', alt: 'Foto de grupo do festival' },
+];

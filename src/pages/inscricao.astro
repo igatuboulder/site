@@ -16,7 +16,7 @@ import { formatarReais, precoEmCentavos, TAXA_CARTAO } from '../lib/preco';
           <div><dt>Cartão</dt><dd class="display">{formatarReais(precoEmCentavos('cartao'))}</dd></div>
         </dl>
         <p class="nota">No cartão o valor inclui a taxa da maquininha ({(TAXA_CARTAO * 100).toLocaleString('pt-BR')}%). O pagamento é feito pela InfinitePay, em ambiente seguro.</p>
-        <p class="nota">Dúvidas: <a href={`mailto:${EVENTO.email}`}>{EVENTO.email}</a></p>
+        <p class="nota">Dúvidas? <a href="/contato">Fale com a gente</a></p>
       </div>
       <FormInscricao />
     </div>
@@ -26,6 +26,6 @@ import { formatarReais, precoEmCentavos, TAXA_CARTAO } from '../lib/preco';
   .precos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 24px 0; }
   .precos div { border: 2px solid var(--verde); padding: 14px 16px; }
   dt { font-size: 11px; letter-spacing: .16em; font-weight: 600; text-transform: uppercase; }
-  dd { margin: 4px 0 0; font-size: 44px; color: var(--verde); }
+  dd { margin: 4px 0 0; font-size: clamp(30px, 9vw, 44px); white-space: nowrap; color: var(--verde); }
   .nota { font-size: 14px; }
 </style>

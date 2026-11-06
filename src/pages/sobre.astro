@@ -5,7 +5,7 @@ import Cabecalho from '../components/Cabecalho.astro';
 import { EVENTO } from '../config/evento';
 import fBloco from '../assets/fotos/IMG_6444.jpg';
 import fSocial from '../assets/fotos/IMG_1105.jpg';
-const setores = ['Labirinto', 'Verruga', 'Corredor Denorex', 'Disco Voador', 'Besouro', 'Cemitério', 'Lagartos', 'Laranjeiras', 'Cruzeiro', 'Califórnia', 'Coisa Boa', 'Degredo'];
+const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 'Besouro', 'Cemitério', 'Lagartos', 'Laranjeiras', 'Cruzeiro', 'Califórnia', 'Coisa Boa', 'Degredo'];
 ---
 <Base titulo="Sobre" descricao="O que é o Festival IgatuBoulder e o IgatuBoulder Social.">
   <Cabecalho rotulo="Sobre" titulo="O festival" />
@@ -41,7 +41,7 @@ const setores = ['Labirinto', 'Verruga', 'Corredor Denorex', 'Disco Voador', 'Be
 <style>
   .lead { font-size: 22px; line-height: 1.4; }
   .foto { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); }
-  .setores { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); border-top: 2px solid var(--verde); }
-  .setores li { display: flex; gap: 14px; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--verde); font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 28px; color: var(--verde); text-transform: uppercase; }
+  .setores { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); border-top: 2px solid var(--verde); background: repeating-linear-gradient(to bottom, transparent 0 59px, var(--verde) 59px 60px); }
+  .setores li { display: flex; gap: 14px; align-items: baseline; height: 60px; padding-top: 16px; line-height: 1; font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 28px; color: var(--verde); text-transform: uppercase; }
   .setores span { font-family: var(--mono); font-size: 12px; font-weight: 600; }
 </style>
