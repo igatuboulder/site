@@ -18,25 +18,50 @@ const { href = '#inscricao' } = Astro.props;
   </div>
 </a>
 <style>
-  .ticket { --furo: 12px; display: grid; grid-template-columns: 1fr 1.3fr 1.5fr; text-decoration: none; color: var(--verde); background: var(--papel); border: 2px solid var(--verde); position: relative; transition: transform .25s cubic-bezier(.2,.8,.2,1.2); }
-  .ticket:hover { transform: translateY(-3px) rotate(-0.4deg); }
-  .parte { padding: 20px 22px; display: flex; flex-direction: column; justify-content: center; gap: 6px; position: relative; }
-  .parte + .parte { border-left: 2px dotted var(--verde); }
-  .parte + .parte::before, .parte + .parte::after { content: ''; position: absolute; left: calc(var(--furo) * -1 - 1px); width: calc(var(--furo) * 2); height: var(--furo); background: var(--amarelo); border: 2px solid var(--verde); }
-  .parte + .parte::before { top: -2px; border-top: 0; border-radius: 0 0 var(--furo) var(--furo); }
-  .parte + .parte::after { bottom: -2px; border-bottom: 0; border-radius: var(--furo) var(--furo) 0 0; }
+  .ticket { --furo: 12px; --l: 2px solid var(--verde); --p: 2px dotted var(--verde); display: grid; grid-template-columns: 1fr 1.3fr 1.5fr; text-decoration: none; color: var(--verde); position: relative; }
+  .parte { background: var(--papel); border-top: var(--l); border-bottom: var(--l); padding: 20px 22px; display: flex; flex-direction: column; justify-content: center; gap: 6px; position: relative; }
+  .canhoto { border-left: var(--l); }
+  .preco { border-right: var(--p); align-items: center; }
+  .cta { border-right: var(--l); border-left: var(--p); margin-left: -2px; transform-origin: 0% 100%; will-change: transform; }
+  .preco { border-left: var(--p); margin-left: -2px; }
+  .preco::before, .preco::after, .cta::before, .cta::after { content: ''; position: absolute; left: calc(var(--furo) * -1 - 1px); width: calc(var(--furo) * 2); height: var(--furo); background: var(--amarelo); border: 2px solid var(--verde); }
+  .preco::before, .cta::before { top: -2px; border-top: 0; border-radius: 0 0 var(--furo) var(--furo); }
+  .preco::after, .cta::after { bottom: -2px; border-bottom: 0; border-radius: var(--furo) var(--furo) 0 0; }
   .titulo { font-family: var(--display); font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: .03em; }
-  .preco { align-items: center; }
   .valor { font-size: 68px; display: flex; align-items: flex-start; }
   .valor small { font-size: 26px; margin: 5px 5px 0 0; }
   .valor sup { font-size: 30px; line-height: 1; }
   .acao { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 34px; color: var(--laranja); line-height: 1; }
+  .ticket:focus-visible { outline: 3px solid var(--laranja); outline-offset: 6px; }
   @media (max-width: 640px) {
     .ticket { grid-template-columns: 1fr 1fr; }
-    .cta { grid-column: 1 / -1; border-left: 0 !important; align-items: center; background: radial-gradient(circle, var(--verde) 1px, transparent 1.4px) 0 0 / 6px 3px repeat-x; }
-    .preco::after { display: none; }
-    .cta::before, .cta::after { display: none; }
+    .preco { border-right: var(--l); }
+    .canhoto, .preco { border-bottom: var(--p); }
+    .cta { grid-column: 1 / -1; margin: -2px 0 0; border-left: var(--l); border-top: var(--p); align-items: center; transform-origin: 0% 0%; }
+    .preco::after, .cta::before, .cta::after { display: none; }
     .valor { font-size: 52px; }
   }
   @media (max-width: 400px) { .parte { padding: 16px 14px; } .valor { font-size: 42px; } .valor small { font-size: 20px; } .valor sup { font-size: 22px; } .titulo { font-size: 17px; } }
 </style>
+<script>
+  import { gsap } from 'gsap';
+  // Destaca o canhoto "Inscreva-se" pela linha pontilhada: abre de cima para baixo (ou da direita para a esquerda no celular).
+  gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+    document.querySelectorAll<HTMLElement>('.ticket').forEach((t) => {
+      const cta = t.querySelector<HTMLElement>('.cta');
+      if (!cta) return;
+      const empilhado = () => matchMedia('(max-width: 640px)').matches;
+      const abrir = () => (empilhado() ? { rotation: 2.5, x: 4, y: 10 } : { rotation: 4, x: 12, y: 0 });
+      const destacar = () => gsap.to(cta, { ...abrir(), duration: 0.45, ease: 'power3.out', overwrite: true });
+      const voltar = () => gsap.to(cta, { rotation: 0, x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)', overwrite: true });
+      t.addEventListener('mouseenter', destacar);
+      t.addEventListener('focus', destacar);
+      t.addEventListener('mouseleave', voltar);
+      t.addEventListener('blur', voltar);
+      // Aviso na entrada: destaca um pouco e volta, para mostrar que é destacável.
+      gsap.timeline({ delay: 1.6 })
+        .to(cta, { ...abrir(), duration: 0.5, ease: 'power3.out' })
+        .to(cta, { rotation: 0, x: 0, y: 0, duration: 0.9, ease: 'elastic.out(1, 0.45)' }, '+=0.35');
+    });
+  });
+</script>
