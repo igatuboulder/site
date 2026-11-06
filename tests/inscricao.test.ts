@@ -7,7 +7,6 @@ const valida = {
   email: 'ana@exemplo.com',
   telefone: '(75) 98170-7643',
   camiseta: 'M',
-  pagamento: 'pix',
   aceite: true,
 };
 
@@ -38,9 +37,10 @@ describe('validarInscricao', () => {
     const r = validarInscricao({ ...valida, camiseta: 'XXXL' });
     expect(!r.ok && r.erros.camiseta).toBeTruthy();
   });
-  it('só aceita Pix ou cartão', () => {
-    const r = validarInscricao({ ...valida, pagamento: 'boleto' });
-    expect(!r.ok && r.erros.pagamento).toBeTruthy();
+  it('não pede forma de pagamento (escolhida no checkout da InfinitePay)', () => {
+    const r = validarInscricao(valida);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect('pagamento' in r.dados).toBe(false);
   });
   it('exige aceite do termo de responsabilidade', () => {
     const r = validarInscricao({ ...valida, aceite: false });
@@ -49,6 +49,6 @@ describe('validarInscricao', () => {
   it('lista todos os erros de uma vez', () => {
     const r = validarInscricao({});
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(Object.keys(r.erros).sort()).toEqual(['aceite','camiseta','cpf','email','nome','pagamento','telefone']);
+    if (!r.ok) expect(Object.keys(r.erros).sort()).toEqual(['aceite','camiseta','cpf','email','nome','telefone']);
   });
 });

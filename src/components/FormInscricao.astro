@@ -1,6 +1,5 @@
 ---
 import { EVENTO } from '../config/evento';
-import { formatarReais, precoEmCentavos } from '../lib/preco';
 ---
 <form id="form-inscricao" class="form" novalidate>
   <div class="campo">
@@ -34,14 +33,6 @@ import { formatarReais, precoEmCentavos } from '../lib/preco';
     </div>
     <p class="erro" id="erro-camiseta" aria-live="polite"></p>
   </fieldset>
-  <fieldset class="campo">
-    <legend>Pagamento</legend>
-    <div class="opcoes">
-      <label class="chip grande"><input type="radio" name="pagamento" value="pix" checked /><span>Pix · {formatarReais(precoEmCentavos('pix'))}</span></label>
-      <label class="chip grande"><input type="radio" name="pagamento" value="cartao" /><span>Cartão · {formatarReais(precoEmCentavos('cartao'))}</span></label>
-    </div>
-    <p class="erro" id="erro-pagamento" aria-live="polite"></p>
-  </fieldset>
   <div class="campo">
     <label class="aceite"><input type="checkbox" name="aceite" /> <span>Li e aceito o <a href="/termo" target="_blank">termo de responsabilidade</a> do festival.</span></label>
     <p class="erro" id="erro-aceite" aria-live="polite"></p>
@@ -53,7 +44,7 @@ import { formatarReais, precoEmCentavos } from '../lib/preco';
 <script>
   import { validarInscricao } from '../lib/inscricao';
   const form = document.getElementById('form-inscricao') as HTMLFormElement;
-  const campos = ['nome', 'cpf', 'email', 'telefone', 'camiseta', 'pagamento', 'aceite'];
+  const campos = ['nome', 'cpf', 'email', 'telefone', 'camiseta', 'aceite'];
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     const fd = new FormData(form);

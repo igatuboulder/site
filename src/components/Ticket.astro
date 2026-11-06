@@ -1,6 +1,6 @@
 ---
 import { EVENTO } from '../config/evento';
-const pix = EVENTO.precoPix / 100;
+const pix = EVENTO.preco / 100;
 const { href = '#inscricao' } = Astro.props;
 ---
 <a class="ticket" href={href} aria-label={`Passaporte: R$ ${pix} no Pix. Garanta o seu`}>
