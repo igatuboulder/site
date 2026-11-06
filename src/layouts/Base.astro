@@ -59,7 +59,9 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
     import { ScrollTrigger } from 'gsap/ScrollTrigger';
     gsap.registerPlugin(ScrollTrigger);
     gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
-      gsap.from('.cab .sol', { yPercent: 45, duration: 1.4, ease: 'power3.out' });
+      // Sol: nasce ao abrir a página e acompanha o scroll (desce ao rolar para baixo, sobe ao voltar).
+      gsap.from('.cab .sol', { y: () => document.querySelector('.cab .sol')?.clientHeight! * 0.45, duration: 1.4, ease: 'power3.out' });
+      gsap.to('.cab .sol', { yPercent: 70, ease: 'none', scrollTrigger: { trigger: '.cab', start: 'top top', end: 'bottom top', scrub: 0.6 } });
       gsap.utils.toArray<HTMLElement>('.revela').forEach((el) => {
         gsap.from(el, { y: 28, opacity: 0, duration: 0.7, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 88%', once: true } });
       });
