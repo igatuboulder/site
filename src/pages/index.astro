@@ -1,5 +1,162 @@
 ---
+import '../styles/global.css';
+import NomeSvg from '../components/NomeSvg.astro';
+import Ticket from '../components/Ticket.astro';
+import FormInscricao from '../components/FormInscricao.astro';
 import { EVENTO } from '../config/evento';
+const titulo = `${EVENTO.nome} ${EVENTO.ano} · ${EVENTO.edicao}ª edição`;
+const descricao = `${EVENTO.edicao}º Festival IgatuBoulder, ${EVENTO.datas}, em Igatu, Chapada Diamantina. Passaporte R$ ${EVENTO.precos.pix / 100} no Pix.`;
+const apoios = [
+  ['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'], ['hostel-igatu', 'Hostel Igatu'],
+  ['woodtropia', 'Woodtropia'], ['genesis', 'Gênesis'],
+];
 ---
-<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>IgatuBoulder 2027</title></head>
-<body><h1>{EVENTO.nome} {EVENTO.ano}</h1><p>{EVENTO.datas} · {EVENTO.local}</p><p>Site em construção.</p></body></html>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{titulo}</title>
+  <meta name="description" content={descricao} />
+  <meta name="theme-color" content="#DDA548" />
+  <meta property="og:title" content={titulo} />
+  <meta property="og:description" content={descricao} />
+</head>
+<body>
+  <header class="topo grade">
+    <div class="barra">
+      <div><strong>Festival de escalada</strong><span>Chapada Diamantina</span></div>
+      <div class="dir"><strong>Igatu · Chapada Diamantina · BA</strong><span>12°53′47″S · 41°19′07″W</span></div>
+    </div>
+    <h1 class="sr-only">IgatuBoulder — {EVENTO.edicao}º Festival de escalada, {EVENTO.datas}</h1>
+    <div class="nome" aria-hidden="true">
+      <NomeSvg />
+      <img class="escalador" src="/img/escalador.png" alt="" width="133" height="250" />
+    </div>
+    <div class="edicao">
+      <div class="placa display">{EVENTO.edicao}<sup>ª</sup></div>
+      <div class="festival">
+        <p class="display titulo">Festival<br />de escalada</p>
+        <p class="data"><strong>07 a 09 de janeiro de 2027</strong><span>{EVENTO.dias}</span></p>
+      </div>
+    </div>
+    <div class="ticket-wrap revela"><Ticket /></div>
+  </header>
+
+  <main>
+    <section id="inscricao" class="secao papel">
+      <div class="conteudo duas">
+        <div class="revela">
+          <p class="rotulo">Inscrição</p>
+          <h2 class="display h2">Garanta seu passaporte</h2>
+          <p>O passaporte vale para os 3 dias de festival. Preencha seus dados e siga para o pagamento seguro pela InfinitePay.</p>
+          <p class="nota">Dúvidas: <a href={`mailto:${EVENTO.email}`}>{EVENTO.email}</a></p>
+        </div>
+        <div class="revela"><FormInscricao /></div>
+      </div>
+    </section>
+
+    <section class="secao grade">
+      <div class="conteudo">
+        <p class="display mote revela">Não é meu evento,<br />é o nosso evento</p>
+        <p class="texto revela">Desde 2009 o IgatuBoulder reúne escaladores nos blocos de quartzito de Igatu. Desde 2022, o IgatuBoulder Social leva ações de saúde para a comunidade da vila. A {EVENTO.edicao}ª edição continua esse caminho.</p>
+      </div>
+    </section>
+
+    <section class="secao papel">
+      <div class="conteudo duas">
+        <div class="revela">
+          <p class="rotulo">Onde</p>
+          <h2 class="display h2">Igatu, Andaraí · BA</h2>
+          <p>Vila histórica do garimpo, distrito de Andaraí, no coração da Chapada Diamantina.</p>
+          <p><a class="link" href="https://www.google.com/maps/search/?api=1&query=-12.8964,-41.3186" target="_blank" rel="noopener">Abrir no mapa →</a></p>
+        </div>
+        <div class="revela coord display" aria-hidden="true">12°53′47″S<br />41°19′07″W</div>
+      </div>
+    </section>
+
+    <section class="secao grade parceiros">
+      <div class="conteudo">
+        <div class="linha-logos revela">
+          <img class="logo-ib" src="/img/logos/igatuboulder.png" alt="IgatuBoulder Festival" width="660" height="282" />
+          <div class="grupo"><p class="rotulo">Realização</p><div class="logos"><img src="/img/logos/igatulands.png" alt="IgatuLands" /><img src="/img/logos/igatuboulder-social.png" alt="IgatuBoulder Social" /></div></div>
+          <div class="grupo"><p class="rotulo">Patrocínio</p><div class="logos"><img src="/img/logos/km10.png" alt="Km10 Sport" /></div></div>
+        </div>
+        <div class="apoio revela">
+          <p class="rotulo">Apoio</p>
+          <div class="logos">{apoios.map(([f, n]) => <img src={`/img/logos/${f}.png`} alt={n} loading="lazy" />)}<span class="fullgrip">FULLGRIP</span></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <p><a href={`mailto:${EVENTO.email}`}>{EVENTO.email}</a> · <a href={`https://instagram.com/${EVENTO.instagram}`} target="_blank" rel="noopener">@{EVENTO.instagram}</a></p>
+    <p>Realização IgatuLands · {EVENTO.ano}</p>
+  </footer>
+
+  <script>
+    import { gsap } from 'gsap';
+    import { ScrollTrigger } from 'gsap/ScrollTrigger';
+    gsap.registerPlugin(ScrollTrigger);
+    const mm = gsap.matchMedia();
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.from('.nome-svg text, .nome-svg rect', { yPercent: 12, opacity: 0, duration: 0.9, stagger: 0.08 })
+        .from('.escalador', { y: -40, rotate: -12, opacity: 0, duration: 0.8, ease: 'back.out(2)', transformOrigin: '30% 0%' }, '-=0.4')
+        .from('.edicao > *', { y: 24, opacity: 0, duration: 0.6, stagger: 0.1 }, '-=0.4');
+      gsap.utils.toArray<HTMLElement>('.revela').forEach((el) => {
+        gsap.from(el, { y: 32, opacity: 0, duration: 0.7, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 85%', once: true } });
+      });
+    });
+  </script>
+</body>
+</html>
+
+<style>
+  .topo { padding: 32px var(--margem) 48px; max-width: 1200px; margin: 0 auto; }
+  .barra { display: flex; justify-content: space-between; gap: 16px; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+  .barra div { display: flex; flex-direction: column; gap: 4px; }
+  .barra .dir { text-align: right; }
+  .nome { position: relative; margin: 24px auto 0; max-width: 900px; aspect-ratio: 800 / 560; }
+  .nome :global(.nome-svg) { width: 100%; height: 100%; overflow: visible; }
+  .escalador { position: absolute; left: 67.4%; top: 3.9%; width: 16.6%; height: auto; filter: drop-shadow(3px 0 0 var(--amarelo)) drop-shadow(-3px 0 0 var(--amarelo)) drop-shadow(0 3px 0 var(--amarelo)) drop-shadow(0 -3px 0 var(--amarelo)); }
+  .edicao { display: flex; gap: 20px; max-width: 900px; margin: 32px auto 0; align-items: stretch; }
+  .placa { background: var(--verde); color: var(--papel); font-size: clamp(90px, 16vw, 150px); padding: 14px 18px 10px; display: flex; align-items: flex-start; }
+  .placa sup { font-size: .2em; font-stretch: 100%; margin: 6px 0 0 4px; line-height: 1; }
+  .festival { flex: 1; display: flex; flex-direction: column; justify-content: space-between; color: var(--verde); }
+  .titulo { margin: 0; font-stretch: 100%; font-size: clamp(36px, 7.5vw, 64px); text-transform: uppercase; }
+  .data { margin: 12px 0 0; display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px; }
+  .data strong { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: clamp(22px, 3.5vw, 28px); }
+  .data span { font-size: 14px; font-weight: 600; letter-spacing: .06em; }
+  .ticket-wrap { max-width: 900px; margin: 32px auto 0; }
+  .secao { padding: clamp(56px, 9vw, 112px) var(--margem); }
+  .papel { background: var(--papel); }
+  .conteudo { max-width: 1100px; margin: 0 auto; }
+  .duas { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
+  .h2 { font-size: clamp(44px, 7vw, 80px); color: var(--verde); margin: 8px 0 20px; text-transform: uppercase; }
+  .nota { font-size: 14px; }
+  .mote { font-size: clamp(48px, 10vw, 120px); color: var(--verde); text-transform: uppercase; margin: 0 0 32px; }
+  .texto { max-width: 60ch; font-size: 17px; }
+  .coord { font-size: clamp(48px, 8vw, 96px); color: var(--verde); opacity: .9; }
+  .link { font-weight: 600; color: var(--laranja); }
+  .linha-logos { display: grid; grid-template-columns: 220px 1fr 220px; gap: 24px; align-items: center; border-top: 2px solid var(--verde); border-bottom: 1px solid var(--verde); padding: 20px 0; }
+  .logo-ib { width: 100%; max-width: 200px; height: auto; }
+  .grupo { border-left: 1px solid var(--verde); padding-left: 20px; }
+  .logos { display: flex; align-items: center; gap: 28px; flex-wrap: wrap; }
+  .logos img { height: 52px; width: auto; }
+  .apoio { display: grid; grid-template-columns: 90px 1fr; align-items: center; padding: 20px 0; }
+  .apoio .logos { justify-content: space-between; }
+  .fullgrip { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 22px; color: var(--verde); }
+  .rodape { background: var(--verde); color: var(--papel); padding: 32px var(--margem); display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; font-size: 14px; }
+  .rodape p { margin: 0; }
+  @media (max-width: 760px) {
+    .duas { grid-template-columns: 1fr; }
+    .linha-logos { grid-template-columns: 1fr; }
+    .logo-ib { width: 100%; max-width: 200px; height: auto; }
+  .grupo { border-left: 0; padding-left: 0; }
+    .apoio { grid-template-columns: 1fr; gap: 12px; }
+    .apoio .logos { justify-content: flex-start; }
+    .barra { font-size: 10px; }
+  }
+</style>

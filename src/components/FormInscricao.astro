@@ -1,0 +1,102 @@
+---
+import { EVENTO } from '../config/evento';
+import { formatarReais } from '../lib/preco';
+---
+<form id="form-inscricao" class="form" novalidate>
+  <div class="campo">
+    <label for="nome">Nome completo</label>
+    <input id="nome" name="nome" autocomplete="name" required />
+    <p class="erro" id="erro-nome" aria-live="polite"></p>
+  </div>
+  <div class="linha">
+    <div class="campo">
+      <label for="cpf">CPF</label>
+      <input id="cpf" name="cpf" inputmode="numeric" placeholder="000.000.000-00" required />
+      <p class="erro" id="erro-cpf" aria-live="polite"></p>
+    </div>
+    <div class="campo">
+      <label for="telefone">WhatsApp</label>
+      <input id="telefone" name="telefone" type="tel" autocomplete="tel" placeholder="(75) 90000-0000" required />
+      <p class="erro" id="erro-telefone" aria-live="polite"></p>
+    </div>
+  </div>
+  <div class="campo">
+    <label for="email">E-mail</label>
+    <input id="email" name="email" type="email" autocomplete="email" required />
+    <p class="erro" id="erro-email" aria-live="polite"></p>
+  </div>
+  <fieldset class="campo">
+    <legend>Tamanho da camiseta</legend>
+    <div class="opcoes tamanhos">
+      {EVENTO.camisetas.map((t) => (
+        <label class="chip"><input type="radio" name="camiseta" value={t} /><span>{t}</span></label>
+      ))}
+    </div>
+    <p class="erro" id="erro-camiseta" aria-live="polite"></p>
+  </fieldset>
+  <fieldset class="campo">
+    <legend>Pagamento</legend>
+    <div class="opcoes">
+      <label class="chip grande"><input type="radio" name="pagamento" value="pix" checked /><span>Pix · {formatarReais(EVENTO.precos.pix)}</span></label>
+      <label class="chip grande"><input type="radio" name="pagamento" value="cartao" /><span>Cartão · {formatarReais(EVENTO.precos.cartao)}</span></label>
+    </div>
+    <p class="erro" id="erro-pagamento" aria-live="polite"></p>
+  </fieldset>
+  <div class="campo">
+    <label class="aceite"><input type="checkbox" name="aceite" /> <span>Li e aceito o termo de responsabilidade do festival.</span></label>
+    <p class="erro" id="erro-aceite" aria-live="polite"></p>
+  </div>
+  <button type="submit" class="botao">Ir para o pagamento →</button>
+  <p class="aviso" id="aviso" role="status"></p>
+</form>
+
+<script>
+  import { validarInscricao } from '../lib/inscricao';
+  const form = document.getElementById('form-inscricao') as HTMLFormElement;
+  const campos = ['nome', 'cpf', 'email', 'telefone', 'camiseta', 'pagamento', 'aceite'];
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const entrada: Record<string, unknown> = Object.fromEntries(fd.entries());
+    entrada.aceite = fd.get('aceite') === 'on';
+    const r = validarInscricao(entrada);
+    for (const c of campos) {
+      const el = document.getElementById(`erro-${c}`)!;
+      el.textContent = !r.ok ? (r.erros as Record<string, string>)[c] ?? '' : '';
+      const input = form.querySelector(`[name="${c}"]`);
+      input?.setAttribute('aria-invalid', String(!r.ok && c in r.erros));
+    }
+    const aviso = document.getElementById('aviso')!;
+    if (!r.ok) {
+      aviso.textContent = 'Confira os campos marcados.';
+      (form.querySelector('[aria-invalid="true"]') as HTMLElement | null)?.focus();
+      return;
+    }
+    aviso.textContent = 'Dados conferidos. Versão de teste: o pagamento ainda não está conectado.';
+  });
+</script>
+
+<style>
+  .form { display: grid; gap: 18px; }
+  .linha { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .campo { display: grid; gap: 6px; border: 0; padding: 0; margin: 0; min-width: 0; }
+  label, legend { font-size: 12px; letter-spacing: .12em; font-weight: 600; text-transform: uppercase; padding: 0; }
+  input:not([type=radio]):not([type=checkbox]) { font: inherit; font-size: 17px; padding: 12px 14px; border: 2px solid var(--verde); background: #fff; color: var(--tinta); border-radius: 0; width: 100%; }
+  input[aria-invalid="true"] { border-color: var(--laranja); }
+  .opcoes { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip { position: relative; cursor: pointer; text-transform: none; letter-spacing: 0; }
+  .chip input { position: absolute; opacity: 0; }
+  .chip span { display: inline-block; min-width: 48px; text-align: center; padding: 10px 14px; border: 2px solid var(--verde); font-size: 15px; font-weight: 600; transition: background .15s, color .15s; }
+  .chip input:checked + span { background: var(--verde); color: var(--papel); }
+  .chip input:focus-visible + span { outline: 3px solid var(--laranja); outline-offset: 2px; }
+  .chip.grande span { padding: 12px 18px; }
+  .aceite { display: flex; gap: 10px; align-items: flex-start; text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 15px; }
+  .aceite input { width: 20px; height: 20px; accent-color: var(--verde); margin-top: 2px; }
+  .erro { margin: 0; min-height: 1em; color: var(--laranja); font-size: 13px; font-weight: 600; }
+  .erro:empty { min-height: 0; }
+  .botao { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 30px; padding: 16px 24px; background: var(--verde); color: var(--papel); border: 0; cursor: pointer; justify-self: start; transition: transform .2s cubic-bezier(.2,.8,.2,1.2), background .2s; }
+  .botao:hover { background: var(--tinta); transform: translateY(-2px); }
+  .botao:active { transform: translateY(1px) scale(.98); }
+  .aviso { margin: 0; font-weight: 600; }
+  @media (max-width: 560px) { .linha { grid-template-columns: 1fr; } .botao { justify-self: stretch; } }
+</style>

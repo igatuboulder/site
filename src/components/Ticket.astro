@@ -1,0 +1,40 @@
+---
+import { EVENTO } from '../config/evento';
+const pix = EVENTO.precos.pix / 100;
+const { href = '#inscricao' } = Astro.props;
+---
+<a class="ticket" href={href} aria-label={`Passaporte: R$ ${pix} no Pix. Garanta o seu`}>
+  <div class="parte canhoto">
+    <span class="titulo">Passaporte</span>
+    <span class="rotulo">3 dias de festival</span>
+  </div>
+  <div class="parte preco">
+    <span class="display valor"><small>R$</small>{pix}<sup>*</sup></span>
+    <span class="rotulo">*no Pix</span>
+  </div>
+  <div class="parte cta">
+    <span class="rotulo">Garanta o seu</span>
+    <span class="acao">Inscreva-se →</span>
+  </div>
+</a>
+<style>
+  .ticket { --furo: 12px; display: grid; grid-template-columns: 1fr 1.3fr 1.5fr; text-decoration: none; color: var(--verde); background: var(--papel); border: 2px solid var(--verde); position: relative; transition: transform .25s cubic-bezier(.2,.8,.2,1.2); }
+  .ticket:hover { transform: translateY(-3px) rotate(-0.4deg); }
+  .parte { padding: 20px 22px; display: flex; flex-direction: column; justify-content: center; gap: 6px; position: relative; }
+  .parte + .parte { border-left: 2px dotted var(--verde); }
+  .parte + .parte::before, .parte + .parte::after { content: ''; position: absolute; left: calc(var(--furo) * -1 - 1px); width: calc(var(--furo) * 2); height: var(--furo); background: var(--amarelo); border: 2px solid var(--verde); }
+  .parte + .parte::before { top: -2px; border-top: 0; border-radius: 0 0 var(--furo) var(--furo); }
+  .parte + .parte::after { bottom: -2px; border-bottom: 0; border-radius: var(--furo) var(--furo) 0 0; }
+  .titulo { font-family: var(--display); font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: .03em; }
+  .preco { align-items: center; }
+  .valor { font-size: 68px; display: flex; align-items: flex-start; }
+  .valor small { font-size: 26px; margin: 5px 5px 0 0; }
+  .valor sup { font-size: 30px; line-height: 1; }
+  .acao { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 34px; color: var(--laranja); line-height: 1; }
+  @media (max-width: 640px) {
+    .ticket { grid-template-columns: 1fr 1fr; }
+    .cta { grid-column: 1 / -1; border-left: 0 !important; border-top: 2px dotted var(--verde); align-items: center; }
+    .cta::before, .cta::after { display: none; }
+    .valor { font-size: 52px; }
+  }
+</style>
