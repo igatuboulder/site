@@ -51,7 +51,7 @@ const secoes = agruparFotos(FOTOS);
   .setor { color: var(--verde); margin: 0 0 12px; }
   .galeria { list-style: none; margin: 0; padding: 0; columns: 3 240px; column-gap: 12px; }
   .galeria li { break-inside: avoid; margin: 0 0 12px; }
-  .galeria-img { width: 100%; height: auto; border: 2px solid var(--verde); }
+  .galeria :global(.galeria-img) { width: 100%; height: auto; border: 2px solid var(--verde); }
   .insta { display: inline-flex; align-items: center; gap: 14px; font-size: 18px; color: var(--verde); text-decoration: none; }
   .insta strong { color: var(--laranja); }
   .insta:hover strong { text-decoration: underline; }

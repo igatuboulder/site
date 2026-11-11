@@ -1,20 +1,21 @@
 ---
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
-const dias = [
-  { dia: 'Qui', data: '07.01' },
-  { dia: 'Sex', data: '08.01' },
-  { dia: 'Sáb', data: '09.01' },
-];
+import { DIAS } from '../data/programacao';
 ---
 <Base titulo="Programação" descricao="Programação do 14º Festival IgatuBoulder.">
   <Cabecalho rotulo="Programação" titulo="Três dias em Igatu">
-    <p class="intro">A programação completa sai em breve. Acompanhe pelo Instagram.</p>
+    <p class="intro">Escalada, ações do IgatuBoulder Social, cultura e festa. Horários e novidades saem no Instagram.</p>
   </Cabecalho>
   <section class="secao papel">
     <div class="conteudo dias">
-      {dias.map((d) => (
-        <article class="dia revela"><p class="display nome">{d.dia}</p><p class="data">{d.data}.2027</p><p class="breve">Em breve</p></article>
+      {DIAS.map((d) => (
+        <article class="dia revela">
+          <h2 class="display nome">{d.dia}<span class="sr-only">, {d.data}.2027</span></h2>
+          <p class="data" aria-hidden="true">{d.data}.2027</p>
+          <p class="rotulo titulo">{d.titulo}</p>
+          <ul class="ativ">{d.atividades.map((a) => <li>{a}</li>)}</ul>
+        </article>
       ))}
     </div>
   </section>
@@ -25,6 +26,8 @@ const dias = [
   .dia { border: 2px solid var(--verde); padding: 24px; min-height: 240px; display: flex; flex-direction: column; }
   .nome { font-size: 96px; color: var(--verde); text-transform: uppercase; margin: 0; }
   .data { font-weight: 600; letter-spacing: .1em; margin: 8px 0 0; }
-  .breve { margin-top: auto; font-size: 13px; letter-spacing: .14em; text-transform: uppercase; opacity: .7; }
+  .titulo { margin: 20px 0 8px; color: var(--laranja); }
+  .ativ { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--verde); }
+  .ativ li { padding: 8px 0; border-bottom: 1px solid var(--grade); font-size: 15px; line-height: 1.35; }
   @media (max-width: 760px) { .dias { grid-template-columns: 1fr; } .dia { min-height: 0; } }
 </style>

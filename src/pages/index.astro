@@ -75,7 +75,7 @@ const destaques = [
   .data span { font-size: 14px; font-weight: 600; letter-spacing: .06em; }
   .ticket-wrap { max-width: 900px; margin: 32px auto 0; }
   .faixa { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; border-top: 2px solid var(--verde); border-bottom: 2px solid var(--verde); }
-  .faixa-img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+  .faixa :global(.faixa-img) { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
   .com-id { position: relative; overflow: hidden; padding-block: clamp(96px, 14vw, 180px); }
   .com-id .conteudo { position: relative; }
   .rocha { position: absolute; right: -4%; top: 50%; width: min(78vw, 1000px); height: auto; transform: translateY(-50%); opacity: .14; pointer-events: none; max-width: none; }

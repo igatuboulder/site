@@ -1,10 +1,10 @@
-// Dados oficiais da 14ª edição (contratante, 05/11/2026)
+// Dados oficiais da 14ª edição (datas confirmadas pela proposta 2027, 11/11/2026)
 export const EVENTO = {
   nome: 'Festival IgatuBoulder',
   edicao: 14,
   ano: 2027,
-  datas: '07 a 09 de janeiro de 2027',
-  dias: 'qui · sex · sáb',
+  datas: '08 a 10 de janeiro de 2027',
+  dias: 'sex · sáb · dom',
   local: 'Igatu · Chapada Diamantina · BA',
   email: 'boulderigatu@gmail.com',
   instagram: 'igatuboulder2027',
