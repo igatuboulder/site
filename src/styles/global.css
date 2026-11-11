@@ -38,3 +38,9 @@ a { color: inherit; }
 .link { font-weight: 600; color: var(--laranja); }
 .revisar { background: rgba(196, 87, 46, .12); outline: 1px dashed var(--laranja); }
 @media (max-width: 760px) { .duas { grid-template-columns: 1fr; } }
+
+/* audiodescrição das fotos: sempre lida pelo leitor de tela, visível com o botão "Audiodescrição" */
+.fig-ad { margin: 0; }
+.fig-ad .ad { display: none; }
+[data-ad='on'] .fig-ad .ad { display: block; margin-top: 8px; padding: 10px 12px; background: var(--papel); color: var(--tinta); border-left: 3px solid var(--verde); font-size: 14px; line-height: 1.45; }
+.ad-rotulo { display: block; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--verde); margin-bottom: 4px; }

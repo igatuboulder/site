@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { agruparFotos, type Foto } from '../src/lib/fotos';
 
-const f = (arquivo: string, secao: Foto['secao'], setor?: string): Foto => ({ arquivo, secao, setor, alt: arquivo });
+const f = (arquivo: string, secao: Foto['secao'], setor?: string): Foto => ({ arquivo, secao, setor, alt: arquivo, descricao: arquivo });
 
 describe('agruparFotos', () => {
   it('separa as seções na ordem: Social, Escalada, Festival', () => {

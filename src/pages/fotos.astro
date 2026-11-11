@@ -1,13 +1,11 @@
 ---
-import { Image } from 'astro:assets';
+import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import IconeInstagram from '../components/IconeInstagram.astro';
 import { EVENTO } from '../config/evento';
 import { FOTOS } from '../data/fotos';
 import { agruparFotos, type Secao } from '../lib/fotos';
-const arquivos = import.meta.glob<{ default: ImageMetadata }>('../assets/fotos/*.jpg', { eager: true });
-const img = (nome: string) => arquivos[`../assets/fotos/${nome}.jpg`].default;
 const TITULOS: Record<Secao, string> = { social: 'IgatuBoulder Social', escalada: 'Escalada', festival: 'O festival' };
 const secoes = agruparFotos(FOTOS);
 ---
@@ -27,9 +25,7 @@ const secoes = agruparFotos(FOTOS);
             <ul class="galeria">
               {g.fotos.map((f) => (
                 <li class="revela">
-                  <a href={img(f.arquivo).src} target="_blank" rel="noopener">
-                    <Image src={img(f.arquivo)} alt={f.alt} widths={[400, 800]} sizes="(max-width: 760px) 50vw, 33vw" loading="lazy" />
-                  </a>
+                  <FotoAD class="galeria-img" arquivo={f.arquivo} ampliar widths={[400, 800]} sizes="(max-width: 760px) 50vw, 33vw" loading="lazy" />
                 </li>
               ))}
             </ul>
@@ -55,7 +51,7 @@ const secoes = agruparFotos(FOTOS);
   .setor { color: var(--verde); margin: 0 0 12px; }
   .galeria { list-style: none; margin: 0; padding: 0; columns: 3 240px; column-gap: 12px; }
   .galeria li { break-inside: avoid; margin: 0 0 12px; }
-  .galeria img { width: 100%; height: auto; border: 2px solid var(--verde); }
+  .galeria-img { width: 100%; height: auto; border: 2px solid var(--verde); }
   .insta { display: inline-flex; align-items: center; gap: 14px; font-size: 18px; color: var(--verde); text-decoration: none; }
   .insta strong { color: var(--laranja); }
   .insta:hover strong { text-decoration: underline; }

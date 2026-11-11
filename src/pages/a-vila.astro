@@ -1,9 +1,7 @@
 ---
-import { Image } from 'astro:assets';
+import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
-import fVila from '../assets/fotos/IMG_1092.jpg';
-import fGente from '../assets/fotos/IMG_1322.jpg';
 const marcos = [
   { ano: 'Séc. XIX', t: 'O garimpo', d: 'A descoberta de diamantes na Serra do Sincorá atrai garimpeiros para a região. Nasce o povoado de Xique-Xique, hoje Xique-Xique do Igatu.' },
   { ano: 'Auge', t: 'Cidade de pedra', d: 'Sem madeira por perto, as casas, muros e caminhos são feitos de pedra empilhada. A vila cresce com o diamante e chega a ter milhares de moradores.' },
@@ -21,7 +19,7 @@ const marcos = [
         <p>Ela nasceu com o garimpo de diamantes no século XIX. As casas, os muros e os caminhos foram erguidos com as pedras da própria serra, e muitas dessas construções estão de pé até hoje, inteiras ou em ruínas. Por isso a vila ganhou apelidos como Cidade de Pedra e Machu Picchu baiana.</p>
         <p>É nessa paisagem, entre ruínas e blocos de quartzito, que acontece o IgatuBoulder.</p>
       </div>
-      <Image class="foto revela" src={fVila} alt="Fachada colonial azul em Igatu com a bandeira do IgatuBoulder" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+      <FotoAD class="foto revela" arquivo="IMG_1092" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
     </div>
   </section>
   <section class="secao grade">
@@ -35,7 +33,7 @@ const marcos = [
   </section>
   <section class="secao papel">
     <div class="conteudo duas">
-      <Image class="foto revela" src={fGente} alt="Moradores e escaladores reunidos no festival" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+      <FotoAD class="foto revela" arquivo="IMG_1322" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
       <div class="texto revela">
         <p class="rotulo">Preservar</p>
         <h2 class="display h2">A vila é a casa de quem mora aqui</h2>

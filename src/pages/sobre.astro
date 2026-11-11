@@ -1,10 +1,8 @@
 ---
-import { Image } from 'astro:assets';
+import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import { EVENTO } from '../config/evento';
-import fBloco from '../assets/fotos/IMG_6444.jpg';
-import fSocial from '../assets/fotos/IMG_1105.jpg';
 const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 'Besouro', 'Cemitério', 'Lagartos', 'Laranjeiras', 'Cruzeiro', 'Califórnia', 'Coisa Boa', 'Degredo'];
 ---
 <Base titulo="Sobre" descricao="O que é o Festival IgatuBoulder e o IgatuBoulder Social.">
@@ -16,7 +14,7 @@ const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 
         <p>São três dias de escalada nos setores ao redor da vila, encontros, festa e convivência com quem vive ali. O festival acontece em janeiro e a {EVENTO.edicao}ª edição será de {EVENTO.datas}.</p>
         <p>O apelido IgatuLands é uma homenagem a Rocklands, na África do Sul, um dos destinos de boulder mais famosos do mundo.</p>
       </div>
-      <Image class="foto revela" src={fBloco} alt="Escaladores no pé de um bloco em Igatu" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+      <FotoAD class="foto revela" arquivo="IMG_6444" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
     </div>
   </section>
   <section class="secao grade">
@@ -28,7 +26,7 @@ const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 
   </section>
   <section class="secao papel">
     <div class="conteudo duas">
-      <Image class="foto revela" src={fSocial} alt="Atividade do IgatuBoulder Social com a comunidade" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+      <FotoAD class="foto revela" arquivo="IMG_1105" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
       <div class="texto revela">
         <p class="rotulo">Saúde na vila</p>
         <h2 class="display h2">IgatuBoulder Social</h2>
