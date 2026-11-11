@@ -2,32 +2,53 @@
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 const passos = [
-  { t: 'Salvador → Andaraí', d: 'Cerca de 400 km pela BR-242 e BA-142. De ônibus, há linhas de Salvador para Andaraí.' },
-  { t: 'Lençóis → Andaraí', d: 'Cerca de 100 km. Quem chega de avião pode usar o aeroporto de Lençóis.' },
-  { t: 'Andaraí → Igatu', d: 'São 14 km de estrada de pedra até a vila. Dá para ir de carro com cuidado, de mototáxi ou combinar transporte no centro de Andaraí.' },
+  { de: 'Salvador', para: 'Andaraí', km: '~400 km', d: 'Pela BR-242 e BA-142. De ônibus, há linhas de Salvador para Andaraí.' },
+  { de: 'Lençóis', para: 'Andaraí', km: '~100 km', d: 'Quem chega de avião pode usar o aeroporto de Lençóis.' },
+  { de: 'Andaraí', para: 'Igatu', km: '14 km', d: 'Estrada de pedra até a vila. Dá para ir de carro com cuidado, de mototáxi ou combinar transporte no centro de Andaraí.' },
 ];
+const MAPA = 'https://www.google.com/maps?q=Igatu,+Andara%C3%AD+-+BA&z=12&output=embed';
 ---
 <Base titulo="Como chegar" descricao="Como chegar em Igatu, Andaraí, Chapada Diamantina.">
   <Cabecalho rotulo="Como chegar" titulo="Até Igatu" />
   <section class="secao papel">
+    <ol class="passos conteudo">
+      {passos.map((p, i) => (
+        <li class="revela">
+          <span class="n">{String(i + 1).padStart(2, '0')}</span>
+          <h2 class="display rota"><span>{p.de}</span> <span class="ate"><span class="seta" aria-label="até">→</span> {p.para}</span></h2>
+          <p class="display km">{p.km}</p>
+          <p class="d">{p.d}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+  <section class="secao grade">
     <div class="conteudo duas">
-      <ol class="passos revela">
-        {passos.map((p, i) => <li><span class="display n">{i + 1}</span><div><h2 class="rotulo">{p.t}</h2><p>{p.d}</p></div></li>)}
-      </ol>
       <div class="texto revela">
         <p class="rotulo">Onde ficar</p>
         <p>A vila tem pousadas, casas de moradores e camping. Reserve cedo: em janeiro a vila enche.</p>
         <p class="rotulo">Leve</p>
-        <p>Sapatilha, crash pad se tiver, lanterna, protetor solar, garrafa d'água e dinheiro em espécie.</p>
-        <p><a class="link" href="https://www.google.com/maps/search/?api=1&query=Igatu+Andara%C3%AD+BA" target="_blank" rel="noopener">Abrir Igatu no mapa →</a></p>
+        <p>Sapatilha, crash pad se tiver, lanterna, protetor solar e garrafa d'água.</p>
+      </div>
+      <div class="mapa revela">
+        <iframe title="Mapa de Igatu, Andaraí, Bahia" src={MAPA} loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       </div>
     </div>
   </section>
 </Base>
 <style>
-  .passos { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--verde); }
-  .passos li { display: grid; grid-template-columns: 56px 1fr; gap: 16px; padding: 20px 0; border-bottom: 1px solid var(--verde); }
-  .n { font-size: 64px; color: var(--laranja); }
-  .passos h2 { margin: 6px 0 6px; color: var(--verde); }
-  .passos p { margin: 0; }
+  .passos { list-style: none; padding: 0; border-top: 2px solid var(--verde); }
+  .passos li { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; grid-template-areas: 'n rota km' 'n d d'; column-gap: 20px; row-gap: 6px; align-items: baseline; padding: 28px 0; border-bottom: 2px solid var(--verde); }
+  .n { grid-area: n; font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--laranja); }
+  .rota { grid-area: rota; margin: 0; font-size: clamp(40px, 7vw, 88px); color: var(--verde); text-transform: uppercase; }
+  .seta { color: var(--laranja); font-stretch: 100%; }
+  .ate { white-space: nowrap; }
+  .km { grid-area: km; margin: 0; font-size: clamp(28px, 4vw, 48px); color: var(--laranja); white-space: nowrap; }
+  .d { grid-area: d; margin: 0; max-width: 60ch; font-size: 16px; }
+  .mapa { border: 2px solid var(--verde); background: var(--papel); aspect-ratio: 4 / 3; max-width: 100%; }
+  .mapa iframe { display: block; width: 100%; height: 100%; border: 0; }
+  @media (max-width: 760px) {
+    .passos li { grid-template-columns: 32px minmax(0, 1fr); grid-template-areas: 'n rota' 'n km' 'n d'; }
+    .mapa { aspect-ratio: 1; }
+  }
 </style>

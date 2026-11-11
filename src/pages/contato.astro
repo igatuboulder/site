@@ -14,25 +14,24 @@ const canais = [
   <Cabecalho rotulo="Contato" titulo="Fala com a gente" />
   <section class="secao papel">
     <div class="conteudo duas">
-      <ul class="canais revela">
-        {canais.map((c) => <li><span class="rotulo">{c.r}</span><a class="display" href={c.href}>{c.ig && <IconeInstagram tamanho={36} />}{c.wa && <IconeWhatsapp tamanho={36} />}{c.v}</a></li>)}
-      </ul>
-      <div class="texto revela">
-        <p>Dúvidas sobre inscrição, kit, hospedagem ou o IgatuBoulder Social? Escreva para a gente.</p>
+      <div class="revela">
+        <p class="lead">Dúvidas sobre inscrição, kit, hospedagem ou o IgatuBoulder Social? Escreva para a gente.</p>
+        <ul class="canais">
+          {canais.map((c) => <li><span class="rotulo">{c.r}</span><a class="display" href={c.href}>{c.ig && <IconeInstagram tamanho={36} />}{c.wa && <IconeWhatsapp tamanho={36} />}{c.v}</a></li>)}
+        </ul>
       </div>
-    </div>
-  </section>
-  <section class="secao grade">
-    <div class="conteudo texto revela">
-      <p class="rotulo">Seja parceiro</p>
-      <h2 class="display h2">Faça parte do IgatuBoulder 2027</h2>
-      <p>O IgatuBoulder é feito de pessoas. De quem escala, de quem visita, de quem mora em Igatu e de quem trabalha para o festival acontecer.</p>
-      <p>Em 2027 queremos ampliar essa rede: empresas, profissionais, instituições, marcas e voluntários para fortalecer o esporte, movimentar a economia local e ampliar as ações gratuitas do IgatuBoulder Social.</p>
-      <p>Quer patrocinar, apoiar ou ser voluntário? Chame a gente no Instagram ou no WhatsApp e peça a nossa proposta de parceria.</p>
+      <div class="texto revela">
+        <p class="rotulo">Seja parceiro</p>
+        <h2 class="display h2">Faça parte do IgatuBoulder 2027</h2>
+        <p>O IgatuBoulder é feito de pessoas. De quem escala, de quem visita, de quem mora em Igatu e de quem trabalha para o festival acontecer.</p>
+        <p>Em 2027 queremos ampliar essa rede: empresas, profissionais, instituições, marcas e voluntários para fortalecer o esporte, movimentar a economia local e ampliar as ações gratuitas do IgatuBoulder Social.</p>
+        <p>Quer patrocinar, apoiar ou ser voluntário? Chame a gente no Instagram ou no WhatsApp e peça a nossa proposta de parceria.</p>
+      </div>
     </div>
   </section>
 </Base>
 <style>
+  .lead { font-size: 18px; margin: 0 0 20px; max-width: 40ch; }
   .canais { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--verde); }
   .canais li { display: flex; flex-direction: column; gap: 4px; padding: 18px 0; border-bottom: 1px solid var(--verde); }
   .canais a { display: inline-flex; align-items: center; gap: 12px; font-size: clamp(28px, 4vw, 44px); color: var(--verde); text-decoration: none; text-transform: uppercase; overflow-wrap: anywhere; }
