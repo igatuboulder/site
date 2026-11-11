@@ -12,11 +12,18 @@ const acoes = [
   { t: 'Escalada com as crianças', d: 'Uma manhã de escalada com os pequenos guerreiros de pedra de Igatu, para estimular o esporte, a convivência e a qualidade de vida.' },
   { t: 'Cine de montanha', d: 'Sessões com filmes e curtas brasileiros de escalada, para valorizar a produção nacional e mostrar à comunidade o universo da escalada pelo cinema.' },
 ];
-const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 'Besouro', 'Cemitério', 'Lagartos', 'Laranjeiras', 'Cruzeiro', 'Califórnia', 'Coisa Boa', 'Degredo'];
 ---
 <Base titulo="Sobre" descricao="O que é o Festival IgatuBoulder e o IgatuBoulder Social.">
   <Cabecalho rotulo="Sobre" titulo="O festival" />
   <section class="secao papel">
+    <div class="conteudo texto revela">
+      <p class="rotulo">Retorno à comunidade</p>
+      <h2 class="display h2">Feito com a vila</h2>
+      <p>O festival é feito pela equipe IgatuLands, com jovens de Igatu. A organização, a logística, a limpeza e a manutenção das áreas de escalada e de convivência usam mão de obra local.</p>
+      <p>Durante os três dias, quem vem escalar se hospeda, come, compra artesanato e contrata guias na vila. E o festival inspira os moradores, principalmente crianças e adolescentes, a praticar esportes de aventura.</p>
+    </div>
+  </section>
+  <section class="secao grade">
     <div class="conteudo duas">
       <div class="texto revela">
         <p class="lead">O IgatuBoulder é um festival de escalada em blocos em Igatu, vila histórica do garimpo no município de Andaraí, no coração da Chapada Diamantina.</p>
@@ -26,7 +33,7 @@ const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 
       <FotoAD class="foto revela" arquivo="IMG_6444" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
     </div>
   </section>
-  <section class="secao grade">
+  <section class="secao papel">
     <div class="conteudo">
       <p class="rotulo">14ª edição</p>
       <h2 class="display h2">Duas frentes, um propósito</h2>
@@ -35,7 +42,7 @@ const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 
       </div>
     </div>
   </section>
-  <section class="secao papel">
+  <section class="secao grade">
     <div class="conteudo duas">
       <FotoAD class="foto revela" arquivo="IMG_1105" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
       <div class="texto revela">
@@ -47,28 +54,13 @@ const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 
       </div>
     </div>
   </section>
-  <section class="secao grade">
+  <section class="secao papel">
     <div class="conteudo">
       <p class="rotulo">Responsabilidade ambiental</p>
       <h2 class="display h2">Cuidar da pedra e da vila</h2>
       <div class="acoes">
         {acoes.map((a) => <article class="acao revela"><h3 class="display">{a.t}</h3><p>{a.d}</p></article>)}
       </div>
-    </div>
-  </section>
-  <section class="secao papel">
-    <div class="conteudo texto revela">
-      <p class="rotulo">Retorno à comunidade</p>
-      <h2 class="display h2">Feito com a vila</h2>
-      <p>O festival é feito pela equipe IgatuLands, com jovens de Igatu. A organização, a logística, a limpeza e a manutenção das áreas de escalada e de convivência usam mão de obra local.</p>
-      <p>Durante os três dias, quem vem escalar se hospeda, come, compra artesanato e contrata guias na vila. E o festival inspira os moradores, principalmente crianças e adolescentes, a praticar esportes de aventura.</p>
-    </div>
-  </section>
-  <section class="secao grade">
-    <div class="conteudo">
-      <p class="rotulo">Setores</p>
-      <h2 class="display h2">Onde a gente escala</h2>
-      <ul class="setores revela">{setores.map((s, i) => <li><span>{String(i + 1).padStart(2, '0')}</span>{s}</li>)}</ul>
     </div>
   </section>
 </Base>
@@ -84,7 +76,4 @@ const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 
   .acao h3 { font-size: 32px; }
   .frente p:last-child, .acao p { margin: 0; }
   @media (max-width: 760px) { .frentes, .acoes { grid-template-columns: 1fr; } }
-  .setores { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); border-top: 2px solid var(--verde); background: repeating-linear-gradient(to bottom, transparent 0 59px, var(--verde) 59px 60px); }
-  .setores li { display: flex; gap: 14px; align-items: baseline; height: 60px; padding-top: 16px; line-height: 1; font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 28px; color: var(--verde); text-transform: uppercase; }
-  .setores span { font-family: var(--mono); font-size: 12px; font-weight: 600; }
 </style>

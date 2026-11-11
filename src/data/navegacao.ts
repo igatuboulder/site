@@ -4,6 +4,7 @@ export const PAGINAS = [
   { href: '/historia', rotulo: 'História' },
   { href: '/programacao', rotulo: 'Programação' },
   { href: '/fotos', rotulo: 'Fotos' },
+  { href: '/setores', rotulo: 'Setores' },
   { href: '/como-chegar', rotulo: 'Como chegar' },
   { href: '/contato', rotulo: 'Contato' },
 ] as const;
