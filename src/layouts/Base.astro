@@ -3,12 +3,13 @@ import '../styles/global.css';
 import IconeInstagram from '../components/IconeInstagram.astro';
 import { EVENTO } from '../config/evento';
 import { PAGINAS } from '../data/navegacao';
+import { REALIZACAO, PATROCINIO, APOIOS, type Parceiro } from '../data/parceiros';
 interface Props { titulo?: string; descricao?: string }
 const { titulo, descricao } = Astro.props;
 const tituloFinal = titulo ? `${titulo} · IgatuBoulder ${EVENTO.ano}` : `${EVENTO.nome} ${EVENTO.ano} · ${EVENTO.edicao}ª edição`;
 const desc = descricao ?? `${EVENTO.edicao}º Festival IgatuBoulder, ${EVENTO.datas}, em Igatu, Chapada Diamantina.`;
+const grupos: [string, Parceiro[], string?][] = [['Realização', REALIZACAO], ['Patrocínio', PATROCINIO], ['Apoio', APOIOS, 'apoio']];
 const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
-const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'], ['hostel-igatu', 'Hostel Igatu'], ['woodtropia', 'Woodtropia'], ['genesis', 'Gênesis']];
 ---
 <!doctype html>
 <html lang="pt-BR">
@@ -22,9 +23,16 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
   <meta property="og:description" content={desc} />
   <link rel="icon" type="image/png" href="/favicon.png" />
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <script is:inline>try { if (localStorage.getItem('ib-ad') === '1') document.documentElement.dataset.ad = 'on'; } catch (e) {}</script>
 </head>
 <body>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+  <div class="acess" role="region" aria-label="Acessibilidade">
+    <span class="rotulo">Acessibilidade</span>
+    <button type="button" id="btn-ad" aria-pressed="false" title="Mostra na tela a descrição de cada foto">Audiodescrição</button>
+    <button type="button" id="btn-ouvir" aria-pressed="false" hidden title="Lê em voz alta o texto e as descrições das fotos">Ouvir a página</button>
+    <button type="button" id="btn-libras" title="Abre o tradutor de Libras (VLibras)">Libras</button>
+  </div>
   <nav class="nav" aria-label="Principal">
     <a class="marca" href="/" aria-label="Início"><img src="/img/id-ig-simbolo.png" alt="" width="693" height="369" /><span class="marca-txt"><span>IGATU</span><span>BOULDER</span></span></a>
     <details class="menu">
@@ -43,9 +51,11 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
 
   <footer class="rodape grade">
     <div class="parceiros">
-      <div class="grupo"><p class="rotulo">Realização</p><div class="logos"><img src="/img/logos/igatulands.png" alt="IgatuLands" loading="lazy" /><img src="/img/logos/igatuboulder-social.png" alt="IgatuBoulder Social" loading="lazy" /></div></div>
-      <div class="grupo"><p class="rotulo">Patrocínio</p><div class="logos"><img src="/img/logos/km10.png" alt="Km10 Sport" loading="lazy" /></div></div>
-      <div class="grupo apoio"><p class="rotulo">Apoio</p><div class="logos">{apoios.map(([f, n]) => <img src={`/img/logos/${f}.png`} alt={n} loading="lazy" />)}<span class="fullgrip">FULLGRIP</span></div></div>
+      {grupos.map(([rotulo, lista, cls]) => (
+        <div class:list={['grupo', cls]}><p class="rotulo">{rotulo}</p><div class="logos">
+          {lista.map((p) => p.arquivo ? <img src={`/img/logos/${p.arquivo}.png`} alt={p.nome} loading="lazy" /> : <span class="nome-parceiro">{p.nome.toUpperCase()}</span>)}
+        </div></div>
+      ))}
     </div>
     <div class="base">
       <img class="logo-ib" src="/img/logos/igatuboulder.png" alt="IgatuBoulder Festival" width="660" height="282" loading="lazy" />
@@ -54,6 +64,72 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
       <p>{EVENTO.datas}<br />{EVENTO.local}</p>
     </div>
   </footer>
+
+  <!-- VLibras: tradutor de Libras do Governo Federal (vlibras.gov.br) -->
+  <div vw class="enabled">
+    <div vw-access-button class="active"></div>
+    <div vw-plugin-wrapper><div class="vw-plugin-top-wrapper"></div></div>
+  </div>
+  <script is:inline src="https://vlibras.gov.br/app/vlibras-plugin.js"></script>
+  <script is:inline>if (window.VLibras) new window.VLibras.Widget('https://vlibras.gov.br/app');</script>
+
+  <script>
+    import { dividirEmTrechos } from '../lib/leitura';
+    // Audiodescrição: mostra/esconde as descrições das fotos (o leitor de tela já lê sempre).
+    const btnAd = document.getElementById('btn-ad')!;
+    const raiz = document.documentElement;
+    const marcarAd = () => btnAd.setAttribute('aria-pressed', String(raiz.dataset.ad === 'on'));
+    marcarAd();
+    btnAd.addEventListener('click', () => {
+      const ligar = raiz.dataset.ad !== 'on';
+      if (ligar) raiz.dataset.ad = 'on'; else delete raiz.dataset.ad;
+      try { localStorage.setItem('ib-ad', ligar ? '1' : '0'); } catch {}
+      marcarAd();
+    });
+
+    // Ouvir a página: lê o conteúdo principal em voz alta, incluindo as audiodescrições.
+    const btnOuvir = document.getElementById('btn-ouvir')!;
+    if ('speechSynthesis' in window) {
+      btnOuvir.hidden = false;
+      const fala = window.speechSynthesis;
+      const parar = () => { fala.cancel(); btnOuvir.setAttribute('aria-pressed', 'false'); btnOuvir.textContent = 'Ouvir a página'; };
+      const textoDaPagina = () => {
+        const partes: string[] = [];
+        const andar = (el: Element) => {
+          if (el.matches('script, style, [aria-hidden="true"], .ad-rotulo')) return;
+          if (el.matches('h1, h2, h3, p, li, figcaption, dt, dd, label, legend, button, summary') && !el.querySelector('p, li, h2, h3, figcaption')) {
+            const t = (el.textContent ?? '').replace(/\s+/g, ' ').trim();
+            if (t) partes.push(/[.!?:]$/.test(t) ? t : t + '.');
+            return;
+          }
+          for (const filho of Array.from(el.children)) andar(filho);
+        };
+        andar(document.getElementById('conteudo')!);
+        return partes.join(' ');
+      };
+      btnOuvir.addEventListener('click', () => {
+        if (btnOuvir.getAttribute('aria-pressed') === 'true') return parar();
+        fala.cancel();
+        const voz = fala.getVoices().find((v) => v.lang.toLowerCase().startsWith('pt-br')) ?? fala.getVoices().find((v) => v.lang.toLowerCase().startsWith('pt'));
+        const trechos = dividirEmTrechos(textoDaPagina());
+        trechos.forEach((t, i) => {
+          const u = new SpeechSynthesisUtterance(t);
+          u.lang = 'pt-BR';
+          if (voz) u.voice = voz;
+          if (i === trechos.length - 1) u.onend = parar;
+          fala.speak(u);
+        });
+        btnOuvir.setAttribute('aria-pressed', 'true');
+        btnOuvir.textContent = 'Parar leitura';
+      });
+      window.addEventListener('pagehide', () => fala.cancel());
+    }
+
+    // Libras: abre o VLibras pelo botão da barra.
+    document.getElementById('btn-libras')!.addEventListener('click', () => {
+      (document.querySelector('[vw-access-button]') as HTMLElement | null)?.click();
+    });
+  </script>
 
   <script>
     import { gsap } from 'gsap';
@@ -94,7 +170,11 @@ const apoios = [['larikinha', 'Larikinha'], ['andarai', 'Prefeitura de Andaraí'
   .parceiros { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr .8fr 2fr; gap: 24px; padding-bottom: 32px; border-bottom: 1px solid var(--verde); }
   .grupo .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
   .grupo img { height: 46px; width: auto; }
-  .fullgrip { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; color: var(--verde); }
+  .acess { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px var(--margem); background: var(--verde); color: var(--papel); }
+  .acess .rotulo { margin-right: auto; }
+  .acess button { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--papel); background: none; border: 1px solid var(--papel); padding: 6px 10px; cursor: pointer; }
+  .acess button:hover, .acess button[aria-pressed='true'] { background: var(--papel); color: var(--verde); }
+  .nome-parceiro { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; color: var(--verde); }
   .base { max-width: 1100px; margin: 0 auto; padding-top: 28px; display: grid; grid-template-columns: 180px 110px 1fr 1fr; gap: 24px; align-items: center; font-size: 14px; }
   .base p { margin: 0; }
   .ig { display: inline-flex; align-items: center; gap: 8px; }

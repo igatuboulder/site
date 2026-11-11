@@ -1,5 +1,6 @@
 export type Secao = 'social' | 'escalada' | 'festival';
-export interface Foto { arquivo: string; secao: Secao; setor?: string; alt: string }
+// alt: texto alternativo curto. descricao: audiodescrição completa, lida pelo leitor de tela e mostrada com o botão "Audiodescrição".
+export interface Foto { arquivo: string; secao: Secao; setor?: string; alt: string; descricao: string }
 export interface Grupo { setor: string | null; fotos: Foto[] }
 export interface SecaoFotos { secao: Secao; grupos: Grupo[] }
 

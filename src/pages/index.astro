@@ -1,13 +1,9 @@
 ---
-import { Image } from 'astro:assets';
+import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import NomeSvg from '../components/NomeSvg.astro';
 import Ticket from '../components/Ticket.astro';
 import { EVENTO } from '../config/evento';
-import f1 from '../assets/fotos/IMG_6446.jpg';
-import f2 from '../assets/fotos/IMG_6406.jpg';
-import f3 from '../assets/fotos/IMG_1322.jpg';
-import f4 from '../assets/fotos/IMG_6462.jpg';
 const destaques = [
   { href: '/sobre', rotulo: 'O festival', titulo: 'Três dias de boulder em Igatu' },
   { href: '/historia', rotulo: 'História', titulo: 'Da primeira edição à 14ª' },
@@ -36,7 +32,7 @@ const destaques = [
   </section>
 
   <section class="faixa" aria-label="Fotos do festival">
-    {[f1, f2, f3, f4].map((f) => <Image src={f} alt="" widths={[400, 800]} sizes="(max-width: 760px) 50vw, 25vw" />)}
+    {['IMG_6446', 'IMG_6406', 'IMG_1322', 'IMG_6462'].map((a) => <FotoAD class="faixa-img" arquivo={a} widths={[400, 800]} sizes="(max-width: 760px) 50vw, 25vw" />)}
   </section>
 
   <section class="secao papel com-id">
@@ -79,7 +75,7 @@ const destaques = [
   .data span { font-size: 14px; font-weight: 600; letter-spacing: .06em; }
   .ticket-wrap { max-width: 900px; margin: 32px auto 0; }
   .faixa { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); overflow: hidden; border-top: 2px solid var(--verde); border-bottom: 2px solid var(--verde); }
-  .faixa img { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
+  .faixa :global(.faixa-img) { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
   .com-id { position: relative; overflow: hidden; padding-block: clamp(96px, 14vw, 180px); }
   .com-id .conteudo { position: relative; }
   .rocha { position: absolute; right: -4%; top: 50%; width: min(78vw, 1000px); height: auto; transform: translateY(-50%); opacity: .14; pointer-events: none; max-width: none; }

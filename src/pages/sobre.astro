@@ -1,10 +1,17 @@
 ---
-import { Image } from 'astro:assets';
+import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import { EVENTO } from '../config/evento';
-import fBloco from '../assets/fotos/IMG_6444.jpg';
-import fSocial from '../assets/fotos/IMG_1105.jpg';
+const frentes = [
+  { nome: 'IgatuBoulder', sub: 'Festival', texto: 'Escalada, turismo, cultura, natureza, esporte e economia local. É o que traz visitantes, movimenta a vila e cria experiências através do esporte e da cultura.' },
+  { nome: 'IgatuBoulder Social', sub: 'Braço social', texto: 'Saúde, educação, esporte, cultura, meio ambiente e voluntariado. Ações gratuitas feitas com profissionais voluntários, parceiros e apoiadores, para quem mora em Igatu.' },
+];
+const acoes = [
+  { t: 'Mutirão de limpeza', d: 'Por trás de toda área de escalada existe um cuidado constante com a rocha e com o ambiente. O mutirão junta escaladores e crianças da vila para limpar e conservar os setores.' },
+  { t: 'Escalada com as crianças', d: 'Uma manhã de escalada com os pequenos guerreiros de pedra de Igatu, para estimular o esporte, a convivência e a qualidade de vida.' },
+  { t: 'Cine de montanha', d: 'Sessões com filmes e curtas brasileiros de escalada, para valorizar a produção nacional e mostrar à comunidade o universo da escalada pelo cinema.' },
+];
 const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 'Besouro', 'Cemitério', 'Lagartos', 'Laranjeiras', 'Cruzeiro', 'Califórnia', 'Coisa Boa', 'Degredo'];
 ---
 <Base titulo="Sobre" descricao="O que é o Festival IgatuBoulder e o IgatuBoulder Social.">
@@ -16,7 +23,45 @@ const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 
         <p>São três dias de escalada nos setores ao redor da vila, encontros, festa e convivência com quem vive ali. O festival acontece em janeiro e a {EVENTO.edicao}ª edição será de {EVENTO.datas}.</p>
         <p>O apelido IgatuLands é uma homenagem a Rocklands, na África do Sul, um dos destinos de boulder mais famosos do mundo.</p>
       </div>
-      <Image class="foto revela" src={fBloco} alt="Escaladores no pé de um bloco em Igatu" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+      <FotoAD class="foto revela" arquivo="IMG_6444" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+    </div>
+  </section>
+  <section class="secao grade">
+    <div class="conteudo">
+      <p class="rotulo">14ª edição</p>
+      <h2 class="display h2">Duas frentes, um propósito</h2>
+      <div class="frentes">
+        {frentes.map((f) => <article class="frente revela"><p class="rotulo">{f.sub}</p><h3 class="display">{f.nome}</h3><p>{f.texto}</p></article>)}
+      </div>
+    </div>
+  </section>
+  <section class="secao papel">
+    <div class="conteudo duas">
+      <FotoAD class="foto revela" arquivo="IMG_1105" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
+      <div class="texto revela">
+        <p class="rotulo">Saúde na vila</p>
+        <h2 class="display h2">IgatuBoulder Social</h2>
+        <p>O IgatuBoulder Social é a razão de o festival existir. Desde 2022, durante o festival, médicos, dentistas e outros voluntários fazem atendimentos para os moradores de Igatu. Em 2023 foram mais de 100 atendimentos.</p>
+        <p>Em 2027, o Social amplia a atuação para saúde, educação, esporte, cultura, meio ambiente e voluntariado, com atendimentos básicos como odontologia, fisioterapia, psicomotricidade e acompanhamento psicossocial.</p>
+        <p>A vila tem cerca de 500 moradores, e boa parte do que o festival movimenta fica na comunidade.</p>
+      </div>
+    </div>
+  </section>
+  <section class="secao grade">
+    <div class="conteudo">
+      <p class="rotulo">Responsabilidade ambiental</p>
+      <h2 class="display h2">Cuidar da pedra e da vila</h2>
+      <div class="acoes">
+        {acoes.map((a) => <article class="acao revela"><h3 class="display">{a.t}</h3><p>{a.d}</p></article>)}
+      </div>
+    </div>
+  </section>
+  <section class="secao papel">
+    <div class="conteudo texto revela">
+      <p class="rotulo">Retorno à comunidade</p>
+      <h2 class="display h2">Feito com a vila</h2>
+      <p>O festival é feito pela equipe IgatuLands, com jovens de Igatu. A organização, a logística, a limpeza e a manutenção das áreas de escalada e de convivência usam mão de obra local.</p>
+      <p>Durante os três dias, quem vem escalar se hospeda, come, compra artesanato e contrata guias na vila. E o festival inspira os moradores, principalmente crianças e adolescentes, a praticar esportes de aventura.</p>
     </div>
   </section>
   <section class="secao grade">
@@ -26,21 +71,19 @@ const setores = ['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 
       <ul class="setores revela">{setores.map((s, i) => <li><span>{String(i + 1).padStart(2, '0')}</span>{s}</li>)}</ul>
     </div>
   </section>
-  <section class="secao papel">
-    <div class="conteudo duas">
-      <Image class="foto revela" src={fSocial} alt="Atividade do IgatuBoulder Social com a comunidade" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
-      <div class="texto revela">
-        <p class="rotulo">Saúde na vila</p>
-        <h2 class="display h2">IgatuBoulder Social</h2>
-        <p>O IgatuBoulder Social é a razão de o festival existir. Desde 2022, durante o festival, médicos, dentistas e outros voluntários fazem atendimentos para os moradores de Igatu. Em 2023 foram mais de 100 atendimentos.</p>
-        <p>A vila tem cerca de 500 moradores, e boa parte do que o festival movimenta fica na comunidade.</p>
-      </div>
-    </div>
-  </section>
 </Base>
 <style>
   .lead { font-size: 22px; line-height: 1.4; }
-  .foto { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); }
+  .duas :global(.foto) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); }
+  .frentes, .acoes { display: grid; gap: 16px; }
+  .frentes { grid-template-columns: repeat(2, 1fr); }
+  .acoes { grid-template-columns: repeat(3, 1fr); }
+  .frente, .acao { background: var(--papel); border: 2px solid var(--verde); padding: 24px; }
+  .frente h3, .acao h3 { color: var(--verde); text-transform: uppercase; margin: 6px 0 12px; }
+  .frente h3 { font-size: clamp(36px, 5vw, 56px); }
+  .acao h3 { font-size: 32px; }
+  .frente p:last-child, .acao p { margin: 0; }
+  @media (max-width: 760px) { .frentes, .acoes { grid-template-columns: 1fr; } }
   .setores { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); border-top: 2px solid var(--verde); background: repeating-linear-gradient(to bottom, transparent 0 59px, var(--verde) 59px 60px); }
   .setores li { display: flex; gap: 14px; align-items: baseline; height: 60px; padding-top: 16px; line-height: 1; font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 28px; color: var(--verde); text-transform: uppercase; }
   .setores span { font-family: var(--mono); font-size: 12px; font-weight: 600; }
