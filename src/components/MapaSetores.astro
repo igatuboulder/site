@@ -116,6 +116,7 @@ const ICONE: Record<string, string> = {
 <script>
   import { gsap } from 'gsap';
   import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { ritmo } from '../lib/ritmo';
   gsap.registerPlugin(ScrollTrigger);
   type Dado = { n: string; nome: string; distancia: string; tempo: string; desnivel: string; boulders: number | null; destaques: { nome: string; grau: string }[] };
   const fig = document.querySelector<HTMLElement>('[data-mapa]');
@@ -188,14 +189,14 @@ const ICONE: Record<string, string> = {
       gsap.set(marcas.map((m) => m.el), { opacity: 0, scale: 0.4, transformOrigin: 'center', transformBox: 'fill-box' });
       const prog = { p: 0 };
       const tween = gsap.to(prog, {
-        p: 1, duration: 7, ease: 'power2.inOut', paused: true,
+        p: 1, duration: 14, ease: ritmo, paused: true,
         onUpdate: () => {
           revela.style.strokeDashoffset = String(len * (1 - prog.p));
           const pt = revela.getPointAtLength(prog.p * len);
           viajante.setAttribute('cx', String(pt.x)); viajante.setAttribute('cy', String(pt.y));
-          for (const m of marcas) if (!m.visto && prog.p >= m.f - 0.005) { m.visto = true; gsap.to(m.el, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.8)' }); }
+          for (const m of marcas) if (!m.visto && prog.p >= m.f - 0.005) { m.visto = true; gsap.to(m.el, { opacity: 1, scale: 1, duration: 0.9, ease: 'power2.out' }); }
         },
-        onComplete: () => { gsap.to(viajante, { opacity: 0, duration: 0.8, ease: 'power1.out' }); },
+        onComplete: () => { gsap.to(viajante, { opacity: 0, duration: 1.2, ease: 'power1.inOut' }); },
       });
       ScrollTrigger.create({ trigger: fig, start: 'top 70%', once: true, onEnter: () => tween.play() });
       return () => { tween.kill(); gsap.set(viajante, { clearProps: 'opacity' }); gsap.set(marcas.map((m) => m.el), { clearProps: 'all' }); revela.style.strokeDashoffset = '0'; };

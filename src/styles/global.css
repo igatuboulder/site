@@ -38,7 +38,8 @@ a { color: inherit; }
 
 /* blocos de página */
 .secao { padding: clamp(56px, 9vw, 112px) var(--margem); }
-.papel { background: var(--papel); }
+/* fundo bege com textura de curvas de nível (scripts/gerar-textura.py) */
+.papel { background: var(--papel) url(/img/curvas-textura.svg) 0 0 / 900px 900px repeat; }
 .conteudo { max-width: 1100px; margin: 0 auto; }
 .duas { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
 .h2 { line-height: .95; font-size: var(--t-secao); color: var(--verde); margin: 8px 0 20px; text-transform: uppercase; }
