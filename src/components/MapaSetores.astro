@@ -1,0 +1,108 @@
+---
+// Mapa ilustrado dos setores: relevo real (curvas de nível a cada 30 m), fora de escala,
+// com uma trilha pontilhada saindo da vila e passando por todos os setores.
+import mapa from '../data/mapa-setores.json';
+import { SETORES, ORDEM_TRILHA } from '../data/setores';
+import { trilha, type Ponto } from '../lib/trilha';
+
+const pos = mapa.setores as Record<string, Ponto>;
+const vila = mapa.vila as Ponto;
+const d = trilha([vila, ...ORDEM_TRILHA.map((n) => pos[n])]);
+const slug = (n: string) => n.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+// Corredor e Denorex estão no mesmo ponto: um marcador só, com os dois números.
+type Marca = { nomes: string[]; nums: string[]; x: number; y: number; lado: 'e' | 'd' };
+const LADO: Record<string, 'e' | 'd'> = { Labirinto: 'e', Verruga: 'e', Corredor: 'e', Cruzeiro: 'e' };
+const marcas: Marca[] = [];
+SETORES.forEach((s, i) => {
+  const [x, y] = pos[s.nome];
+  const igual = marcas.find((m) => m.x === x && m.y === y);
+  const num = String(i + 1).padStart(2, '0');
+  if (igual) { igual.nomes.push(s.nome); igual.nums.push(num); }
+  else marcas.push({ nomes: [s.nome], nums: [num], x, y, lado: LADO[s.nome] ?? 'd' });
+});
+const casas: Ponto[] = [[-22, -6], [-8, -16], [8, -10], [22, -2], [-14, 8], [2, 6], [16, 14], [-2, 20]];
+---
+<figure class="mapa-setores" data-mapa>
+  <div class="rolagem" tabindex="0" aria-label="Mapa dos setores; arraste para os lados para ver tudo">
+  <svg viewBox={`0 0 ${mapa.w} ${mapa.h}`} role="img" aria-labelledby="mapa-tit mapa-desc">
+    <title id="mapa-tit">Mapa ilustrado dos setores de boulder ao redor de Igatu</title>
+    <desc id="mapa-desc">Desenho fora de escala com as curvas de nível da serra. Uma trilha pontilhada sai da vila de Igatu, no centro, e passa por todos os setores: {ORDEM_TRILHA.join(', ')}. Califórnia, Coisa Boa e Degredo ficam mais ao norte, mais afastados da vila.</desc>
+    <defs>
+      <radialGradient id="mapa-fade" cx="50%" cy="52%" r="62%">
+        <stop offset="0.55" stop-color="#fff" />
+        <stop offset="1" stop-color="#000" />
+      </radialGradient>
+      <mask id="mapa-mask-relevo"><rect width="100%" height="100%" fill="url(#mapa-fade)" /></mask>
+      <mask id="mapa-mask-trilha" maskUnits="userSpaceOnUse"><path class="revela-trilha" d={d} fill="none" stroke="#fff" stroke-width="18" stroke-linecap="round" /></mask>
+    </defs>
+    <g class="relevo" mask="url(#mapa-mask-relevo)" fill="none">
+      {mapa.curvas.map((c) => <path d={c.d} class:list={[c.n % 150 === 0 && 'mestra']} />)}
+    </g>
+    <path class="trilha" d={d} mask="url(#mapa-mask-trilha)" />
+    <g class="vila" transform={`translate(${vila[0]} ${vila[1]})`}>
+      {casas.map(([x, y]) => <g transform={`translate(${x} ${y})`}><rect x="-5" y="-3" width="10" height="8" /><path d="M-6.5 -3 L0 -9 L6.5 -3 Z" /></g>)}
+      <text class="vila-nome" x="34" y="34">IGATU</text>
+      <text class="vila-sub" x="35" y="52">a vila</text>
+    </g>
+    {marcas.map((m, i) => (
+      <a class="marca" href={`#setor-${slug(m.nomes[0])}`} style={`--i:${i}`}>
+        <circle cx={m.x} cy={m.y} r="15" />
+        <text class="num" x={m.x} y={m.y + 5}>{m.nums.length > 1 ? m.nums[0].slice(1) + '·' + m.nums[1].slice(1) : m.nums[0]}</text>
+        <text class="rot" x={m.lado === 'd' ? m.x + 24 : m.x - 24} y={m.y + 7} text-anchor={m.lado === 'd' ? 'start' : 'end'}>{m.nomes.join(' · ')}</text>
+      </a>
+    ))}
+    <circle class="viajante" cx={vila[0]} cy={vila[1]} r="8" />
+    <g class="norte" transform={`translate(${mapa.w - 60} 64)`} aria-hidden="true">
+      <path d="M0 -30 L10 8 L0 2 L-10 8 Z" />
+      <text y="30">N</text>
+    </g>
+  </svg>
+  </div>
+  <figcaption>Mapa ilustrativo, fora de escala. Para ir aos setores, combine com alguém da vila ou um guia local.</figcaption>
+</figure>
+
+<script>
+  import { gsap } from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+  import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
+  gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
+  const fig = document.querySelector<HTMLElement>('[data-mapa]');
+  const revela = fig?.querySelector<SVGPathElement>('.revela-trilha');
+  const trilhaPath = fig?.querySelector<SVGPathElement>('.trilha');
+  const rolagem = fig?.querySelector<HTMLElement>('.rolagem');
+  if (rolagem) rolagem.scrollLeft = (rolagem.scrollWidth - rolagem.clientWidth) * 0.45;
+  if (fig && revela && trilhaPath) {
+    gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
+      const len = revela.getTotalLength();
+      gsap.set(revela, { strokeDasharray: len, strokeDashoffset: len });
+      gsap.set(fig.querySelectorAll('.marca'), { opacity: 0, scale: 0.4, transformOrigin: 'center', transformBox: 'fill-box' });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: fig, start: 'top 70%', once: true } });
+      tl.to(revela, { strokeDashoffset: 0, duration: 4, ease: 'none' }, 0)
+        .to(fig.querySelector('.viajante'), { duration: 4, ease: 'none', motionPath: { path: trilhaPath, align: trilhaPath, alignOrigin: [0.5, 0.5] } }, 0)
+        .to(fig.querySelectorAll('.marca'), { opacity: 1, scale: 1, duration: 0.4, ease: 'back.out(2)', stagger: 0.28 }, 0.2);
+    });
+  }
+</script>
+
+<style>
+  .mapa-setores { margin: 0; border: 2px solid var(--verde); background: var(--papel); }
+  .rolagem { overflow-x: auto; overscroll-behavior-x: contain; }
+  @media (max-width: 700px) { svg { min-width: 680px; } }
+  svg { display: block; width: 100%; height: auto; font-family: var(--display); }
+  .relevo path { stroke: var(--verde); stroke-width: 0.8; opacity: 0.35; }
+  .relevo path.mestra { stroke-width: 1.6; opacity: 0.5; }
+  .trilha { fill: none; stroke: var(--laranja); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 0 13; }
+  .vila rect, .vila path { fill: var(--verde); }
+  .vila-nome { font-weight: 900; font-stretch: 70%; font-size: 34px; fill: var(--verde); letter-spacing: .02em; paint-order: stroke; stroke: var(--papel); stroke-width: 6px; }
+  .vila-sub { font-family: var(--mono); font-size: 13px; fill: var(--verde); paint-order: stroke; stroke: var(--papel); stroke-width: 5px; }
+  .marca circle { fill: var(--verde); stroke: var(--papel); stroke-width: 3; transition: fill .2s; }
+  .marca .num { font-family: var(--mono); font-size: 12px; font-weight: 600; fill: var(--papel); text-anchor: middle; }
+  .marca .rot { font-weight: 900; font-stretch: 70%; font-size: 26px; text-transform: uppercase; fill: var(--verde); paint-order: stroke; stroke: var(--papel); stroke-width: 7px; stroke-linejoin: round; }
+  .marca:hover circle, .marca:focus-visible circle { fill: var(--laranja); }
+  .marca:hover .rot, .marca:focus-visible .rot { fill: var(--laranja); }
+  .marca:focus-visible { outline: none; }
+  .viajante { fill: var(--sol); stroke: var(--verde); stroke-width: 3; }
+  .norte path { fill: var(--verde); }
+  .norte text { font-family: var(--mono); font-size: 16px; font-weight: 600; fill: var(--verde); text-anchor: middle; }
+  figcaption { padding: 10px 14px; border-top: 2px solid var(--verde); font-size: 13px; }
+</style>
