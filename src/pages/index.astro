@@ -38,7 +38,7 @@ const destaques = [
   <section class="secao papel com-id">
     <img class="rocha" src="/img/id-ig-simbolo.png" alt="" width="693" height="369" loading="lazy" />
     <div class="conteudo">
-      <div class="cards">
+      <div class="cards" data-loop>
         {destaques.map((d) => (
           <a class="card revela" href={d.href}><span class="rotulo">{d.rotulo}</span><span class="display">{d.titulo}</span><span class="seta">→</span></a>
         ))}
@@ -54,6 +54,25 @@ const destaques = [
         .from('.escalador', { y: -40, rotate: -12, opacity: 0, duration: 0.8, ease: 'back.out(2)', transformOrigin: '30% 0%' }, '-=0.4')
         .from('.edicao > *, .ticket-wrap', { y: 24, opacity: 0, duration: 0.6, stagger: 0.1 }, '-=0.4');
     });
+
+    // Cards: enquanto ninguém usa, o destaque passa do primeiro ao terceiro em loop.
+    // Quando o mouse (ou o foco do teclado) entra, o loop para e vale o hover normal.
+    const grupo = document.querySelector<HTMLElement>('[data-loop]');
+    const cards = grupo ? Array.from(grupo.querySelectorAll<HTMLElement>('.card')) : [];
+    if (grupo && cards.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      let i = -1, timer: number | undefined, retoma: number | undefined, visivel = false, emUso = false;
+      const passo = () => { cards.forEach((c) => c.classList.remove('destaque')); i = (i + 1) % cards.length; cards[i].classList.add('destaque'); };
+      const parar = () => { clearInterval(timer); timer = undefined; cards.forEach((c) => c.classList.remove('destaque')); };
+      const iniciar = () => { if (timer || emUso || !visivel) return; passo(); timer = window.setInterval(passo, 2600); };
+      new IntersectionObserver(([e]) => { visivel = e.isIntersecting; visivel ? iniciar() : parar(); }, { threshold: 0.4 }).observe(grupo);
+      const entrar = () => { emUso = true; clearTimeout(retoma); parar(); };
+      const sair = () => { emUso = false; clearTimeout(retoma); retoma = window.setTimeout(iniciar, 2000); };
+      grupo.addEventListener('pointerenter', entrar);
+      grupo.addEventListener('mouseenter', entrar);
+      grupo.addEventListener('pointerleave', sair);
+      grupo.addEventListener('focusin', entrar);
+      grupo.addEventListener('focusout', (e) => { if (!grupo.contains(e.relatedTarget as Node)) sair(); });
+    }
   </script>
 </Base>
 
@@ -80,12 +99,16 @@ const destaques = [
   .com-id .conteudo { position: relative; }
   .rocha { position: absolute; right: -4%; top: 50%; width: min(78vw, 1000px); height: auto; transform: translateY(-50%); opacity: .14; pointer-events: none; max-width: none; }
   @media (max-width: 760px) { .rocha { width: 200vw; right: -70vw; opacity: .1; } }
-  .mote { line-height: .95; font-size: clamp(48px, 9vw, 112px); color: var(--verde); text-transform: uppercase; margin: 0 0 48px; }
+  .mote { line-height: .95; font-size: var(--t-titulo); color: var(--verde); text-transform: uppercase; margin: 0 0 48px; }
   .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .card { display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 2px solid var(--verde); text-decoration: none; color: var(--verde); min-height: 200px; transition: background .2s, color .2s, transform .25s cubic-bezier(.2,.8,.2,1.2); }
-  .card .display { line-height: 1; font-size: 34px; font-stretch: 75%; text-transform: uppercase; }
-  .card .seta { margin-top: auto; font-size: 28px; }
-  .card:hover { background: var(--verde); color: var(--papel); transform: translateY(-4px); }
+  .card .display { line-height: 1; font-size: var(--t-item); font-stretch: 75%; text-transform: uppercase; }
+  .card .seta { margin-top: auto; font-size: var(--t-item); }
+  .card:hover, .card.destaque { background: var(--verde); color: var(--papel); transform: translateY(-4px); }
+  .card { transition: background .6s ease-in-out, color .6s ease-in-out, transform .6s cubic-bezier(.4,0,.2,1); }
+  .card:hover { transition-duration: .2s, .2s, .25s; }
+  .card.destaque .seta { animation: empurra 1.3s ease-in-out infinite; }
+  @keyframes empurra { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
   @media (max-width: 400px) { .titulo { font-size: 30px; } .placa { font-size: 76px; } }
   @media (max-width: 760px) { .faixa { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cards { grid-template-columns: 1fr; } .barra { font-size: 10px; flex-direction: column; gap: 10px; } .barra .dir { text-align: left; } }
 </style>

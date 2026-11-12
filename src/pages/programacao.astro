@@ -21,13 +21,12 @@ import { DIAS } from '../data/programacao';
   </section>
 </Base>
 <style>
-  .intro { font-size: 18px; margin-top: 24px; }
   .dias { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .dia { border: 2px solid var(--verde); padding: 24px; min-height: 240px; display: flex; flex-direction: column; }
-  .nome { font-size: 96px; color: var(--verde); text-transform: uppercase; margin: 0; }
+  .nome { font-size: var(--t-secao); color: var(--verde); text-transform: uppercase; margin: 0; }
   .data { font-weight: 600; letter-spacing: .1em; margin: 8px 0 0; }
   .titulo { margin: 20px 0 8px; color: var(--laranja); }
   .ativ { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--verde); }
-  .ativ li { padding: 8px 0; border-bottom: 1px solid var(--grade); font-size: 15px; line-height: 1.35; }
+  .ativ li { padding: 8px 0; border-bottom: 1px solid var(--grade); font-size: var(--t-corpo); line-height: 1.35; }
   @media (max-width: 760px) { .dias { grid-template-columns: 1fr; } .dia { min-height: 0; } }
 </style>

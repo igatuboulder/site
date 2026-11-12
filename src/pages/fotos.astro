@@ -173,7 +173,6 @@ const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fo
 </script>
 
 <style>
-  .intro { font-size: 18px; margin-top: 24px; }
   .albuns { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px 28px; }
   .capa { position: relative; display: block; text-decoration: none; color: var(--verde); padding: 0 12px 0 0; }
   /* "pilha" de fotos atrás da capa: indica que a galeria abre mais fotos */
@@ -182,13 +181,13 @@ const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fo
   .capa:hover :global(.capa-img), .capa:focus-visible :global(.capa-img) { transform: translate(-4px, -6px) rotate(-1deg); }
   .capa:hover .pilha { transform: rotate(2deg) translate(4px, 2px); }
   .info { position: relative; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 18px; }
-  .titulo { font-size: clamp(30px, 3.4vw, 40px); text-transform: uppercase; }
-  .qtd { font-size: 13px; font-weight: 600; letter-spacing: .06em; white-space: nowrap; color: var(--laranja); }
+  .titulo { font-size: var(--t-item); text-transform: uppercase; }
+  .qtd { font-size: var(--t-nota); font-weight: 600; letter-spacing: .06em; white-space: nowrap; color: var(--laranja); }
 
   .galeria-dlg { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; padding: 0; border: 0; background: var(--papel); color: var(--tinta); overflow: auto; }
   .galeria-dlg::backdrop { background: rgba(31, 26, 23, .7); }
   .dlg-topo { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: end; gap: 16px; padding: 18px var(--margem); background: var(--amarelo); border-bottom: 2px solid var(--verde); }
-  .dlg-topo h2 { font-size: clamp(36px, 6vw, 64px); color: var(--verde); text-transform: uppercase; margin: 4px 0 0; }
+  .dlg-topo h2 { font-size: var(--t-secao); color: var(--verde); text-transform: uppercase; margin: 4px 0 0; }
   .dlg-topo .rotulo { margin: 0; }
   .fechar, .visor-barra button { font: 600 13px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--papel); background: var(--verde); border: 0; padding: 10px 14px; cursor: pointer; }
   .grade-fotos { list-style: none; margin: 0; padding: 24px var(--margem) 48px; columns: 4 220px; column-gap: 12px; }
@@ -200,21 +199,21 @@ const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fo
   .visor { position: fixed; inset: 0; z-index: 3; background: #14100d; color: #f6f1e7; display: grid; grid-template-rows: auto 1fr; }
   .visor[hidden] { display: none; }
   .visor-barra { display: flex; justify-content: space-between; align-items: center; padding: 12px var(--margem); }
-  .contagem { font-size: 13px; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+  .contagem { font-size: var(--t-nota); letter-spacing: .08em; font-variant-numeric: tabular-nums; }
   .visor-fig { margin: 0; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 10px; padding: 0 var(--margem) 18px; }
   .visor-fig img { width: 100%; height: 100%; object-fit: contain; min-height: 0; }
-  .visor-fig figcaption { max-width: 72ch; margin: 0 auto; font-size: 13.5px; line-height: 1.45; text-align: center; }
+  .visor-fig figcaption { max-width: 72ch; margin: 0 auto; font-size: var(--t-nota); line-height: 1.45; text-align: center; }
   .visor-fig figcaption strong { display: block; margin-bottom: 4px; }
   .v-desc { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   :global([data-ad='on']) .v-desc { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; display: block; opacity: .85; }
-  .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 64px; font-size: 24px; color: #f6f1e7; background: rgba(0,0,0,.35); border: 1px solid rgba(246,241,231,.4); cursor: pointer; }
+  .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 64px; font-size: var(--t-lead); color: #f6f1e7; background: rgba(0,0,0,.35); border: 1px solid rgba(246,241,231,.4); cursor: pointer; }
   .nav:hover { background: var(--laranja); }
   .ant { left: 8px; } .prox { right: 8px; }
   @media (max-width: 600px) { .nav { width: 40px; height: 52px; } }
   :global(html.trava) { overflow: hidden; }
   @media (prefers-reduced-motion: reduce) { .pilha, .capa :global(.capa-img) { transition: none; } }
 
-  .insta { display: inline-flex; align-items: center; gap: 14px; font-size: 18px; color: var(--verde); text-decoration: none; }
+  .insta { display: inline-flex; align-items: center; gap: 14px; font-size: var(--t-lead); color: var(--verde); text-decoration: none; }
   .insta strong { color: var(--laranja); }
   .insta:hover strong { text-decoration: underline; }
 </style>

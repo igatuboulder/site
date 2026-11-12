@@ -16,33 +16,29 @@ const acoes = [
 <Base titulo="Sobre" descricao="O que é o Festival IgatuBoulder e o IgatuBoulder Social.">
   <Cabecalho rotulo="Sobre" titulo="O festival" />
   <section class="secao papel">
-    <div class="conteudo texto revela">
-      <p class="rotulo">Retorno à comunidade</p>
-      <h2 class="display h2">Feito com a vila</h2>
-      <p>O festival é feito pela equipe IgatuLands, com jovens de Igatu. A organização, a logística, a limpeza e a manutenção das áreas de escalada e de convivência usam mão de obra local.</p>
-      <p>Durante os três dias, quem vem escalar se hospeda, come, compra artesanato e contrata guias na vila. E o festival inspira os moradores, principalmente crianças e adolescentes, a praticar esportes de aventura.</p>
-    </div>
-  </section>
-  <section class="secao grade">
     <div class="conteudo duas">
       <div class="texto revela">
-        <p class="lead">O IgatuBoulder é um festival de escalada em blocos em Igatu, vila histórica do garimpo no município de Andaraí, no coração da Chapada Diamantina.</p>
+        <p class="rotulo">Retorno à comunidade</p>
+        <h2 class="display h2">Feito com a vila</h2>
+        <p>O festival é feito pela equipe IgatuLands, com jovens de Igatu. A organização, a logística, a limpeza e a manutenção das áreas de escalada e de convivência usam mão de obra local.</p>
+        <p>Durante os três dias, quem vem escalar se hospeda, come, compra artesanato e contrata guias na vila. E o festival inspira os moradores, principalmente crianças e adolescentes, a praticar esportes de aventura.</p>
+        <p>O IgatuBoulder é um festival de escalada em blocos em Igatu, vila histórica do garimpo no município de Andaraí, no coração da Chapada Diamantina.</p>
         <p>São três dias de escalada nos setores ao redor da vila, encontros, festa e convivência com quem vive ali. O festival acontece em janeiro e a {EVENTO.edicao}ª edição será de {EVENTO.datas}.</p>
         <p>O apelido IgatuLands é uma homenagem a Rocklands, na África do Sul, um dos destinos de boulder mais famosos do mundo.</p>
       </div>
       <FotoAD class="foto revela" arquivo="IMG_6444" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
     </div>
   </section>
-  <section class="secao papel">
+  <section class="secao grade">
     <div class="conteudo">
       <p class="rotulo">14ª edição</p>
       <h2 class="display h2">Duas frentes, um propósito</h2>
       <div class="frentes">
-        {frentes.map((f) => <article class="frente revela"><p class="rotulo">{f.sub}</p><h3 class="display">{f.nome}</h3><p>{f.texto}</p></article>)}
+        {frentes.map((f) => <article class="frente revela"><p class="rotulo">{f.sub}</p><h3 class="display h3">{f.nome}</h3><p>{f.texto}</p></article>)}
       </div>
     </div>
   </section>
-  <section class="secao grade">
+  <section class="secao papel">
     <div class="conteudo duas">
       <FotoAD class="foto revela" arquivo="IMG_1105" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
       <div class="texto revela">
@@ -54,26 +50,22 @@ const acoes = [
       </div>
     </div>
   </section>
-  <section class="secao papel">
+  <section class="secao grade">
     <div class="conteudo">
       <p class="rotulo">Responsabilidade ambiental</p>
       <h2 class="display h2">Cuidar da pedra e da vila</h2>
       <div class="acoes">
-        {acoes.map((a) => <article class="acao revela"><h3 class="display">{a.t}</h3><p>{a.d}</p></article>)}
+        {acoes.map((a) => <article class="acao revela"><h3 class="display h3">{a.t}</h3><p>{a.d}</p></article>)}
       </div>
     </div>
   </section>
 </Base>
 <style>
-  .lead { font-size: 22px; line-height: 1.4; }
   .duas :global(.foto) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); }
   .frentes, .acoes { display: grid; gap: 16px; }
   .frentes { grid-template-columns: repeat(2, 1fr); }
   .acoes { grid-template-columns: repeat(3, 1fr); }
   .frente, .acao { background: var(--papel); border: 2px solid var(--verde); padding: 24px; }
-  .frente h3, .acao h3 { color: var(--verde); text-transform: uppercase; margin: 6px 0 12px; }
-  .frente h3 { font-size: clamp(36px, 5vw, 56px); }
-  .acao h3 { font-size: 32px; }
   .frente p:last-child, .acao p { margin: 0; }
   @media (max-width: 760px) { .frentes, .acoes { grid-template-columns: 1fr; } }
 </style>

@@ -10,31 +10,46 @@
   --laranja: #C4572E;
   --sol: #F1C40F;
   --rocha: #302114;
+  --rio: #4E7C8E;
   --grade: rgba(31, 26, 23, 0.13);
   --display: 'Archivo Variable', Archivo, 'Arial Narrow', sans-serif;
   --mono: 'IBM Plex Mono', ui-monospace, monospace;
   --margem: clamp(16px, 5vw, 56px);
+  /* escala tipográfica: o mesmo tipo de informação usa sempre o mesmo tamanho */
+  --t-titulo: clamp(56px, 11vw, 140px); /* título da página (h1) */
+  --t-secao: clamp(40px, 6vw, 72px);    /* título de seção (h2) */
+  --t-item: clamp(28px, 3.4vw, 40px);   /* título de item, card, rota, número de destaque */
+  --t-lead: clamp(18px, 2vw, 21px);     /* texto de abertura */
+  --t-corpo: 16px;                      /* texto corrido */
+  --t-nota: 13px;                       /* notas, legendas, contadores */
+  --t-rotulo: 11px;                     /* rótulos em caixa alta */
 }
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body { margin: 0; background: var(--amarelo); color: var(--tinta); font-family: var(--mono); font-size: 16px; line-height: 1.5; }
+body { margin: 0; background: var(--amarelo); color: var(--tinta); font-family: var(--mono); font-size: var(--t-corpo); line-height: 1.5; }
 img { max-width: 100%; display: block; }
 a { color: inherit; }
 :focus-visible { outline: 3px solid var(--laranja); outline-offset: 3px; }
 .grade { background-image: linear-gradient(var(--grade) 1px, transparent 1px), linear-gradient(90deg, var(--grade) 1px, transparent 1px); background-size: 40px 40px; }
-.rotulo { font-size: 11px; letter-spacing: 0.16em; font-weight: 600; text-transform: uppercase; }
+.rotulo { font-size: var(--t-rotulo); letter-spacing: 0.16em; font-weight: 600; text-transform: uppercase; }
 .display { font-family: var(--display); font-weight: 900; font-stretch: 62%; line-height: 0.85; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
 
 /* blocos de página */
 .secao { padding: clamp(56px, 9vw, 112px) var(--margem); }
-.papel { background: var(--papel); }
+/* fundo bege com textura de curvas de nível (scripts/gerar-textura.py) */
+.papel { background: var(--papel) url(/img/curvas-textura.svg) 0 0 / 900px 900px repeat; }
 .conteudo { max-width: 1100px; margin: 0 auto; }
 .duas { display: grid; grid-template-columns: 1fr 1.2fr; gap: clamp(32px, 6vw, 80px); align-items: start; }
-.h2 { line-height: .95; font-size: clamp(40px, 6vw, 72px); color: var(--verde); margin: 8px 0 20px; text-transform: uppercase; }
-.texto { max-width: 62ch; font-size: 17px; }
+.h2 { line-height: .95; font-size: var(--t-secao); color: var(--verde); margin: 8px 0 20px; text-transform: uppercase; }
+.h3 { line-height: 1; font-size: var(--t-item); font-stretch: 75%; color: var(--verde); margin: 6px 0 12px; text-transform: uppercase; }
+.lead { font-size: var(--t-lead); line-height: 1.4; }
+.nota { font-size: var(--t-nota); }
+.intro { max-width: 60ch; margin-top: 24px; font-size: var(--t-lead); line-height: 1.4; }
+.texto { max-width: 62ch; font-size: var(--t-corpo); }
 .texto p { margin: 0 0 1em; }
+.texto p + .h3 { margin-top: 32px; }
 .link { font-weight: 600; color: var(--laranja); }
 .revisar { background: rgba(196, 87, 46, .12); outline: 1px dashed var(--laranja); }
 @media (max-width: 760px) { .duas { grid-template-columns: 1fr; } }
@@ -42,5 +57,5 @@ a { color: inherit; }
 /* audiodescrição das fotos: sempre lida pelo leitor de tela, visível com o botão "Audiodescrição" */
 .fig-ad { margin: 0; }
 .fig-ad .ad { display: none; }
-[data-ad='on'] .fig-ad .ad { display: block; margin-top: 8px; padding: 10px 12px; background: var(--papel); color: var(--tinta); border-left: 3px solid var(--verde); font-size: 14px; line-height: 1.45; }
-.ad-rotulo { display: block; font-size: 11px; font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--verde); margin-bottom: 4px; }
+[data-ad='on'] .fig-ad .ad { display: block; margin-top: 8px; padding: 10px 12px; background: var(--papel); color: var(--tinta); border-left: 3px solid var(--verde); font-size: var(--t-nota); line-height: 1.45; }
+.ad-rotulo { display: block; font-size: var(--t-rotulo); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--verde); margin-bottom: 4px; }
