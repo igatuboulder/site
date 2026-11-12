@@ -1,40 +1,73 @@
 ---
+import { getImage, Image } from 'astro:assets';
 import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import IconeInstagram from '../components/IconeInstagram.astro';
 import { EVENTO } from '../config/evento';
 import { FOTOS } from '../data/fotos';
-import { agruparFotos, type Secao } from '../lib/fotos';
-const TITULOS: Record<Secao, string> = { social: 'IgatuBoulder Social', escalada: 'Escalada', festival: 'O festival' };
-const secoes = agruparFotos(FOTOS);
+import { montarAlbuns } from '../lib/fotos';
+
+const arquivos = import.meta.glob<{ default: ImageMetadata }>('../assets/fotos/*.jpg', { eager: true });
+const img = (nome: string) => arquivos[`../assets/fotos/${nome}.jpg`].default;
+const albuns = montarAlbuns(FOTOS);
+// Versão grande de cada foto, para o visor em tela cheia.
+const grandes: Record<string, string> = {};
+for (const f of FOTOS) grandes[f.arquivo] = (await getImage({ src: img(f.arquivo), width: 1600, format: 'webp' })).src;
+const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fotos: a.fotos.map((f) => ({ src: grandes[f.arquivo], alt: f.alt, descricao: f.descricao })) }]));
 ---
-<Base titulo="Fotos" descricao="Fotos do Festival IgatuBoulder: IgatuBoulder Social, escalada e festival.">
+<Base titulo="Fotos" descricao="Galerias de fotos do Festival IgatuBoulder: IgatuBoulder Social, escalada e festival.">
   <Cabecalho rotulo="Fotos" titulo="Na pedra">
-    <nav class="atalhos" aria-label="Seções de fotos">
-      {secoes.map((s) => <a href={`#${s.secao}`}>{TITULOS[s.secao]}</a>)}
-    </nav>
+    <p class="intro">Escolha uma galeria para ver todas as fotos.</p>
   </Cabecalho>
-  {secoes.map((s, i) => (
-    <section id={s.secao} class:list={['secao', i % 2 ? 'grade' : 'papel']}>
-      <div class="conteudo">
-        <h2 class="display h2">{TITULOS[s.secao]}</h2>
-        {s.grupos.map((g) => (
-          <div class="grupo">
-            {g.setor && <h3 class="rotulo setor">Setor {g.setor}</h3>}
-            <ul class="galeria">
-              {g.fotos.map((f) => (
-                <li class="revela">
-                  <FotoAD class="galeria-img" arquivo={f.arquivo} ampliar widths={[400, 800]} sizes="(max-width: 760px) 50vw, 33vw" loading="lazy" />
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
-      </div>
-    </section>
-  ))}
+
   <section class="secao papel">
+    <ul class="albuns conteudo">
+      {albuns.map((a) => (
+        <li class="album revela">
+          <a class="capa" href={`#${a.id}`} data-album={a.id} aria-label={`Abrir a galeria ${a.titulo}, ${a.fotos.length} fotos`}>
+            <span class="pilha" aria-hidden="true"></span>
+            <Image class="capa-img" src={img(a.capa.arquivo)} alt="" widths={[500, 900]} sizes="(max-width: 760px) 100vw, 33vw" loading="lazy" />
+            <span class="info">
+              <span class="display titulo">{a.titulo}</span>
+              <span class="qtd">{a.fotos.length} fotos <span aria-hidden="true">→</span></span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </section>
+
+  {albuns.map((a) => (
+    <dialog class="galeria-dlg" id={`dlg-${a.id}`} data-album={a.id} aria-labelledby={`tit-${a.id}`}>
+      <div class="dlg-topo">
+        <div><p class="rotulo">Galeria · {a.fotos.length} fotos</p><h2 class="display" id={`tit-${a.id}`}>{a.titulo}</h2></div>
+        <button type="button" class="fechar" data-fechar>Fechar <span aria-hidden="true">✕</span></button>
+      </div>
+      <ul class="grade-fotos">
+        {a.fotos.map((f, i) => (
+          <li>
+            <FotoAD class="mini" arquivo={f.arquivo} widths={[400, 700]} sizes="(max-width: 760px) 50vw, 25vw" loading="lazy" />
+            <button type="button" class="ampliar" data-i={i}><span class="sr-only">Ampliar foto {i + 1}: {f.alt}</span></button>
+          </li>
+        ))}
+      </ul>
+      <div class="visor" hidden>
+        <div class="visor-barra">
+          <span class="contagem" aria-live="polite"></span>
+          <button type="button" data-voltar>Voltar à galeria</button>
+        </div>
+        <figure class="visor-fig">
+          <img alt="" />
+          <figcaption><strong class="v-alt"></strong><span class="v-desc ad-texto"></span></figcaption>
+        </figure>
+        <button type="button" class="nav ant" data-ant aria-label="Foto anterior">←</button>
+        <button type="button" class="nav prox" data-prox aria-label="Próxima foto">→</button>
+      </div>
+    </dialog>
+  ))}
+
+  <section class="secao grade">
     <div class="conteudo">
       <a class="insta" href={`https://instagram.com/${EVENTO.instagram}`} target="_blank" rel="noopener">
         <IconeInstagram tamanho={32} />
@@ -42,16 +75,145 @@ const secoes = agruparFotos(FOTOS);
       </a>
     </div>
   </section>
+  <script type="application/json" id="dados-albuns" set:html={JSON.stringify(dados)} />
 </Base>
+
+<script>
+  type Dados = Record<string, { titulo: string; fotos: { src: string; alt: string; descricao: string }[] }>;
+  const dados: Dados = JSON.parse(document.getElementById('dados-albuns')!.textContent || '{}');
+  let aberto: HTMLDialogElement | null = null;
+  let atual = 0;
+
+  const dlg = (id: string) => document.getElementById(`dlg-${id}`) as HTMLDialogElement | null;
+
+  function abrir(id: string) {
+    const d = dlg(id);
+    if (!d || !dados[id]) return;
+    if (aberto && aberto !== d) aberto.close();
+    aberto = d;
+    fecharVisor();
+    if (!d.open) d.showModal();
+    document.documentElement.classList.add('trava');
+  }
+  function fechar() {
+    aberto?.close();
+  }
+  function mostrar(i: number) {
+    if (!aberto) return;
+    const lista = dados[aberto.dataset.album!].fotos;
+    atual = (i + lista.length) % lista.length;
+    const f = lista[atual];
+    const visor = aberto.querySelector<HTMLElement>('.visor')!;
+    const im = visor.querySelector('img')!;
+    im.src = f.src; im.alt = f.alt;
+    visor.querySelector('.v-alt')!.textContent = f.alt;
+    visor.querySelector('.v-desc')!.textContent = f.descricao;
+    visor.querySelector('.contagem')!.textContent = `${atual + 1} de ${lista.length}`;
+    visor.hidden = false;
+    // pré-carrega a vizinha
+    const prox = new Image(); prox.src = lista[(atual + 1) % lista.length].src;
+    visor.querySelector<HTMLButtonElement>('[data-voltar]')!.focus({ preventScroll: true });
+  }
+  function fecharVisor() {
+    const visor = aberto?.querySelector<HTMLElement>('.visor');
+    if (visor && !visor.hidden) {
+      visor.hidden = true;
+      aberto!.querySelectorAll<HTMLButtonElement>('.ampliar')[atual]?.focus({ preventScroll: true });
+    }
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>('a.capa').forEach((a) => a.addEventListener('click', (e) => {
+    e.preventDefault();
+    history.pushState(null, '', `#${a.dataset.album}`);
+    abrir(a.dataset.album!);
+  }));
+
+  document.querySelectorAll<HTMLDialogElement>('dialog.galeria-dlg').forEach((d) => {
+    d.addEventListener('close', () => {
+      document.documentElement.classList.remove('trava');
+      if (location.hash === `#${d.dataset.album}`) history.pushState(null, '', location.pathname);
+      if (aberto === d) aberto = null;
+      document.querySelector<HTMLAnchorElement>(`a.capa[data-album="${d.dataset.album}"]`)?.focus({ preventScroll: true });
+    });
+    d.addEventListener('click', (e) => {
+      const t = e.target as HTMLElement;
+      if (t.closest('[data-fechar]')) fechar();
+      else if (t.closest('.ampliar')) mostrar(Number((t.closest('.ampliar') as HTMLElement).dataset.i));
+      else if (t.closest('[data-voltar]')) fecharVisor();
+      else if (t.closest('[data-ant]')) mostrar(atual - 1);
+      else if (t.closest('[data-prox]')) mostrar(atual + 1);
+    });
+    d.addEventListener('cancel', (e) => {
+      const visor = d.querySelector<HTMLElement>('.visor')!;
+      if (!visor.hidden) { e.preventDefault(); fecharVisor(); }
+    });
+    // deslizar para os lados no celular
+    let x0: number | null = null;
+    d.querySelector('.visor')!.addEventListener('touchstart', (e) => { x0 = (e as TouchEvent).touches[0].clientX; }, { passive: true });
+    d.querySelector('.visor')!.addEventListener('touchend', (e) => {
+      if (x0 == null) return;
+      const dx = (e as TouchEvent).changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 50) mostrar(atual + (dx < 0 ? 1 : -1));
+    });
+  });
+
+  document.addEventListener('keydown', (e) => {
+    const visor = aberto?.querySelector<HTMLElement>('.visor');
+    if (!visor || visor.hidden) return;
+    if (e.key === 'ArrowRight') mostrar(atual + 1);
+    if (e.key === 'ArrowLeft') mostrar(atual - 1);
+  });
+
+  const peloHash = () => {
+    const id = location.hash.slice(1);
+    if (id && dados[id]) abrir(id); else fechar();
+  };
+  window.addEventListener('popstate', peloHash);
+  peloHash();
+</script>
+
 <style>
-  .atalhos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
-  .atalhos a { font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; text-decoration: none; color: var(--verde); border: 2px solid var(--verde); padding: 8px 12px; background: var(--papel); }
-  .atalhos a:hover { background: var(--verde); color: var(--papel); }
-  .grupo + .grupo { margin-top: 40px; }
-  .setor { color: var(--verde); margin: 0 0 12px; }
-  .galeria { list-style: none; margin: 0; padding: 0; columns: 3 240px; column-gap: 12px; }
-  .galeria li { break-inside: avoid; margin: 0 0 12px; }
-  .galeria :global(.galeria-img) { width: 100%; height: auto; border: 2px solid var(--verde); }
+  .intro { font-size: 18px; margin-top: 24px; }
+  .albuns { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 40px 28px; }
+  .capa { position: relative; display: block; text-decoration: none; color: var(--verde); padding: 0 12px 0 0; }
+  /* "pilha" de fotos atrás da capa: indica que a galeria abre mais fotos */
+  .pilha { position: absolute; top: 12px; left: 12px; width: calc(100% - 12px); aspect-ratio: 4 / 5; border: 2px solid var(--verde); background: var(--amarelo); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+  .capa :global(.capa-img) { position: relative; width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); transition: transform .35s cubic-bezier(.2,.8,.2,1); }
+  .capa:hover :global(.capa-img), .capa:focus-visible :global(.capa-img) { transform: translate(-4px, -6px) rotate(-1deg); }
+  .capa:hover .pilha { transform: rotate(2deg) translate(4px, 2px); }
+  .info { position: relative; display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-top: 18px; }
+  .titulo { font-size: clamp(30px, 3.4vw, 40px); text-transform: uppercase; }
+  .qtd { font-size: 13px; font-weight: 600; letter-spacing: .06em; white-space: nowrap; color: var(--laranja); }
+
+  .galeria-dlg { width: 100vw; max-width: 100vw; height: 100dvh; max-height: 100dvh; margin: 0; padding: 0; border: 0; background: var(--papel); color: var(--tinta); overflow: auto; }
+  .galeria-dlg::backdrop { background: rgba(31, 26, 23, .7); }
+  .dlg-topo { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; align-items: end; gap: 16px; padding: 18px var(--margem); background: var(--amarelo); border-bottom: 2px solid var(--verde); }
+  .dlg-topo h2 { font-size: clamp(36px, 6vw, 64px); color: var(--verde); text-transform: uppercase; margin: 4px 0 0; }
+  .dlg-topo .rotulo { margin: 0; }
+  .fechar, .visor-barra button { font: 600 13px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--papel); background: var(--verde); border: 0; padding: 10px 14px; cursor: pointer; }
+  .grade-fotos { list-style: none; margin: 0; padding: 24px var(--margem) 48px; columns: 4 220px; column-gap: 12px; }
+  .grade-fotos li { position: relative; break-inside: avoid; margin: 0 0 12px; }
+  .grade-fotos :global(.mini) { width: 100%; height: auto; border: 2px solid var(--verde); }
+  .ampliar { position: absolute; inset: 0; width: 100%; aspect-ratio: auto; background: none; border: 0; cursor: zoom-in; padding: 0; }
+  .ampliar:hover { background: rgba(221, 165, 72, .18); }
+
+  .visor { position: fixed; inset: 0; z-index: 3; background: #14100d; color: #f6f1e7; display: grid; grid-template-rows: auto 1fr; }
+  .visor[hidden] { display: none; }
+  .visor-barra { display: flex; justify-content: space-between; align-items: center; padding: 12px var(--margem); }
+  .contagem { font-size: 13px; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
+  .visor-fig { margin: 0; min-height: 0; display: grid; grid-template-rows: minmax(0, 1fr) auto; gap: 10px; padding: 0 var(--margem) 18px; }
+  .visor-fig img { width: 100%; height: 100%; object-fit: contain; min-height: 0; }
+  .visor-fig figcaption { max-width: 72ch; margin: 0 auto; font-size: 13.5px; line-height: 1.45; text-align: center; }
+  .visor-fig figcaption strong { display: block; margin-bottom: 4px; }
+  .v-desc { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  :global([data-ad='on']) .v-desc { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; display: block; opacity: .85; }
+  .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 64px; font-size: 24px; color: #f6f1e7; background: rgba(0,0,0,.35); border: 1px solid rgba(246,241,231,.4); cursor: pointer; }
+  .nav:hover { background: var(--laranja); }
+  .ant { left: 8px; } .prox { right: 8px; }
+  @media (max-width: 600px) { .nav { width: 40px; height: 52px; } }
+  :global(html.trava) { overflow: hidden; }
+  @media (prefers-reduced-motion: reduce) { .pilha, .capa :global(.capa-img) { transition: none; } }
+
   .insta { display: inline-flex; align-items: center; gap: 14px; font-size: 18px; color: var(--verde); text-decoration: none; }
   .insta strong { color: var(--laranja); }
   .insta:hover strong { text-decoration: underline; }
