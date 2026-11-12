@@ -39,11 +39,11 @@ const MAPA = 'https://www.google.com/maps?q=Igatu,+Andara%C3%AD+-+BA&z=12&output
 <style>
   .passos { list-style: none; padding: 0; border-top: 2px solid var(--verde); }
   .passos li { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; grid-template-areas: 'n rota km' 'n d d'; column-gap: 20px; row-gap: 6px; align-items: baseline; padding: 28px 0; border-bottom: 2px solid var(--verde); }
-  .n { grid-area: n; font-family: var(--mono); font-size: var(--t-nota); font-weight: 600; color: var(--laranja); }
+  .n { grid-area: n; font-family: var(--mono); font-size: var(--t-nota); font-weight: 600; color: var(--laranja-texto); }
   .rota { grid-area: rota; margin: 0; }
   .seta { color: var(--laranja); font-stretch: 100%; }
   .ate { white-space: nowrap; }
-  .km { grid-area: km; margin: 0; color: var(--laranja); white-space: nowrap; }
+  .km { grid-area: km; margin: 0; color: var(--laranja-texto); white-space: nowrap; }
   .d { grid-area: d; margin: 0; max-width: 60ch; }
   .mapa { border: 2px solid var(--verde); background: var(--papel); aspect-ratio: 4 / 3; max-width: 100%; }
   .mapa iframe { display: block; width: 100%; height: 100%; border: 0; }

@@ -157,10 +157,10 @@ const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
   .links { display: flex; gap: 22px; list-style: none; margin: 0 0 0 auto; padding: 0; }
   .links a, .menu a { text-decoration: none; font-size: 13px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; padding: 6px 0; border-bottom: 2px solid transparent; }
   .links a:hover, .links a[aria-current] { border-bottom-color: var(--verde); }
-  .inscreva { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; text-decoration: none; background: var(--verde); color: var(--papel); padding: 8px 16px; white-space: nowrap; transition: transform .2s cubic-bezier(.2,.8,.2,1.2); }
+  .inscreva { display: inline-flex; align-items: center; font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; text-decoration: none; background: var(--verde); color: var(--papel); padding: 8px 16px; white-space: nowrap; transition: transform .2s cubic-bezier(.22,1,.36,1); }
   .inscreva:hover { transform: translateY(-2px); }
   .menu { display: none; margin-left: auto; }
-  .menu summary { list-style: none; cursor: pointer; font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; border: 2px solid var(--verde); padding: 6px 12px; }
+  .menu summary { display: flex; align-items: center; list-style: none; cursor: pointer; font-size: 13px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; border: 2px solid var(--verde); padding: 6px 12px; }
   .menu summary::-webkit-details-marker { display: none; }
   .menu ul { position: absolute; left: 0; right: 0; top: 100%; background: var(--amarelo); border-bottom: 2px solid var(--verde); list-style: none; margin: 0; padding: 8px var(--margem) 16px; }
   .menu li a { display: block; padding: 12px 0; font-size: 16px; }
@@ -174,6 +174,13 @@ const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
   .acess .rotulo { margin-right: auto; }
   .acess button { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--papel); background: none; border: 1px solid var(--papel); padding: 6px 10px; cursor: pointer; }
   .acess button:hover, .acess button[aria-pressed='true'] { background: var(--papel); color: var(--verde); }
+  /* toque: 44px onde o dedo é o ponteiro; no celular a barra de acessibilidade cabe numa linha */
+  @media (pointer: coarse), (max-width: 600px) { .acess button, .menu summary, .inscreva, .marca { min-height: 44px; } }
+  @media (max-width: 600px) {
+    .acess { flex-wrap: nowrap; gap: 6px; }
+    .acess .rotulo { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+    .acess button { flex: 1; font-size: 11px; letter-spacing: .04em; padding: 6px 4px; }
+  }
   .nome-parceiro { font-family: var(--display); font-weight: 900; font-stretch: 75%; font-size: 20px; color: var(--verde); }
   .base { max-width: 1100px; margin: 0 auto; padding-top: 28px; display: grid; grid-template-columns: 180px 110px 1fr 1fr; gap: 24px; align-items: center; font-size: 14px; }
   .base p { margin: 0; }

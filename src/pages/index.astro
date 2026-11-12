@@ -51,7 +51,7 @@ const destaques = [
     gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
       gsap.timeline({ defaults: { ease: 'power3.out' } })
         .from('.nome-svg text, .nome-svg rect', { yPercent: 12, opacity: 0, duration: 0.9, stagger: 0.08 })
-        .from('.escalador', { y: -40, rotate: -12, opacity: 0, duration: 0.8, ease: 'back.out(2)', transformOrigin: '30% 0%' }, '-=0.4')
+        .from('.escalador', { y: -40, rotate: -12, opacity: 0, duration: 0.9, ease: 'power3.out', transformOrigin: '30% 0%' }, '-=0.4')
         .from('.edicao > *, .ticket-wrap', { y: 24, opacity: 0, duration: 0.6, stagger: 0.1 }, '-=0.4');
     });
 
@@ -101,7 +101,7 @@ const destaques = [
   @media (max-width: 760px) { .rocha { width: 200vw; right: -70vw; opacity: .1; } }
   .mote { line-height: .95; font-size: var(--t-titulo); color: var(--verde); text-transform: uppercase; margin: 0 0 48px; }
   .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .card { display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 2px solid var(--verde); text-decoration: none; color: var(--verde); min-height: 200px; transition: background .2s, color .2s, transform .25s cubic-bezier(.2,.8,.2,1.2); }
+  .card { display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 2px solid var(--verde); text-decoration: none; color: var(--verde); min-height: 200px; transition: background .2s, color .2s, transform .25s cubic-bezier(.22,1,.36,1); }
   .card .display { line-height: 1; font-size: var(--t-item); font-stretch: 75%; text-transform: uppercase; }
   .card .seta { margin-top: auto; font-size: var(--t-item); }
   .card:hover, .card.destaque { background: var(--verde); color: var(--papel); transform: translateY(-4px); }
@@ -110,5 +110,5 @@ const destaques = [
   .card.destaque .seta { animation: empurra 1.3s ease-in-out infinite; }
   @keyframes empurra { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(10px); } }
   @media (max-width: 400px) { .titulo { font-size: 30px; } .placa { font-size: 76px; } }
-  @media (max-width: 760px) { .faixa { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cards { grid-template-columns: 1fr; } .barra { font-size: 10px; flex-direction: column; gap: 10px; } .barra .dir { text-align: left; } }
+  @media (max-width: 760px) { .faixa { grid-template-columns: repeat(2, minmax(0, 1fr)); } .cards { grid-template-columns: 1fr; } .barra { font-size: 11px; flex-direction: column; gap: 10px; } .card { min-height: 0; gap: 20px; } .com-id { padding-block: 64px; } .barra .dir { text-align: left; } }
 </style>

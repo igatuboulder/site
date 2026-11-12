@@ -44,7 +44,7 @@ const lista = SETORES.map((s, i) => ({ ...s, id: `setor-${slug(s.nome)}`, slug: 
   .nome button:focus-visible { outline: 3px solid var(--laranja); outline-offset: 3px; }
   .setor:hover .nome { color: var(--laranja); }
   .acesso { margin: 0; font-size: var(--t-nota); }
-  .n { font-family: var(--mono); font-size: var(--t-nota); font-weight: 600; color: var(--laranja); }
+  .n { font-family: var(--mono); font-size: var(--t-nota); font-weight: 600; color: var(--laranja-texto); }
   .nome { font-size: var(--t-item); color: var(--verde); text-transform: uppercase; margin: 0; }
   .fotos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
   .fotos :global(.foto-setor) { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border: 1px solid var(--verde); }
