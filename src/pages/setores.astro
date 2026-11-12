@@ -5,9 +5,11 @@ import FotoAD from '../components/FotoAD.astro';
 import MapaSetores from '../components/MapaSetores.astro';
 import { SETORES } from '../data/setores';
 import { FOTOS } from '../data/fotos';
+import mapa from '../data/mapa-setores.json';
+import { formatarAcesso, type Acesso } from '../lib/acesso';
+import { slugSetor as slug } from '../lib/slug';
 
-const slug = (n: string) => n.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
-const lista = SETORES.map((s, i) => ({ ...s, id: `setor-${slug(s.nome)}`, n: String(i + 1).padStart(2, '0'), fotos: FOTOS.filter((f) => f.setor === s.nome) }));
+const lista = SETORES.map((s, i) => ({ ...s, id: `setor-${slug(s.nome)}`, slug: slug(s.nome), acesso: formatarAcesso((mapa.acessos as Record<string, Acesso>)[s.nome]), n: String(i + 1).padStart(2, '0'), fotos: FOTOS.filter((f) => f.setor === s.nome) }));
 ---
 <Base titulo="Setores" descricao="Os setores de boulder ao redor de Igatu, na Chapada Diamantina.">
   <Cabecalho rotulo="Setores" titulo="Onde a gente escala">
@@ -18,9 +20,10 @@ const lista = SETORES.map((s, i) => ({ ...s, id: `setor-${slug(s.nome)}`, n: Str
       <MapaSetores />
       <ol class="setores">
         {lista.map((s) => (
-          <li class="setor revela" id={s.id}>
+          <li class="setor revela" id={s.id} data-setor={s.slug}>
             <span class="n">{s.n}</span>
-            <h2 class="display nome">{s.nome}</h2>
+            <h2 class="display nome"><button type="button" data-abrir={s.slug} aria-controls="painel-setor">{s.nome}</button></h2>
+            <p class="acesso">{s.acesso.distancia} · {s.acesso.tempo}</p>
             {s.fotos.length > 0 && (
               <div class="fotos">{s.fotos.slice(0, 3).map((f) => <FotoAD class="foto-setor" arquivo={f.arquivo} widths={[300, 600]} sizes="(max-width: 760px) 33vw, 160px" loading="lazy" />)}</div>
             )}
@@ -34,7 +37,13 @@ const lista = SETORES.map((s, i) => ({ ...s, id: `setor-${slug(s.nome)}`, n: Str
   .setores { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0; border-top: 2px solid var(--verde); border-left: 2px solid var(--verde); }
   .setor { display: flex; flex-direction: column; gap: 6px; padding: 18px 18px 20px; border-right: 2px solid var(--verde); border-bottom: 2px solid var(--verde); min-width: 0; }
   .setor { scroll-margin-top: 90px; }
-  .setor:target { background: var(--amarelo); }
+  .setor { position: relative; transition: background .25s; }
+  .setor:target, .setor.ativo { background: var(--amarelo); }
+  .nome button { all: unset; cursor: pointer; }
+  .nome button::after { content: ''; position: absolute; inset: 0; }
+  .nome button:focus-visible { outline: 3px solid var(--laranja); outline-offset: 3px; }
+  .setor:hover .nome { color: var(--laranja); }
+  .acesso { margin: 0; font-size: var(--t-nota); }
   .n { font-family: var(--mono); font-size: var(--t-nota); font-weight: 600; color: var(--laranja); }
   .nome { font-size: var(--t-item); color: var(--verde); text-transform: uppercase; margin: 0; }
   .fotos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }

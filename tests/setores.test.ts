@@ -47,3 +47,48 @@ describe('mapa ilustrado dos setores', () => {
     expect(trilha([[0, 0], [5, 5], [5, 5], [9, 9]]).match(/C/g)).toHaveLength(2);
   });
 });
+
+describe('acesso estimado aos setores (pela trilha, não em linha reta)', () => {
+  it('formata distância, tempo e desnível', async () => {
+    const { formatarAcesso, formatarTempo } = await import('../src/lib/acesso');
+    expect(formatarTempo(20)).toBe('20 min');
+    expect(formatarTempo(65)).toBe('1h05');
+    expect(formatarTempo(60)).toBe('1h');
+    expect(formatarAcesso({ km: 0.8, min: 20, desnivel: 75 })).toEqual({ distancia: '~0,8 km', tempo: '~20 min a pé', desnivel: 'sobe 75 m' });
+    expect(formatarAcesso({ km: 2.6, min: 40, desnivel: -180 }).desnivel).toBe('desce 180 m');
+    expect(formatarAcesso({ km: 0.4, min: 10, desnivel: 0 }).desnivel).toBe('plano');
+  });
+
+  it('todo setor tem acesso estimado no mapa, maior ou igual à distância em linha reta', () => {
+    const acessos = (mapa as unknown as { acessos: Record<string, { km: number; min: number }> }).acessos;
+    const VILA = [-12.89636, -41.31871];
+    for (const s of SETORES) {
+      const a = acessos[s.nome];
+      expect(a, s.nome).toBeDefined();
+      const reta = Math.hypot((s.lat! - VILA[0]) * 110.57, (s.lon! - VILA[1]) * 108.5);
+      expect(a.km, s.nome).toBeGreaterThanOrEqual(Math.floor(reta * 10) / 10);
+      expect(a.min).toBeGreaterThan(0);
+    }
+  });
+
+  it('mapa traz rios, trilhas e pontos de referência além das curvas', () => {
+    const m = mapa as unknown as { rios: unknown[]; trilhas: unknown[]; pontos: { nome: string }[] };
+    expect(m.rios.length).toBeGreaterThan(0);
+    expect(m.trilhas.length).toBeGreaterThan(0);
+    expect(m.pontos.map((p) => p.nome)).toContain('Cemitério gótico');
+  });
+});
+
+describe('seleção do setor nos dois sentidos', () => {
+  const pagina = readFileSync('src/pages/setores.astro', 'utf8');
+  const comp = readFileSync('src/components/MapaSetores.astro', 'utf8');
+  it('cards e marcadores compartilham data-setor e um painel de detalhes', () => {
+    expect(pagina).toMatch(/data-setor=/);
+    expect(comp).toMatch(/data-setor=/);
+    expect(comp).toMatch(/class="painel"/);
+  });
+  it('a trilha anima com aceleração suave (ease in/out), não constante', () => {
+    expect(comp).not.toMatch(/ease: 'none'/);
+    expect(comp).toMatch(/inOut/);
+  });
+});

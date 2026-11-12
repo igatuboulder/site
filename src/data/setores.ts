@@ -1,7 +1,9 @@
 // Setores de boulder ao redor de Igatu. Coordenadas públicas (27crags/cragmap, conferidas em 05/11/2026).
 // Corredor e Denorex aparecem juntos no 27crags como "Corredor Denorex": os dois usam esse ponto até a organização confirmar.
 // As coordenadas ficam em setores.json (lidas também por scripts/gerar-mapa.py).
-export interface Setor { nome: string; lat?: number; lon?: number }
+// boulders/destaques: preencher com dados da organização ou do Guia Igatu Boulder (não inventar).
+export interface Destaque { nome: string; grau: string }
+export interface Setor { nome: string; lat?: number; lon?: number; boulders?: number; destaques?: Destaque[] }
 
 import dados from './setores.json';
 
