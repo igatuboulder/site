@@ -31,13 +31,12 @@ const lista = SETORES.map((s, i) => ({ ...s, id: `setor-${slug(s.nome)}`, n: Str
   </section>
 </Base>
 <style>
-  .intro { max-width: 60ch; font-size: 18px; margin-top: 24px; }
   .setores { list-style: none; margin: 32px 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 0; border-top: 2px solid var(--verde); border-left: 2px solid var(--verde); }
   .setor { display: flex; flex-direction: column; gap: 6px; padding: 18px 18px 20px; border-right: 2px solid var(--verde); border-bottom: 2px solid var(--verde); min-width: 0; }
   .setor { scroll-margin-top: 90px; }
   .setor:target { background: var(--amarelo); }
-  .n { font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--laranja); }
-  .nome { font-size: clamp(34px, 4vw, 44px); color: var(--verde); text-transform: uppercase; margin: 0; }
+  .n { font-family: var(--mono); font-size: var(--t-nota); font-weight: 600; color: var(--laranja); }
+  .nome { font-size: var(--t-item); color: var(--verde); text-transform: uppercase; margin: 0; }
   .fotos { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 10px; }
   .fotos :global(.foto-setor) { width: 100%; height: auto; aspect-ratio: 1; object-fit: cover; border: 1px solid var(--verde); }
 </style>

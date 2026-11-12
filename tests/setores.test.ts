@@ -6,9 +6,9 @@ import mapa from '../src/data/mapa-setores.json';
 import { trilha } from '../src/lib/trilha';
 
 describe('aba Setores', () => {
-  it('fica no menu logo antes de Como chegar e Contato', () => {
+  it('fica no menu entre Como chegar e Contato', () => {
     const r = PAGINAS.map((p) => p.rotulo);
-    expect(r.slice(-3)).toEqual(['Setores', 'Como chegar', 'Contato']);
+    expect(r.slice(-3)).toEqual(['Como chegar', 'Setores', 'Contato']);
     expect(PAGINAS.find((p) => p.rotulo === 'Setores')?.href).toBe('/setores');
   });
 

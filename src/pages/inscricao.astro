@@ -24,7 +24,6 @@ import { formatarReais, PRECO_PASSAPORTE } from '../lib/preco';
 <style>
   .precos { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 320px; gap: 12px; margin: 24px 0; }
   .precos div { border: 2px solid var(--verde); padding: 14px 16px; }
-  dt { font-size: 11px; letter-spacing: .16em; font-weight: 600; text-transform: uppercase; }
-  dd { margin: 4px 0 0; font-size: clamp(30px, 9vw, 44px); white-space: nowrap; color: var(--verde); }
-  .nota { font-size: 14px; }
+  dt { font-size: var(--t-rotulo); letter-spacing: .16em; font-weight: 600; text-transform: uppercase; }
+  dd { margin: 4px 0 0; font-size: var(--t-item); white-space: nowrap; color: var(--verde); }
 </style>

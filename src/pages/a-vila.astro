@@ -45,11 +45,10 @@ const marcos = [
   </section>
 </Base>
 <style>
-  .lead { font-size: 22px; line-height: 1.4; }
   .duas :global(.foto) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); }
   .marcos { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--verde); }
   .marcos li { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--verde); align-items: baseline; }
-  .ano { font-size: 40px; color: var(--laranja); text-transform: uppercase; }
+  .ano { font-size: var(--t-item); color: var(--laranja); text-transform: uppercase; }
   .marcos h3 { margin: 0 0 6px; color: var(--verde); }
   .marcos p { margin: 0; max-width: 62ch; }
   @media (max-width: 600px) { .marcos li { grid-template-columns: 1fr; gap: 6px; } }

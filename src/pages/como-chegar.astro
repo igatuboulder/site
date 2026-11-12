@@ -15,8 +15,8 @@ const MAPA = 'https://www.google.com/maps?q=Igatu,+Andara%C3%AD+-+BA&z=12&output
       {passos.map((p, i) => (
         <li class="revela">
           <span class="n">{String(i + 1).padStart(2, '0')}</span>
-          <h2 class="display rota"><span>{p.de}</span> <span class="ate"><span class="seta" aria-label="até">→</span> {p.para}</span></h2>
-          <p class="display km">{p.km}</p>
+          <h2 class="display h3 rota"><span>{p.de}</span> <span class="ate"><span class="seta" aria-label="até">→</span> {p.para}</span></h2>
+          <p class="display h3 km">{p.km}</p>
           <p class="d">{p.d}</p>
         </li>
       ))}
@@ -25,9 +25,9 @@ const MAPA = 'https://www.google.com/maps?q=Igatu,+Andara%C3%AD+-+BA&z=12&output
   <section class="secao grade">
     <div class="conteudo duas">
       <div class="texto revela">
-        <p class="rotulo">Onde ficar</p>
+        <h2 class="display h3">Onde ficar</h2>
         <p>A vila tem pousadas, casas de moradores e camping. Reserve cedo: em janeiro a vila enche.</p>
-        <p class="rotulo">Leve</p>
+        <h2 class="display h3">Leve</h2>
         <p>Sapatilha, crash pad se tiver, lanterna, protetor solar e garrafa d'água.</p>
       </div>
       <div class="mapa revela">
@@ -39,12 +39,12 @@ const MAPA = 'https://www.google.com/maps?q=Igatu,+Andara%C3%AD+-+BA&z=12&output
 <style>
   .passos { list-style: none; padding: 0; border-top: 2px solid var(--verde); }
   .passos li { display: grid; grid-template-columns: 48px minmax(0, 1fr) auto; grid-template-areas: 'n rota km' 'n d d'; column-gap: 20px; row-gap: 6px; align-items: baseline; padding: 28px 0; border-bottom: 2px solid var(--verde); }
-  .n { grid-area: n; font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--laranja); }
-  .rota { grid-area: rota; margin: 0; font-size: clamp(40px, 7vw, 88px); color: var(--verde); text-transform: uppercase; }
+  .n { grid-area: n; font-family: var(--mono); font-size: var(--t-nota); font-weight: 600; color: var(--laranja); }
+  .rota { grid-area: rota; margin: 0; }
   .seta { color: var(--laranja); font-stretch: 100%; }
   .ate { white-space: nowrap; }
-  .km { grid-area: km; margin: 0; font-size: clamp(28px, 4vw, 48px); color: var(--laranja); white-space: nowrap; }
-  .d { grid-area: d; margin: 0; max-width: 60ch; font-size: 16px; }
+  .km { grid-area: km; margin: 0; color: var(--laranja); white-space: nowrap; }
+  .d { grid-area: d; margin: 0; max-width: 60ch; }
   .mapa { border: 2px solid var(--verde); background: var(--papel); aspect-ratio: 4 / 3; max-width: 100%; }
   .mapa iframe { display: block; width: 100%; height: 100%; border: 0; }
   @media (max-width: 760px) {
