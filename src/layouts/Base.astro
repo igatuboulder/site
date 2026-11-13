@@ -8,7 +8,7 @@ interface Props { titulo?: string; descricao?: string }
 const { titulo, descricao } = Astro.props;
 const tituloFinal = titulo ? `${titulo} · IgatuBoulder ${EVENTO.ano}` : `${EVENTO.nome} ${EVENTO.ano} · ${EVENTO.edicao}ª edição`;
 const desc = descricao ?? `${EVENTO.edicao}º Festival IgatuBoulder, ${EVENTO.datas}, em Igatu, Chapada Diamantina.`;
-const grupos: [string, Parceiro[], string?][] = [['Realização', REALIZACAO], ['Patrocínio', PATROCINIO], ['Apoio', APOIOS, 'apoio']];
+const grupos: [string, Parceiro[], string?][] = [['Realização', REALIZACAO], ['Patrocínio', PATROCINIO, 'patrocinio'], ['Apoio', APOIOS, 'apoio']];
 const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 <!doctype html>
@@ -170,6 +170,7 @@ const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
   .parceiros { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1.2fr .8fr 2fr; gap: 24px; padding-bottom: 32px; border-bottom: 1px solid var(--verde); }
   .grupo .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
   .grupo img { height: 46px; width: auto; }
+  .patrocinio img { height: 52px; }
   .acess { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px var(--margem); background: var(--verde); color: var(--papel); }
   .acess .rotulo { margin-right: auto; }
   .acess button { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--papel); background: none; border: 1px solid var(--papel); padding: 6px 10px; cursor: pointer; }

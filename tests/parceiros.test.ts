@@ -17,3 +17,15 @@ describe('parceiros', () => {
     for (const p of [...REALIZACAO, ...PATROCINIO, ...APOIOS]) expect(p.nome.trim()).not.toBe('');
   });
 });
+
+describe('destaque do patrocínio no rodapé', () => {
+  it('logo do patrocínio fica 10 a 15% maior que os demais', async () => {
+    const { readFileSync } = await import('node:fs');
+    const b = readFileSync('src/layouts/Base.astro', 'utf8');
+    expect(b).toMatch(/\['Patrocínio', PATROCINIO, 'patrocinio'\]/);
+    const base = Number(b.match(/\.grupo img \{ height: (\d+)px/)?.[1]);
+    const pat = Number(b.match(/\.patrocinio img \{ height: (\d+)px/)?.[1]);
+    expect(pat / base).toBeGreaterThanOrEqual(1.1);
+    expect(pat / base).toBeLessThanOrEqual(1.15);
+  });
+});
