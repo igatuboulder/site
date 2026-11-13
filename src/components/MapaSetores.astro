@@ -12,7 +12,7 @@ const pos = mapa.setores as Record<string, Ponto>;
 const vila = mapa.vila as Ponto;
 const acessos = mapa.acessos as Record<string, Acesso>;
 const d = trilha([vila, ...ORDEM_TRILHA.map((n) => pos[n])]);
-// Corredor e Denorex estão no mesmo ponto: um marcador só, com os dois números.
+// Setores no mesmo ponto viram um marcador só, com os dois números.
 type Marca = { nomes: string[]; nums: string[]; x: number; y: number; lado: 'e' | 'd' };
 const LADO: Record<string, 'e' | 'd'> = { Labirinto: 'e', Verruga: 'e', Corredor: 'e', Cruzeiro: 'e' };
 const marcas: Marca[] = [];
