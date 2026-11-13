@@ -12,8 +12,8 @@ describe('aba Setores', () => {
     expect(PAGINAS.find((p) => p.rotulo === 'Setores')?.href).toBe('/setores');
   });
 
-  it('mantém os 13 setores na mesma ordem de antes', () => {
-    expect(SETORES.map((s) => s.nome)).toEqual(['Labirinto', 'Verruga', 'Corredor', 'Denorex', 'Disco Voador', 'Besouro', 'Cemitério', 'Lagartos', 'Laranjeiras', 'Cruzeiro', 'Califórnia', 'Coisa Boa', 'Degredo']);
+  it('tem 12 setores; Denorex é boulder do Corredor, não setor', () => {
+    expect(SETORES.map((s) => s.nome)).toEqual(['Labirinto', 'Verruga', 'Corredor', 'Disco Voador', 'Besouro', 'Cemitério', 'Lagartos', 'Laranjeiras', 'Cruzeiro', 'Califórnia', 'Coisa Boa', 'Degredo']);
   });
 
   it('a lista de setores sai do Sobre (agora tem página própria)', () => {
