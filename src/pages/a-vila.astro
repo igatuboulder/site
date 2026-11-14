@@ -2,6 +2,8 @@
 import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
+import FotoLarga from '../components/FotoLarga.astro';
+import FaixaFotos from '../components/FaixaFotos.astro';
 const marcos = [
   { ano: 'Séc. XIX', t: 'O garimpo', d: 'A descoberta de diamantes na Serra do Sincorá atrai garimpeiros para a região. Nasce o povoado de Xique-Xique, hoje Xique-Xique do Igatu.' },
   { ano: 'Auge', t: 'Cidade de pedra', d: 'Sem madeira por perto, as casas, muros e caminhos são feitos de pedra empilhada. A vila cresce com o diamante e chega a ter milhares de moradores.' },
@@ -22,6 +24,7 @@ const marcos = [
       <FotoAD class="foto revela" arquivo="IMG_1092" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
     </div>
   </section>
+  <FotoLarga arquivo="pp-vila-aerea-3" />
   <section class="secao grade">
     <div class="conteudo">
       <p class="rotulo">Linha do tempo</p>
@@ -31,6 +34,16 @@ const marcos = [
       </ol>
     </div>
   </section>
+  <section class="secao papel">
+    <div class="conteudo">
+      <p class="rotulo">Retratos</p>
+      <h2 class="display h2">O dia a dia da vila</h2>
+      <FaixaFotos arquivos={['pp-vila-casas', 'pp-vila-rua', 'pp-vila-senhora', 'pp-vila-placa']} proporcao="4 / 3" />
+      <div class="espaco"></div>
+      <FaixaFotos arquivos={['pp-vila-porta', 'pp-vila-casa-pedra', 'pp-vila-casa-morro', 'pp-vila-bar']} />
+    </div>
+  </section>
+  <FotoLarga arquivo="pp-vila-aerea-1" />
   <section class="secao papel">
     <div class="conteudo duas">
       <FotoAD class="foto revela" arquivo="IMG_1322" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
@@ -46,6 +59,7 @@ const marcos = [
 </Base>
 <style>
   .duas :global(.foto) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); }
+  .espaco { height: 12px; }
   .marcos { list-style: none; margin: 0; padding: 0; border-top: 2px solid var(--verde); }
   .marcos li { display: grid; grid-template-columns: 160px minmax(0, 1fr); gap: 24px; padding: 20px 0; border-bottom: 1px solid var(--verde); align-items: baseline; }
   .ano { font-size: var(--t-item); color: var(--laranja); text-transform: uppercase; }

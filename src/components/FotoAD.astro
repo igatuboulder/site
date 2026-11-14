@@ -3,6 +3,7 @@
 // fica ligada à imagem (aria-describedby) e aparece na tela com o botão "Audiodescrição".
 import { Image } from 'astro:assets';
 import { fotoPorArquivo } from '../data/fotos';
+import { creditoDe } from '../data/autores';
 interface Props { arquivo: string; class?: string; widths: number[]; sizes: string; loading?: 'lazy' | 'eager'; ampliar?: boolean }
 const { arquivo, class: cls, widths, sizes, loading, ampliar = false } = Astro.props;
 const arquivos = import.meta.glob<{ default: ImageMetadata }>('../assets/fotos/*.jpg', { eager: true });
@@ -10,10 +11,14 @@ const img = arquivos[`../assets/fotos/${arquivo}.jpg`]?.default;
 const foto = fotoPorArquivo(arquivo);
 if (!img || !foto) throw new Error(`Foto sem arquivo ou sem audiodescrição: ${arquivo}`);
 const id = `ad-${arquivo}`;
+const credito = creditoDe(foto.autor);
 ---
 <figure class="fig-ad">
-  {ampliar
-    ? <a href={img.src} target="_blank" rel="noopener"><Image class={cls} src={img} alt={`${foto.alt} (abre a foto ampliada)`} aria-describedby={id} widths={widths} sizes={sizes} loading={loading} /></a>
-    : <Image class={cls} src={img} alt={foto.alt} aria-describedby={id} widths={widths} sizes={sizes} loading={loading} />}
+  <span class="quadro">
+    {ampliar
+      ? <a href={img.src} target="_blank" rel="noopener"><Image class={cls} src={img} alt={`${foto.alt} (abre a foto ampliada)`} aria-describedby={id} widths={widths} sizes={sizes} loading={loading} /></a>
+      : <Image class={cls} src={img} alt={foto.alt} aria-describedby={id} widths={widths} sizes={sizes} loading={loading} />}
+    {credito && <a class="credito" href={credito.link} target="_blank" rel="noopener" aria-label={`${credito.texto}, ${credito.instagram} no Instagram`}>{credito.texto}</a>}
+  </span>
   <figcaption id={id} class="ad"><span class="ad-rotulo">Audiodescrição</span> {foto.descricao}</figcaption>
 </figure>

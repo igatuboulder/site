@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
+import FotoLarga from '../components/FotoLarga.astro';
 const marcos = [
   { ano: '2013', titulo: '1ª edição', texto: 'Nos dias 25 e 26 de janeiro, cerca de 70 escaladores se reúnem nos setores Labirinto, Cemitério e Denorex. A inscrição custava R$ 20, e a campanha "Bote sua sapatilha" arrecadou sapatilhas para a molecada da vila.' },
   { ano: '2015', titulo: '3ª edição', texto: 'Cerca de 200 escaladores, inclusive do Chile e dos Estados Unidos. Novos setores, como Estrada Real e Coisa Boa, e uma competição para as crianças.' },
@@ -14,6 +15,7 @@ const marcos = [
   <Cabecalho rotulo="História" titulo="Da primeira à 14ª">
     <p class="intro">O IgatuBoulder nasceu da escalada na vila e da vontade de que ela fizesse bem para quem mora ali. À frente, desde o começo, está a equipe IgatuLands.</p>
   </Cabecalho>
+  <FotoLarga arquivo="pp-escalada-luz" />
   <section class="secao papel">
     <ol class="linha conteudo">
       {marcos.map((m) => (

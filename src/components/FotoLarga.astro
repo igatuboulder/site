@@ -1,0 +1,14 @@
+---
+// Faixa de foto de ponta a ponta da tela (vistas aéreas, paisagens). Usa FotoAD: alt, audiodescrição e crédito.
+import FotoAD from './FotoAD.astro';
+interface Props { arquivo: string; proporcao?: string }
+const { arquivo, proporcao = '21 / 9' } = Astro.props;
+---
+<div class="foto-larga revela" style={`--prop: ${proporcao}`}>
+  <FotoAD class="larga" arquivo={arquivo} widths={[800, 1400, 2200]} sizes="100vw" loading="lazy" />
+</div>
+<style>
+  .foto-larga { border-block: 2px solid var(--verde); background: var(--verde); }
+  .foto-larga :global(.larga) { width: 100%; height: auto; aspect-ratio: var(--prop); object-fit: cover; }
+  @media (max-width: 760px) { .foto-larga :global(.larga) { aspect-ratio: 4 / 3; } }
+</style>

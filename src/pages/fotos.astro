@@ -7,6 +7,7 @@ import IconeInstagram from '../components/IconeInstagram.astro';
 import { EVENTO } from '../config/evento';
 import { FOTOS } from '../data/fotos';
 import { montarAlbuns } from '../lib/fotos';
+import { creditoDe } from '../data/autores';
 
 const arquivos = import.meta.glob<{ default: ImageMetadata }>('../assets/fotos/*.jpg', { eager: true });
 const img = (nome: string) => arquivos[`../assets/fotos/${nome}.jpg`].default;
@@ -14,7 +15,7 @@ const albuns = montarAlbuns(FOTOS);
 // Versão grande de cada foto, para o visor em tela cheia.
 const grandes: Record<string, string> = {};
 for (const f of FOTOS) grandes[f.arquivo] = (await getImage({ src: img(f.arquivo), width: 1600, format: 'webp' })).src;
-const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fotos: a.fotos.map((f) => ({ src: grandes[f.arquivo], alt: f.alt, descricao: f.descricao })) }]));
+const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fotos: a.fotos.map((f) => ({ src: grandes[f.arquivo], alt: f.alt, descricao: f.descricao, credito: creditoDe(f.autor) })) }]));
 ---
 <Base titulo="Fotos" descricao="Galerias de fotos do Festival IgatuBoulder: IgatuBoulder Social, escalada e festival.">
   <Cabecalho rotulo="Fotos" titulo="Na pedra">
@@ -59,7 +60,7 @@ const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fo
         </div>
         <figure class="visor-fig">
           <img alt="" />
-          <figcaption><strong class="v-alt"></strong><span class="v-desc ad-texto"></span></figcaption>
+          <figcaption><strong class="v-alt"></strong> <a class="v-credito" target="_blank" rel="noopener" hidden></a><span class="v-desc ad-texto"></span></figcaption>
         </figure>
         <button type="button" class="nav ant" data-ant aria-label="Foto anterior">←</button>
         <button type="button" class="nav prox" data-prox aria-label="Próxima foto">→</button>
@@ -79,7 +80,7 @@ const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fo
 </Base>
 
 <script>
-  type Dados = Record<string, { titulo: string; fotos: { src: string; alt: string; descricao: string }[] }>;
+  type Dados = Record<string, { titulo: string; fotos: { src: string; alt: string; descricao: string; credito: { texto: string; instagram: string; link: string } | null }[] }>;
   const dados: Dados = JSON.parse(document.getElementById('dados-albuns')!.textContent || '{}');
   let aberto: HTMLDialogElement | null = null;
   let atual = 0;
@@ -108,6 +109,9 @@ const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fo
     im.src = f.src; im.alt = f.alt;
     visor.querySelector('.v-alt')!.textContent = f.alt;
     visor.querySelector('.v-desc')!.textContent = f.descricao;
+    const cred = visor.querySelector<HTMLAnchorElement>('.v-credito')!;
+    cred.hidden = !f.credito;
+    if (f.credito) { cred.href = f.credito.link; cred.textContent = `${f.credito.texto} · ${f.credito.instagram}`; }
     visor.querySelector('.contagem')!.textContent = `${atual + 1} de ${lista.length}`;
     visor.hidden = false;
     // pré-carrega a vizinha
@@ -204,6 +208,8 @@ const dados = Object.fromEntries(albuns.map((a) => [a.id, { titulo: a.titulo, fo
   .visor-fig img { width: 100%; height: 100%; object-fit: contain; min-height: 0; }
   .visor-fig figcaption { max-width: 72ch; margin: 0 auto; font-size: var(--t-nota); line-height: 1.45; text-align: center; }
   .visor-fig figcaption strong { display: block; margin-bottom: 4px; }
+  .v-credito { margin-left: 8px; color: inherit; opacity: .85; font-size: var(--t-nota); white-space: nowrap; }
+  .v-credito:hover, .v-credito:focus-visible { opacity: 1; }
   .v-desc { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
   :global([data-ad='on']) .v-desc { position: static; width: auto; height: auto; overflow: visible; clip: auto; white-space: normal; display: block; opacity: .85; }
   .nav { position: absolute; top: 50%; transform: translateY(-50%); width: 48px; height: 64px; font-size: var(--t-lead); color: #f6f1e7; background: rgba(0,0,0,.35); border: 1px solid rgba(246,241,231,.4); cursor: pointer; }
