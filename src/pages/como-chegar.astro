@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
+import FotoLarga from '../components/FotoLarga.astro';
 const passos = [
   { de: 'Salvador', para: 'Andaraí', km: '~410 km', d: 'Quem vem de avião pode descer no Aeroporto de Salvador, que tem voos de todo o país. De carro são cerca de 6 horas pela BR-324 até Feira de Santana, depois BR-116, BR-242 e BA-142 até Andaraí. De ônibus, há linhas saindo da Rodoviária de Salvador para Andaraí; são poucos horários por dia, então vale comprar a passagem com antecedência.' },
   { de: 'Lençóis', para: 'Andaraí', km: '~100 km', d: 'Lençóis é a porta de entrada da Chapada e o aeroporto de Lençóis recebe voos regionais em algumas épocas do ano; confira as companhias antes de comprar. De Lençóis até Andaraí é cerca de 1h30 de carro pela BR-242 e BA-142. Também dá para combinar táxi ou transfer na cidade.' },
@@ -22,6 +23,7 @@ const MAPA = 'https://www.google.com/maps?q=Igatu,+Andara%C3%AD+-+BA&z=12&output
       ))}
     </ol>
   </section>
+  <FotoLarga arquivo="pp-vila-aerea-2" />
   <section class="secao grade">
     <div class="conteudo duas">
       <div class="texto revela">

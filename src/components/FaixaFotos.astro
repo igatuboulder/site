@@ -1,0 +1,14 @@
+---
+// Fileira de fotos com o mesmo recorte. Cada uma com alt, audiodescrição e crédito do autor (via FotoAD).
+import FotoAD from './FotoAD.astro';
+interface Props { arquivos: string[]; proporcao?: string }
+const { arquivos, proporcao = '4 / 5' } = Astro.props;
+---
+<div class="faixa-fotos" style={`--n: ${arquivos.length}; --prop: ${proporcao}`}>
+  {arquivos.map((a) => <FotoAD class="faixa-foto revela" arquivo={a} widths={[400, 800]} sizes={`(max-width: 760px) 50vw, ${Math.round(100 / arquivos.length)}vw`} loading="lazy" />)}
+</div>
+<style>
+  .faixa-fotos { display: grid; grid-template-columns: repeat(var(--n), minmax(0, 1fr)); gap: 12px; }
+  .faixa-fotos :global(.faixa-foto) { width: 100%; height: auto; aspect-ratio: var(--prop); object-fit: cover; border: 2px solid var(--verde); }
+  @media (max-width: 760px) { .faixa-fotos { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+</style>

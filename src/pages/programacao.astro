@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
+import FaixaFotos from '../components/FaixaFotos.astro';
 import { DIAS } from '../data/programacao';
 ---
 <Base titulo="Programação" descricao="Programação do 14º Festival IgatuBoulder.">
@@ -17,6 +18,13 @@ import { DIAS } from '../data/programacao';
           <ul class="ativ">{d.atividades.map((a) => <li>{a}</li>)}</ul>
         </article>
       ))}
+    </div>
+  </section>
+  <section class="secao grade">
+    <div class="conteudo">
+      <p class="rotulo">Cultura e festa</p>
+      <h2 class="display h2">A noite é da vila</h2>
+      <FaixaFotos arquivos={['pp-festa-capoeira-1', 'pp-festa-berimbau', 'pp-festa-capoeira-2']} proporcao="4 / 3" />
     </div>
   </section>
 </Base>

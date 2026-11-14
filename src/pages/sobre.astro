@@ -2,6 +2,7 @@
 import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
+import FaixaFotos from '../components/FaixaFotos.astro';
 import { EVENTO } from '../config/evento';
 const frentes = [
   { nome: 'IgatuBoulder', sub: 'Festival', texto: 'Escalada, turismo, cultura, natureza, esporte e economia local. É o que traz visitantes, movimenta a vila e cria experiências através do esporte e da cultura.' },
@@ -57,12 +58,14 @@ const acoes = [
       <div class="acoes">
         {acoes.map((a) => <article class="acao revela"><h3 class="display h3">{a.t}</h3><p>{a.d}</p></article>)}
       </div>
+      <div class="fotos-cuidado"><FaixaFotos arquivos={['pp-escalada-agarra', 'pp-vila-rio', 'pp-social-menino']} proporcao="4 / 3" /></div>
     </div>
   </section>
 </Base>
 <style>
   .duas :global(.foto) { width: 100%; height: auto; aspect-ratio: 4 / 5; object-fit: cover; border: 2px solid var(--verde); }
   .frentes, .acoes { display: grid; gap: 16px; }
+  .fotos-cuidado { margin-top: 16px; }
   .frentes { grid-template-columns: repeat(2, 1fr); }
   .acoes { grid-template-columns: repeat(3, 1fr); }
   .frente, .acao { background: var(--papel); border: 2px solid var(--verde); padding: 24px; }
