@@ -56,6 +56,11 @@ a { color: inherit; }
 
 /* audiodescrição das fotos: sempre lida pelo leitor de tela, visível com o botão "Audiodescrição" */
 .fig-ad { margin: 0; }
+.fig-ad .quadro { position: relative; display: block; }
+.fig-ad .quadro img { display: block; }
+/* Crédito do fotógrafo: discreto, no canto da foto, sempre visível. */
+.fig-ad .credito { position: absolute; right: 6px; bottom: 6px; z-index: 2; padding: 2px 7px; background: rgb(20 30 20 / .62); color: #fff; font-size: var(--t-rotulo); letter-spacing: .02em; line-height: 1.5; text-decoration: none; border-radius: 2px; }
+.fig-ad .credito:hover, .fig-ad .credito:focus-visible { background: var(--verde); text-decoration: underline; }
 .fig-ad .ad { display: none; }
 [data-ad='on'] .fig-ad .ad { display: block; margin-top: 8px; padding: 10px 12px; background: var(--papel); color: var(--tinta); border-left: 3px solid var(--verde); font-size: var(--t-nota); line-height: 1.45; }
 .ad-rotulo { display: block; font-size: var(--t-rotulo); font-weight: 600; letter-spacing: .16em; text-transform: uppercase; color: var(--verde); margin-bottom: 4px; }

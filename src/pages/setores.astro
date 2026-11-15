@@ -2,6 +2,8 @@
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import FotoAD from '../components/FotoAD.astro';
+import FotoLarga from '../components/FotoLarga.astro';
+import FaixaFotos from '../components/FaixaFotos.astro';
 import MapaSetores from '../components/MapaSetores.astro';
 import { SETORES } from '../data/setores';
 import { FOTOS } from '../data/fotos';
@@ -30,6 +32,14 @@ const lista = SETORES.map((s, i) => ({ ...s, id: `setor-${slug(s.nome)}`, slug: 
           </li>
         ))}
       </ol>
+    </div>
+  </section>
+  <FotoLarga arquivo="pp-escalada-pocos" />
+  <section class="secao grade">
+    <div class="conteudo">
+      <p class="rotulo">Na pedra</p>
+      <h2 class="display h2">Um dia de boulder</h2>
+      <FaixaFotos arquivos={['pp-escalada-pads', 'pp-escalada-sapatilha', 'pp-escalada-teto', 'pp-escalada-silhueta']} />
     </div>
   </section>
 </Base>
