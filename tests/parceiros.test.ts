@@ -18,14 +18,21 @@ describe('parceiros', () => {
   });
 });
 
-describe('destaque do patrocínio no rodapé', () => {
-  it('logo do patrocínio fica 10 a 15% maior que os demais', async () => {
-    const { readFileSync } = await import('node:fs');
-    const b = readFileSync('src/layouts/Base.astro', 'utf8');
+describe('destaque de realização e patrocínio no rodapé', () => {
+  const ler = async () => (await import('node:fs')).readFileSync('src/layouts/Base.astro', 'utf8');
+  const altura = (b: string, sel: string) => Number(b.match(new RegExp(`\\${sel} img \\{ height: (\\d+)px`))?.[1]);
+
+  it('realização e patrocínio ficam bem maiores que os apoios (pelo menos 40%)', async () => {
+    const b = await ler();
+    expect(b).toMatch(/\['Realização', REALIZACAO, 'realizacao'\]/);
     expect(b).toMatch(/\['Patrocínio', PATROCINIO, 'patrocinio'\]/);
-    const base = Number(b.match(/\.grupo img \{ height: (\d+)px/)?.[1]);
-    const pat = Number(b.match(/\.patrocinio img \{ height: (\d+)px/)?.[1]);
-    expect(pat / base).toBeGreaterThanOrEqual(1.1);
-    expect(pat / base).toBeLessThanOrEqual(1.15);
+    const apoio = altura(b, '.grupo');
+    expect(altura(b, '.realizacao') / apoio).toBeGreaterThanOrEqual(1.4);
+    expect(altura(b, '.patrocinio') / apoio).toBeGreaterThanOrEqual(1.4);
+  });
+
+  it('patrocínio é o maior de todos', async () => {
+    const b = await ler();
+    expect(altura(b, '.patrocinio')).toBeGreaterThan(altura(b, '.realizacao'));
   });
 });
