@@ -167,13 +167,13 @@ const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
   @media (max-width: 900px) { .links { display: none; } .menu { display: block; } }
   @media (max-width: 480px) { .nav { gap: 12px; } .marca img { width: 44px; } .inscreva { font-size: 17px; padding: 8px 12px; } }
   .rodape { padding: 48px var(--margem) 32px; border-top: 2px solid var(--verde); }
-  /* Realização e patrocínio em destaque na primeira linha; apoios menores na linha de baixo. */
-  .parceiros { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: auto auto; justify-content: start; column-gap: 72px; row-gap: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--verde); }
+  /* Realização e patrocínio em destaque à esquerda; apoios menores à direita, quebrando em mais de uma linha. */
+  .parceiros { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: auto auto minmax(0, 1fr); column-gap: 56px; row-gap: 36px; padding-bottom: 32px; border-bottom: 1px solid var(--verde); }
   .grupo .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
   .grupo img { height: 46px; width: auto; }
   .realizacao img { height: 68px; }
   .patrocinio img { height: 76px; }
-  .apoio { grid-column: 1 / -1; }
+  .apoio .logos { gap: 16px 22px; }
   .acess { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px var(--margem); background: var(--verde); color: var(--papel); }
   .acess .rotulo { margin-right: auto; }
   .acess button { font: 600 12px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--papel); background: none; border: 1px solid var(--papel); padding: 6px 10px; cursor: pointer; }
