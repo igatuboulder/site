@@ -86,8 +86,6 @@ export const FOTOS: Foto[] = [
     descricao: 'À noite, a porta e a janela de uma casa bege estão abertas e iluminadas por dentro, com varal de luzinhas. Na calçada, três pessoas conversam sentadas em cadeiras em volta de uma mesinha, e uma mulher em pé encosta na porta. As casas vizinhas são amarela e azul.' },
   { arquivo: 'pp-vila-gato', secao: 'igatu', autor: 'pedro', alt: 'Gato no alto de um telhado',
     descricao: 'Contra o céu azul do entardecer, a silhueta escura de um gato sentado no topo de um telhado de telhas de barro, lambendo a pata. Dois fios atravessam o céu em diagonal.' },
-  { arquivo: 'pp-social-menino', secao: 'igatu', autor: 'pedro', alt: 'Menino de Igatu acenando para a câmera',
-    descricao: 'Um menino pequeno, de cabelo curto e camisa polo branca, olha sério para a câmera e levanta a mão aberta, como quem acena ou diz pare. Atrás dele, um muro de pedra e galhos. No canto direito aparece parte de outra pessoa.' },
   { arquivo: 'pp-escalada-teto', secao: 'escalada', autor: 'pedro', alt: 'Escalador num bloco, com amiga protegendo a queda',
     descricao: 'Vista do alto. Um escalador sem camisa, de bermuda bege, se estica quase na horizontal num bloco de pedra listrado de marrom e branco, com marcas de magnésio nas agarras. Embaixo, uma escaladora de top e short vermelho, de braços estendidos, faz a proteção dele sobre dois crash pads azuis. À direita, galhos de uma árvore.' },
   { arquivo: 'pp-escalada-pocos', secao: 'escalada', autor: 'pedro', alt: 'Escalador num bloco à beira de poços d’água',

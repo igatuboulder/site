@@ -71,3 +71,10 @@ describe('Instagram centralizado embaixo do patrocínio', () => {
     expect(b).toMatch(/\.col-ig \{ text-align: center; \}/);
   });
 });
+
+describe('IgatuBoulder Social entre os apoios', () => {
+  it('Social sai de Realização e entra em Apoio', () => {
+    expect(REALIZACAO.map((p) => p.nome)).not.toContain('IgatuBoulder Social');
+    expect(APOIOS.map((p) => p.nome)).toContain('IgatuBoulder Social');
+  });
+});
