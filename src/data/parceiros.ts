@@ -11,10 +11,10 @@ export const PATROCINIO: Parceiro[] = [{ nome: 'Km10 Sport', arquivo: 'km10', li
 
 export const APOIOS: Parceiro[] = [
   { nome: 'IgatuBoulder Social', arquivo: 'igatuboulder-social' },
-  { nome: 'Larikinha', arquivo: 'larikinha' },
-  { nome: 'Prefeitura de Andaraí', arquivo: 'andarai' },
+  { nome: 'Larikinha', arquivo: 'larikinha', link: 'https://larikinha.com/' },
+  { nome: 'Prefeitura de Andaraí', arquivo: 'andarai', link: 'https://www.andarai.ba.gov.br/' },
   { nome: 'Hostel Igatu', arquivo: 'hostel-igatu', link: 'https://www.instagram.com/hosteligatu/' },
-  { nome: 'Woodtropia', arquivo: 'woodtropia' },
-  { nome: 'Gênesis', arquivo: 'genesis' },
+  { nome: 'Woodtropia', arquivo: 'woodtropia', link: 'https://www.woodtropia.com/' },
+  { nome: 'Gênesis', arquivo: 'genesis', link: 'https://genesisclimb.com.br/' },
   { nome: 'Bendito', arquivo: 'bendito', link: 'https://www.instagram.com/bendito_sorvetes/' },
 ];
