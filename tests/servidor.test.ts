@@ -64,7 +64,7 @@ describe('inscrever', () => {
     await inscrever(valido, { ...base, db: dbFalso(), criarLink: link });
     expect(link.mock.calls[0][0].options).toBeUndefined();
     await inscrever(valido, { ...base, apiKey: 'k', db: dbFalso(), criarLink: link });
-    expect(link.mock.calls[1][0].options).toEqual({ assured_installments: 0 });
+    expect(link.mock.calls[1][0].options).toEqual({ assured_installments: 0, require_delivery_address: false, single_payment: true });
   });
 
   it('ignora robôs que preenchem o campo escondido', async () => {

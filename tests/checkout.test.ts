@@ -9,7 +9,7 @@ describe('montarCheckout', () => {
     expect(c.items).toEqual([{ quantity: 1, price: 16000, description: 'Passaporte Festival IgatuBoulder 2027' }]);
   });
   it('repassa a taxa do cartão ao comprador em qualquer parcelamento', () => {
-    expect(c.options).toEqual({ assured_installments: 0 });
+    expect(c.options).toEqual({ assured_installments: 0, require_delivery_address: false, single_payment: true });
   });
   it('identifica o pedido e volta para o site', () => {
     expect(c.order_nsu).toBe('IGB27-0001');

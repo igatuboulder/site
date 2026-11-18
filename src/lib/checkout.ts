@@ -24,6 +24,7 @@ export function montarCheckout(d: Inscricao, o: { pedido: string; baseUrl: strin
     customer: { name: d.nome, email: d.email, phone_number: `+55${d.telefone}` },
     // 0 = nenhuma parcela com taxa absorvida pelo festival: no cartão, quem compra paga a taxa.
     // Confirmar num pagamento de teste que vale também para o cartão à vista.
-    options: { assured_installments: 0 },
+    // Sem etapa de endereço (não há entrega) e link vale para um pagamento só.
+    options: { assured_installments: 0, require_delivery_address: false, single_payment: true },
   };
 }
