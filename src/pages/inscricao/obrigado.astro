@@ -1,0 +1,50 @@
+---
+// Volta do checkout. Confirma o pagamento com a InfinitePay antes de dizer que deu certo.
+import Base from '../../layouts/Base.astro';
+import Cabecalho from '../../components/Cabecalho.astro';
+import { EVENTO } from '../../config/evento';
+---
+<Base titulo="Inscrição recebida">
+  <Cabecalho rotulo="Inscrição" titulo="Quase lá" />
+  <section class="secao papel">
+    <div class="conteudo">
+      <div class="estado" id="estado" data-estado="conferindo" aria-live="polite">
+        <p class="h3" id="titulo">Conferindo seu pagamento…</p>
+        <p class="lead" id="texto">Isso leva só alguns segundos.</p>
+        <p class="nota" id="pedido"></p>
+        <p id="recibo" hidden><a target="_blank" rel="noopener">Ver o comprovante da InfinitePay</a></p>
+      </div>
+      <p class="nota">Dúvidas? <a href="/contato">Fale com a gente</a>. Até {EVENTO.datas} em Igatu!</p>
+    </div>
+  </section>
+</Base>
+<script>
+  const q = new URLSearchParams(location.search);
+  const pedido = q.get('pedido') || q.get('order_nsu') || '';
+  const $ = (id: string) => document.getElementById(id)!;
+  if (pedido) $('pedido').textContent = `Pedido ${pedido}`;
+  const recibo = q.get('receipt_url');
+  if (recibo?.startsWith('https://')) { const a = $('recibo').querySelector('a')!; a.href = recibo; $('recibo').hidden = false; }
+
+  function mostrar(estado: 'pago' | 'pendente', titulo: string, texto: string) {
+    $('estado').dataset.estado = estado; $('titulo').textContent = titulo; $('texto').textContent = texto;
+  }
+  async function conferir(tentativa = 0): Promise<void> {
+    try {
+      const r = await fetch('/api/pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ pedido, order_nsu: q.get('order_nsu') || pedido, transaction_nsu: q.get('transaction_nsu'), slug: q.get('slug'), receipt_url: recibo }) });
+      const j = await r.json();
+      if (j.pago) return mostrar('pago', 'Inscrição confirmada!', 'Seu passaporte está garantido. Guarde o número do pedido: ele é usado na retirada do kit.');
+    } catch {}
+    if (tentativa < 3) { setTimeout(() => conferir(tentativa + 1), 4000); return; }
+    mostrar('pendente', 'Ainda não vimos o pagamento', 'Se você pagou, pode levar alguns minutos para confirmar e a organização vai conferir. Se não concluiu, é só fazer a inscrição de novo com o mesmo CPF.');
+  }
+  conferir();
+</script>
+<style>
+  .estado { border: 2px solid var(--verde); background: #fff; padding: 24px; margin-bottom: 24px; max-width: 640px; }
+  .estado[data-estado="pago"] { background: var(--verde); color: var(--papel); }
+  .estado[data-estado="pago"] .h3 { color: var(--amarelo); }
+  .estado[data-estado="pago"] a { color: var(--papel); }
+  .estado p { margin: 0 0 8px; }
+</style>

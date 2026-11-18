@@ -53,3 +53,14 @@ export function linkCobranca(x: Registro) {
   const msg = `Oi, ${primeiro}! Aqui é da organização do ${EVENTO.nome} ${EVENTO.ano}. Vimos que sua inscrição (pedido ${x.pedido}) ainda está com o pagamento pendente. Precisa de ajuda para concluir?`;
   return `https://wa.me/55${x.telefone.replace(/\D/g, '')}?text=${encodeURIComponent(msg)}`;
 }
+
+/** Linha da tabela `inscricoes` do banco → registro do painel. */
+export function deBanco(l: Record<string, any>): Registro {
+  return {
+    pedido: l.pedido, nome: l.nome, cpf: l.cpf, email: l.email, telefone: l.telefone, camiseta: l.camiseta, status: l.status,
+    criadoEm: l.criado_em,
+    ...(l.pago_em ? { pagoEm: l.pago_em } : {}),
+    ...(l.valor_pago != null ? { valorPago: l.valor_pago } : {}),
+    ...(l.forma ? { forma: l.forma } : {}),
+  };
+}

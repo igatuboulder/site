@@ -62,3 +62,13 @@ describe('privacidade', () => {
     expect(REGISTROS_DEMO.every((x) => x.email === '' && x.telefone.startsWith('7590000'))).toBe(true);
   });
 });
+
+describe('linha do banco para o painel', () => {
+  it('converte os nomes das colunas', async () => {
+    const { deBanco } = await import('../src/lib/painel');
+    expect(deBanco({ pedido: 'IGB27-0001', nome: 'Ana', cpf: '52998224725', email: 'a@b.co', telefone: '75981707643', camiseta: 'M', status: 'pago',
+      criado_em: '2026-12-01T10:00:00Z', pago_em: '2026-12-01T10:05:00Z', valor_pago: 16000, forma: 'pix' }))
+      .toEqual({ pedido: 'IGB27-0001', nome: 'Ana', cpf: '52998224725', email: 'a@b.co', telefone: '75981707643', camiseta: 'M', status: 'pago',
+        criadoEm: '2026-12-01T10:00:00Z', pagoEm: '2026-12-01T10:05:00Z', valorPago: 16000, forma: 'pix' });
+  });
+});

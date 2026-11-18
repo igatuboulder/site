@@ -9,12 +9,12 @@ describe('montarCheckout', () => {
     expect(c.items).toEqual([{ quantity: 1, price: 16000, description: 'Passaporte Festival IgatuBoulder 2027' }]);
   });
   it('repassa a taxa do cartão ao comprador em qualquer parcelamento', () => {
-    expect(c.options).toEqual({ assured_installments: 0 });
+    expect(c.options).toEqual({ assured_installments: 0, require_delivery_address: false, single_payment: true });
   });
   it('identifica o pedido e volta para o site', () => {
     expect(c.order_nsu).toBe('IGB27-0001');
     expect(c.redirect_url).toBe('https://igatuboulder.com.br/inscricao/obrigado?pedido=IGB27-0001');
-    expect(c.webhook_url).toBe('https://igatuboulder.com.br/api/pagamento');
+    expect(c.webhook_url).toMatch(/^https:\/\/igatuboulder\.com\.br\/api\/pagamento\?pedido=/);
   });
   it('envia os dados do comprador sem o CPF', () => {
     expect(c.customer).toEqual({ name: 'Ana Souza', email: 'ana@exemplo.com', phone_number: '+5575981707643' });
