@@ -55,3 +55,9 @@ describe('Km10 com ainda mais destaque e links das marcas', () => {
     expect(b).toMatch(/target="_blank" rel="noopener"/);
   });
 });
+
+describe('parceiros em negociação ficam fora do site', () => {
+  it('Fullgrip não aparece por enquanto', () => {
+    expect([...REALIZACAO, ...PATROCINIO, ...APOIOS].map((p) => p.nome)).not.toContain('Fullgrip');
+  });
+});

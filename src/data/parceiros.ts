@@ -17,5 +17,4 @@ export const APOIOS: Parceiro[] = [
   { nome: 'Woodtropia', arquivo: 'woodtropia' },
   { nome: 'Gênesis', arquivo: 'genesis' },
   { nome: 'Bendito', arquivo: 'bendito' },
-  { nome: 'Fullgrip' },
 ];
