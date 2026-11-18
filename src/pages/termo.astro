@@ -20,11 +20,22 @@ const clausulas = [
     <div class="conteudo texto">
       <p class="lead">Ao me inscrever no {EVENTO.nome} ({EVENTO.datas}, {EVENTO.local}), declaro que:</p>
       <ol class="clausulas">{clausulas.map((c) => <li>{c}</li>)}</ol>
+
+      <h2 class="h2" id="privacidade">Seus dados</h2>
+      <ul class="dados">
+        <li><strong>O que guardamos:</strong> nome, CPF, e-mail, WhatsApp, tamanho da camiseta e a situação do pagamento.</li>
+        <li><strong>Para quê:</strong> identificar você na inscrição, confirmar o pagamento, fazer a entrega do kit e mandar avisos sobre o festival.</li>
+        <li><strong>Quem vê:</strong> só a organização do festival. O pagamento é feito pela InfinitePay, e os dados do seu cartão ficam com ela: nós nunca vemos. Não vendemos nem repassamos seus dados.</li>
+        <li><strong>Por quanto tempo:</strong> até 90 dias depois do festival. Depois disso, apagamos.</li>
+        <li><strong>Seus direitos:</strong> você pode pedir para ver, corrigir ou apagar seus dados a qualquer momento pela página <a href="/contato">Contato</a>.</li>
+      </ul>
     </div>
   </section>
 </Base>
 <style>
   .clausulas { padding-left: 1.4em; }
   .clausulas li { margin-bottom: 1em; }
+  .dados { padding-left: 1.2em; }
+  .dados li { margin-bottom: .8em; }
   .clausulas li::marker { font-weight: 600; color: var(--laranja); }
 </style>
