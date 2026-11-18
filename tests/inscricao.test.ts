@@ -52,3 +52,8 @@ describe('validarInscricao', () => {
     if (!r.ok) expect(Object.keys(r.erros).sort()).toEqual(['aceite','camiseta','cpf','email','nome','telefone']);
   });
 });
+
+import { EVENTO as EV } from '../src/config/evento';
+describe('tamanhos de camiseta 2027', () => {
+  it('só P, M, G e GG (sem PP e XG)', () => { expect([...EV.camisetas]).toEqual(['P', 'M', 'G', 'GG']); });
+});

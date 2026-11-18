@@ -22,7 +22,7 @@ describe('resumo do painel', () => {
     expect(s.arrecadado).toBe(16000 + 16672 + 16000);
   });
   it('conta camisetas só de quem pagou, em todos os tamanhos, na ordem', () => {
-    expect(s.camisetas).toEqual({ PP: 0, P: 0, M: 2, G: 1, GG: 0, XG: 0 });
+    expect(s.camisetas).toEqual({ P: 0, M: 2, G: 1, GG: 0 });
   });
 });
 
