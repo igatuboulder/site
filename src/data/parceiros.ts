@@ -15,6 +15,6 @@ export const APOIOS: Parceiro[] = [
   { nome: 'Prefeitura de Andaraí', arquivo: 'andarai', link: 'https://www.andarai.ba.gov.br/' },
   { nome: 'Hostel Igatu', arquivo: 'hostel-igatu', link: 'https://www.instagram.com/hosteligatu/' },
   { nome: 'Woodtropia', arquivo: 'woodtropia', link: 'https://www.woodtropia.com/' },
-  { nome: 'Gênesis', arquivo: 'genesis', link: 'https://genesisclimb.godaddysites.com/' },
+  { nome: 'Gênesis', arquivo: 'genesis', link: 'https://www.instagram.com/genesisclimb/' },
   { nome: 'Bendito', arquivo: 'bendito', link: 'https://www.instagram.com/bendito_sorvetes/' },
 ];

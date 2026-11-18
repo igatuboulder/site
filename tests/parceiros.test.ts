@@ -89,8 +89,8 @@ describe('links das marcas', () => {
 });
 
 describe('link da Gênesis', () => {
-  it('vai para o site deles', () => {
+  it('vai para o Instagram (site ainda em construção)', () => {
     const todos = [...REALIZACAO, ...PATROCINIO, ...APOIOS];
-    expect(todos.find((p) => p.nome === 'Gênesis')?.link).toBe('https://genesisclimb.godaddysites.com/');
+    expect(todos.find((p) => p.nome === 'Gênesis')?.link).toBe('https://www.instagram.com/genesisclimb/');
   });
 });
