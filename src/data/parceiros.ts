@@ -5,12 +5,12 @@ export interface Parceiro { nome: string; arquivo?: string; link?: string }
 
 export const REALIZACAO: Parceiro[] = [
   { nome: 'IgatuLands', arquivo: 'igatulands' },
-  { nome: 'IgatuBoulder Social', arquivo: 'igatuboulder-social' },
 ];
 
 export const PATROCINIO: Parceiro[] = [{ nome: 'Km10 Sport', arquivo: 'km10', link: 'https://km10sports.com/' }];
 
 export const APOIOS: Parceiro[] = [
+  { nome: 'IgatuBoulder Social', arquivo: 'igatuboulder-social' },
   { nome: 'Larikinha', arquivo: 'larikinha' },
   { nome: 'Prefeitura de Andaraí', arquivo: 'andarai' },
   { nome: 'Hostel Igatu', arquivo: 'hostel-igatu', link: 'https://www.instagram.com/hosteligatu/' },
