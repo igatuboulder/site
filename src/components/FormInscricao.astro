@@ -74,6 +74,7 @@ import { EVENTO } from '../config/evento';
       aviso.textContent = j.motivo === 'ja_pago'
         ? 'Este CPF já tem uma inscrição paga. Se precisar de ajuda, fale com a organização pela página Contato.'
         : 'Não conseguimos abrir o pagamento agora. Confira os dados e tente de novo em alguns minutos.';
+      if (typeof j.detalhe === 'string') aviso.textContent += ` [prévia: ${j.detalhe}]`;
     } catch {
       aviso.textContent = 'Sem conexão com o servidor. Tente de novo em alguns minutos.';
     }
