@@ -1,0 +1,251 @@
+---
+// Painel da organização: quem já pagou, quem está pendente e a lista de entrega de kits.
+// Página fora do menu e fora do Google. Os dados reais só chegam depois do login (Supabase);
+// até lá, mostra uma demonstração com dados inventados.
+import '../styles/global.css';
+import { EVENTO } from '../config/evento';
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Painel da organização · IgatuBoulder {EVENTO.ano}</title>
+  <link rel="icon" type="image/png" href="/favicon.png" />
+</head>
+<body class="painel">
+  <header class="topo">
+    <div class="topo-in">
+      <img class="logo" src="/img/logos/igatuboulder.png" alt="IgatuBoulder Festival" width="1158" height="637" />
+      <div class="titulo">
+        <p class="rotulo">Painel da organização</p>
+        <p class="display nome">Inscrições {EVENTO.ano}</p>
+      </div>
+      <button type="button" class="btn-imprimir" id="imprimir">Imprimir lista de kits</button>
+    </div>
+  </header>
+
+  <main id="conteudo" class="corpo">
+    <p class="aviso-demo" id="aviso-demo" hidden>
+      <strong>Demonstração.</strong> Estes são dados inventados para mostrar como o painel funciona. Os inscritos de verdade aparecem aqui assim que o banco estiver ligado e você entrar com seu e-mail.
+    </p>
+
+    <section class="resumo" aria-label="Resumo">
+      <div class="card card-pago">
+        <p class="rotulo">Pagos</p>
+        <p class="numero display" id="n-pagos">0</p>
+        <p class="nota">kits garantidos</p>
+      </div>
+      <div class="card card-pendente">
+        <p class="rotulo">Pendentes</p>
+        <p class="numero display" id="n-pendentes">0</p>
+        <p class="nota">inscreveram, ainda não pagaram</p>
+      </div>
+      <div class="card">
+        <p class="rotulo">Arrecadado</p>
+        <p class="numero display" id="arrecadado">R$ 0</p>
+        <p class="nota" id="n-total">0 inscrições no total</p>
+      </div>
+      <div class="barra" aria-hidden="true"><span id="barra-pago"></span></div>
+    </section>
+
+    <section class="tamanhos" aria-label="Camisetas de quem já pagou">
+      <p class="rotulo">Camisetas para separar <span class="nota">(só de quem pagou)</span></p>
+      <ul id="tamanhos"></ul>
+    </section>
+
+    <section class="lista" aria-label="Inscritos">
+      <div class="controles">
+        <div class="abas" role="tablist" aria-label="Filtrar por situação">
+          <button type="button" role="tab" data-status="todos" aria-selected="true">Todos <span></span></button>
+          <button type="button" role="tab" data-status="pago" aria-selected="false">Pagos <span></span></button>
+          <button type="button" role="tab" data-status="pendente" aria-selected="false">Pendentes <span></span></button>
+        </div>
+        <label class="busca">
+          <span class="sr-only">Buscar</span>
+          <input type="search" id="busca" placeholder="Buscar nome, pedido ou final do CPF" autocomplete="off" />
+        </label>
+      </div>
+
+      <table class="tabela">
+        <thead>
+          <tr><th>Nome</th><th>Camiseta</th><th>Situação</th><th>Pagamento</th><th>Pedido</th><th><span class="sr-only">Ações</span></th></tr>
+        </thead>
+        <tbody id="linhas"></tbody>
+      </table>
+      <p class="vazio" id="vazio" hidden>Ninguém encontrado com essa busca.</p>
+    </section>
+  </main>
+
+  <!-- Só aparece na impressão -->
+  <section class="impressao" aria-hidden="true">
+    <h1>Entrega de kits · {EVENTO.edicao}º {EVENTO.nome}</h1>
+    <p>{EVENTO.datas} · {EVENTO.local} · <span id="imp-total"></span> · impresso em <span id="imp-data"></span></p>
+    <p id="imp-tamanhos"></p>
+    <table>
+      <thead><tr><th class="ok">Entregue</th><th>#</th><th>Nome</th><th>CPF</th><th>Camiseta</th><th>Assinatura</th></tr></thead>
+      <tbody id="imp-linhas"></tbody>
+    </table>
+  </section>
+
+  <script>
+    import { resumir, filtrar, listaKits, cpfMascarado, linkCobranca, porNome, type Registro, type Status } from '../lib/painel';
+    import { formatarReais } from '../lib/preco';
+    import { REGISTROS_DEMO } from '../data/painel-demo';
+
+    const $ = (id: string) => document.getElementById(id)!;
+    const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
+    const dataCurta = (iso?: string) => iso ? new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) : '';
+
+    // Fonte dos dados: por enquanto, só a demonstração (dados inventados).
+    // Quando o Supabase estiver ligado, aqui entra o login e a leitura protegida.
+    const registros: Registro[] = REGISTROS_DEMO;
+    $('aviso-demo').hidden = false;
+
+    let status: Status | 'todos' = 'todos';
+    let busca = '';
+
+    function desenharResumo() {
+      const s = resumir(registros);
+      $('n-pagos').textContent = String(s.pagos);
+      $('n-pendentes').textContent = String(s.pendentes);
+      $('arrecadado').textContent = formatarReais(s.arrecadado).replace(/,00$/, '');
+      $('n-total').textContent = `${s.total} inscrições no total`;
+      ($('barra-pago') as HTMLElement).style.width = s.total ? `${(s.pagos / s.total) * 100}%` : '0';
+      $('tamanhos').innerHTML = Object.entries(s.camisetas)
+        .map(([t, n]) => `<li class="${n ? '' : 'zero'}"><span class="t">${t}</span><span class="n">${n}</span></li>`).join('');
+      const abas = document.querySelectorAll<HTMLButtonElement>('.abas button');
+      const contagem = { todos: s.total, pago: s.pagos, pendente: s.pendentes } as const;
+      abas.forEach((b) => { b.querySelector('span')!.textContent = String(contagem[b.dataset.status as keyof typeof contagem]); });
+    }
+
+    function desenharLista() {
+      const lista = filtrar(registros, { status, busca }).sort(porNome);
+      $('linhas').innerHTML = lista.map((x) => {
+        const pago = x.status === 'pago';
+        const pagamento = pago ? `${x.forma === 'cartao' ? 'Cartão' : 'Pix'} · ${dataCurta(x.pagoEm)}` : `inscrito em ${dataCurta(x.criadoEm)}`;
+        const acao = pago ? '' : `<a class="cobrar" href="${linkCobranca(x)}" target="_blank" rel="noopener">Chamar no WhatsApp</a>`;
+        return `<tr class="${x.status}">
+          <td class="c-nome" data-r="Nome"><strong>${esc(x.nome)}</strong><span class="nota">CPF ${cpfMascarado(x.cpf)}</span></td>
+          <td class="c-cam" data-r="Camiseta"><span class="tam">${x.camiseta}</span></td>
+          <td class="c-sit" data-r="Situação"><span class="selo ${x.status}">${pago ? 'Pago' : 'Pendente'}</span></td>
+          <td class="c-pag" data-r="Pagamento">${pagamento}</td>
+          <td class="c-ped" data-r="Pedido">${esc(x.pedido)}</td>
+          <td class="c-acao">${acao}</td></tr>`;
+      }).join('');
+      $('vazio').hidden = lista.length > 0;
+    }
+
+    function desenharImpressao() {
+      const kits = listaKits(registros);
+      const s = resumir(registros);
+      $('imp-total').textContent = `${kits.length} kits`;
+      $('imp-data').textContent = new Date().toLocaleDateString('pt-BR');
+      $('imp-tamanhos').textContent = 'Camisetas: ' + Object.entries(s.camisetas).map(([t, n]) => `${t} ${n}`).join(' · ');
+      $('imp-linhas').innerHTML = kits.map((x, i) =>
+        `<tr><td class="ok"><span class="caixa"></span></td><td>${i + 1}</td><td>${esc(x.nome)}</td><td>${cpfMascarado(x.cpf)}</td><td>${x.camiseta}</td><td class="ass"></td></tr>`).join('');
+    }
+
+    document.querySelectorAll<HTMLButtonElement>('.abas button').forEach((b) => b.addEventListener('click', () => {
+      status = b.dataset.status as typeof status;
+      document.querySelectorAll('.abas button').forEach((o) => o.setAttribute('aria-selected', String(o === b)));
+      desenharLista();
+    }));
+    ($('busca') as HTMLInputElement).addEventListener('input', (e) => { busca = (e.target as HTMLInputElement).value; desenharLista(); });
+    $('imprimir').addEventListener('click', () => { desenharImpressao(); window.print(); });
+    window.addEventListener('beforeprint', desenharImpressao);
+
+    desenharResumo();
+    desenharLista();
+  </script>
+</body>
+</html>
+
+<style is:global>
+  body.painel { background: var(--papel); }
+  .painel .topo { background: var(--verde); color: var(--papel); }
+  .painel .topo-in, .painel .corpo { max-width: 1120px; margin: 0 auto; padding-inline: 16px; }
+  .painel .topo-in { display: flex; align-items: center; gap: 20px; padding-block: 16px; }
+  .painel .logo { height: 44px; width: auto; filter: brightness(0) invert(.96) sepia(.1); }
+  .painel .titulo { flex: 1; }
+  .painel .titulo .rotulo { margin: 0; opacity: .8; }
+  .painel .titulo .nome { margin: 4px 0 0; font-size: var(--t-item); text-transform: uppercase; }
+  .painel .btn-imprimir { font: inherit; font-weight: 600; background: var(--amarelo); color: var(--tinta); border: 0; padding: 12px 18px; cursor: pointer; }
+  .painel .btn-imprimir:hover { background: var(--papel); }
+
+  .painel .corpo { padding-block: 24px 64px; display: grid; gap: 24px; }
+  .painel .aviso-demo { margin: 0; background: #FBE3D6; border-left: 6px solid var(--laranja); padding: 14px 16px; font-size: var(--t-nota); line-height: 1.5; }
+
+  .painel .resumo { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .painel .card { background: #fff; border: 2px solid var(--verde); padding: 16px 18px; }
+  .painel .card p { margin: 0; }
+  .painel .card .numero { font-size: var(--t-secao); color: var(--verde); margin: 8px 0 4px; }
+  .painel .card-pago { background: var(--verde); color: var(--papel); }
+  .painel .card-pago .numero { color: var(--amarelo); }
+  .painel .card-pendente .numero { color: var(--laranja); }
+  .painel .barra { grid-column: 1 / -1; height: 10px; background: #F3D3C2; border: 2px solid var(--verde); }
+  .painel .barra span { display: block; height: 100%; background: var(--verde); transition: width .6s ease; }
+
+  .painel .tamanhos ul { list-style: none; padding: 0; margin: 10px 0 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .painel .tamanhos li { display: flex; align-items: stretch; border: 2px solid var(--verde); background: #fff; }
+  .painel .tamanhos li.zero { opacity: .45; }
+  .painel .tamanhos .t { background: var(--verde); color: var(--papel); padding: 6px 10px; font-weight: 600; min-width: 2.4em; text-align: center; }
+  .painel .tamanhos .n { padding: 6px 12px; font-weight: 600; }
+
+  .painel .controles { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; margin-bottom: 12px; }
+  .painel .abas { display: flex; border: 2px solid var(--verde); }
+  .painel .abas button { font: inherit; background: #fff; border: 0; padding: 10px 14px; cursor: pointer; color: var(--verde); font-weight: 600; }
+  .painel .abas button + button { border-left: 2px solid var(--verde); }
+  .painel .abas button[aria-selected="true"] { background: var(--verde); color: var(--papel); }
+  .painel .abas button span { opacity: .7; margin-left: 4px; }
+  .painel .busca { flex: 1 1 280px; max-width: 420px; }
+  .painel .busca input { width: 100%; box-sizing: border-box; font: inherit; padding: 10px 12px; border: 2px solid var(--verde); background: #fff; }
+
+  .painel .tabela { width: 100%; border-collapse: collapse; background: #fff; border: 2px solid var(--verde); }
+  .painel .tabela th { text-align: left; font-size: var(--t-rotulo); letter-spacing: .14em; text-transform: uppercase; padding: 10px 12px; background: #EFE8D8; border-bottom: 2px solid var(--verde); }
+  .painel .tabela td { padding: 12px; border-bottom: 1px solid #E2D9C6; vertical-align: middle; }
+  .painel .tabela tr.pendente td { background: #FFF8F3; }
+  .painel .c-nome strong { display: block; }
+  .painel .c-nome .nota { color: #6B6258; }
+  .painel .tam { display: inline-block; min-width: 2.4em; text-align: center; border: 2px solid var(--verde); font-weight: 600; padding: 2px 6px; }
+  .painel .selo { display: inline-block; padding: 4px 10px; font-size: var(--t-nota); font-weight: 600; }
+  .painel .selo.pago { background: var(--verde); color: var(--papel); }
+  .painel .selo.pendente { background: var(--laranja); color: #fff; }
+  .painel .c-pag, .painel .c-ped { font-size: var(--t-nota); }
+  .painel .cobrar { font-size: var(--t-nota); font-weight: 600; color: var(--verde); white-space: nowrap; }
+  .painel .vazio { padding: 24px; text-align: center; background: #fff; border: 2px solid var(--verde); border-top: 0; margin: 0; }
+
+  @media (max-width: 760px) {
+    .painel .topo-in { flex-wrap: wrap; }
+    .painel .btn-imprimir { width: 100%; }
+    .painel .resumo { grid-template-columns: 1fr 1fr; }
+    .painel .resumo .card:nth-child(3) { grid-column: 1 / -1; }
+    .painel .tabela thead { display: none; }
+    .painel .tabela, .painel .tabela tbody, .painel .tabela tr, .painel .tabela td { display: block; }
+    .painel .tabela tr { display: grid; grid-template-columns: 1fr auto; gap: 4px 12px; padding: 12px; border-bottom: 1px solid #E2D9C6; }
+    .painel .tabela td { padding: 0; border: 0; background: none !important; }
+    .painel .c-nome { grid-column: 1; } .painel .c-sit { grid-column: 2; grid-row: 1; text-align: right; }
+    .painel .c-cam, .painel .c-pag, .painel .c-ped { grid-column: 1 / -1; display: inline !important; }
+    .painel .c-cam::before { content: 'Camiseta '; font-size: var(--t-nota); }
+    .painel .c-acao { grid-column: 1 / -1; }
+  }
+
+  .painel .impressao { display: none; }
+  @media print {
+    @page { size: A4; margin: 14mm 12mm; }
+    body.painel { background: #fff; }
+    .painel .topo, .painel .corpo { display: none !important; }
+    .painel .impressao { display: block; color: #000; font-size: var(--t-nota); }
+    .painel .impressao h1 { font-family: var(--display); font-stretch: 75%; font-weight: 900; font-size: var(--t-item); text-transform: uppercase; margin: 0 0 4px; }
+    .painel .impressao p { margin: 0 0 6px; font-size: var(--t-nota); }
+    .painel .impressao table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .painel .impressao thead { display: table-header-group; }
+    .painel .impressao th, .painel .impressao td { border: 1px solid #000; padding: 6px 8px; text-align: left; }
+    .painel .impressao th { font-size: var(--t-rotulo); text-transform: uppercase; letter-spacing: .08em; }
+    .painel .impressao tr { break-inside: avoid; }
+    .painel .impressao .ok { width: 18mm; text-align: center; }
+    .painel .impressao .caixa { display: inline-block; width: 12px; height: 12px; border: 1.5px solid #000; }
+    .painel .impressao .ass { width: 55mm; }
+  }
+</style>

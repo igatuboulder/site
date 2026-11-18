@@ -78,3 +78,12 @@ describe('IgatuBoulder Social entre os apoios', () => {
     expect(APOIOS.map((p) => p.nome)).toContain('IgatuBoulder Social');
   });
 });
+
+describe('links das marcas', () => {
+  it('todas as marcas com site levam ao site; IgatuLands e Social não têm link', async () => {
+    const { REALIZACAO, PATROCINIO, APOIOS } = await import('../src/data/parceiros');
+    const todos = [...REALIZACAO, ...PATROCINIO, ...APOIOS];
+    const semLink = todos.filter((p) => !p.link).map((p) => p.nome).sort();
+    expect(semLink).toEqual(['IgatuBoulder Social', 'IgatuLands']);
+  });
+});
