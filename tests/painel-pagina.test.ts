@@ -22,3 +22,18 @@ describe('página do painel', () => {
     expect(existsSync('src/pages/painel.astro')).toBe(true);
   });
 });
+
+describe('acesso ao painel', () => {
+  const src = readFileSync('src/pages/painel.astro', 'utf8');
+  it('entra por link no e-mail, sem criar conta nova', () => {
+    expect(src).toContain('signInWithOtp');
+    expect(src).toContain('shouldCreateUser: false');
+  });
+  it('usa só a chave pública no navegador', () => {
+    expect(src).not.toMatch(/SECRET|service_role|sb_secret/);
+    expect(src).toContain('SUPABASE_PUBLICA');
+  });
+  it('a demonstração só aparece pedindo ?demo', () => {
+    expect(src).toContain("get('demo')");
+  });
+});

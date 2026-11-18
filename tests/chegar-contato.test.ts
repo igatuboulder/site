@@ -25,3 +25,11 @@ describe('Contato', () => {
     expect(contato.match(/<section/g)).toHaveLength(1);
   });
 });
+
+describe('distâncias corrigidas pela organização', () => {
+  it('Andaraí → Igatu tem 13 km', async () => {
+    const { readFileSync } = await import('node:fs');
+    const src = readFileSync('src/pages/como-chegar.astro', 'utf8');
+    expect(src).toMatch(/de: 'Andaraí', para: 'Igatu', km: '13 km'/);
+  });
+});

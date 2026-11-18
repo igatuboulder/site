@@ -22,13 +22,25 @@ import { EVENTO } from '../config/evento';
         <p class="rotulo">Painel da organização</p>
         <p class="display nome">Inscrições {EVENTO.ano}</p>
       </div>
-      <button type="button" class="btn-imprimir" id="imprimir">Imprimir lista de kits</button>
+      <button type="button" class="btn-imprimir" id="imprimir" hidden>Imprimir lista de kits</button>
+      <button type="button" class="btn-sair" id="sair" hidden>Sair</button>
     </div>
   </header>
 
-  <main id="conteudo" class="corpo">
+  <section class="entrar" id="entrar" hidden>
+    <form id="form-entrar" class="caixa-entrar">
+      <p class="h3 display">Entrar no painel</p>
+      <p class="nota">Só os e-mails da organização têm acesso. Você recebe um link no e-mail e entra sem senha.</p>
+      <label for="email-entrar" class="rotulo">Seu e-mail</label>
+      <input id="email-entrar" type="email" autocomplete="email" required />
+      <button type="submit">Receber link de acesso</button>
+      <p class="nota" id="msg-entrar" role="status"></p>
+    </form>
+  </section>
+
+  <main id="conteudo" class="corpo" hidden>
     <p class="aviso-demo" id="aviso-demo" hidden>
-      <strong>Demonstração.</strong> Estes são dados inventados para mostrar como o painel funciona. Os inscritos de verdade aparecem aqui assim que o banco estiver ligado e você entrar com seu e-mail.
+      <strong>Demonstração.</strong> Estes são dados inventados para mostrar como o painel funciona. Para ver os inscritos de verdade, abra o painel sem o ?demo no endereço e entre com o e-mail da organização.
     </p>
 
     <section class="resumo" aria-label="Resumo">
@@ -93,15 +105,18 @@ import { EVENTO } from '../config/evento';
     import { resumir, filtrar, listaKits, cpfMascarado, linkCobranca, porNome, type Registro, type Status } from '../lib/painel';
     import { formatarReais } from '../lib/preco';
     import { REGISTROS_DEMO } from '../data/painel-demo';
+    import { deBanco } from '../lib/painel';
+    import { createClient } from '@supabase/supabase-js';
+    import { SUPABASE_URL, SUPABASE_PUBLICA } from '../config/supabase';
 
     const $ = (id: string) => document.getElementById(id)!;
     const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
     const dataCurta = (iso?: string) => iso ? new Date(iso).toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) : '';
 
-    // Fonte dos dados: por enquanto, só a demonstração (dados inventados).
-    // Quando o Supabase estiver ligado, aqui entra o login e a leitura protegida.
-    const registros: Registro[] = REGISTROS_DEMO;
-    $('aviso-demo').hidden = false;
+    // Fonte dos dados: o banco, depois do login (as regras do banco só liberam os e-mails da organização).
+    // Com ?demo na página, mostra a demonstração com dados inventados.
+    let registros: Registro[] = [];
+    const sb = createClient(SUPABASE_URL, SUPABASE_PUBLICA);
 
     let status: Status | 'todos' = 'todos';
     let busca = '';
@@ -156,14 +171,52 @@ import { EVENTO } from '../config/evento';
     $('imprimir').addEventListener('click', () => { desenharImpressao(); window.print(); });
     window.addEventListener('beforeprint', desenharImpressao);
 
-    desenharResumo();
-    desenharLista();
+    function mostrarPainel() {
+      $('entrar').hidden = true; $('conteudo').hidden = false; $('imprimir').hidden = false;
+      desenharResumo(); desenharLista();
+    }
+
+    async function carregar() {
+      const { data: org } = await sb.from('organizadores').select('email').limit(1);
+      if (!org?.length) {
+        $('entrar').hidden = false; $('conteudo').hidden = true;
+        $('msg-entrar').textContent = 'Este e-mail não tem acesso ao painel. Saia e entre com o e-mail da organização.';
+        $('sair').hidden = false; return;
+      }
+      const { data, error } = await sb.from('inscricoes').select('*').order('criado_em', { ascending: false });
+      if (error) { $('msg-entrar').textContent = 'Não foi possível carregar as inscrições. Tente recarregar a página.'; return; }
+      registros = (data ?? []).map(deBanco);
+      $('sair').hidden = false;
+      mostrarPainel();
+    }
+
+    $('form-entrar').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = ($('email-entrar') as HTMLInputElement).value.trim().toLowerCase();
+      const msg = $('msg-entrar');
+      msg.textContent = 'Enviando…';
+      const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: `${location.origin}/painel` } });
+      msg.textContent = error
+        ? 'Não conseguimos enviar o link. Confira se é o e-mail da organização.'
+        : 'Pronto! Abra o link que mandamos para o seu e-mail (veja também o spam).';
+    });
+    $('sair').addEventListener('click', async () => { await sb.auth.signOut(); location.href = '/painel'; });
+
+    if (new URLSearchParams(location.search).get('demo') !== null) {
+      registros = REGISTROS_DEMO; $('aviso-demo').hidden = false; mostrarPainel();
+    } else {
+      const { data } = await sb.auth.getSession();
+      if (data.session) await carregar(); else $('entrar').hidden = false;
+      sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN') carregar(); });
+      setInterval(() => { if (!$('conteudo').hidden) carregar(); }, 60000);
+    }
   </script>
 </body>
 </html>
 
 <style is:global>
   body.painel { background: var(--papel); }
+  .painel [hidden] { display: none !important; }
   .painel .topo { background: var(--verde); color: var(--papel); }
   .painel .topo-in, .painel .corpo { max-width: 1120px; margin: 0 auto; padding-inline: 16px; }
   .painel .topo-in { display: flex; align-items: center; gap: 20px; padding-block: 16px; }
@@ -173,6 +226,12 @@ import { EVENTO } from '../config/evento';
   .painel .titulo .nome { margin: 4px 0 0; font-size: var(--t-item); text-transform: uppercase; }
   .painel .btn-imprimir { font: inherit; font-weight: 600; background: var(--amarelo); color: var(--tinta); border: 0; padding: 12px 18px; cursor: pointer; }
   .painel .btn-imprimir:hover { background: var(--papel); }
+  .painel .btn-sair { font: inherit; background: none; color: var(--papel); border: 2px solid var(--papel); padding: 10px 14px; cursor: pointer; }
+  .painel .entrar { max-width: 1120px; margin: 0 auto; padding: 48px 16px; }
+  .painel .caixa-entrar { max-width: 440px; background: #fff; border: 2px solid var(--verde); padding: 24px; display: grid; gap: 10px; }
+  .painel .caixa-entrar p { margin: 0; }
+  .painel .caixa-entrar input { font: inherit; padding: 10px 12px; border: 2px solid var(--verde); }
+  .painel .caixa-entrar button { font: inherit; font-weight: 600; background: var(--verde); color: var(--papel); border: 0; padding: 12px 16px; cursor: pointer; }
 
   .painel .corpo { padding-block: 24px 64px; display: grid; gap: 24px; }
   .painel .aviso-demo { margin: 0; background: #FBE3D6; border-left: 6px solid var(--laranja); padding: 14px 16px; font-size: var(--t-nota); line-height: 1.5; }
@@ -235,7 +294,7 @@ import { EVENTO } from '../config/evento';
   @media print {
     @page { size: A4; margin: 14mm 12mm; }
     body.painel { background: #fff; }
-    .painel .topo, .painel .corpo { display: none !important; }
+    .painel .topo, .painel .corpo, .painel .entrar { display: none !important; }
     .painel .impressao { display: block; color: #000; font-size: var(--t-nota); }
     .painel .impressao h1 { font-family: var(--display); font-stretch: 75%; font-weight: 900; font-size: var(--t-item); text-transform: uppercase; margin: 0 0 4px; }
     .painel .impressao p { margin: 0 0 6px; font-size: var(--t-nota); }

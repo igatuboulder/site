@@ -37,6 +37,7 @@ import { EVENTO } from '../config/evento';
     <label class="aceite"><input type="checkbox" name="aceite" /> <span>Li e aceito o <a href="/termo" target="_blank">termo de responsabilidade</a> do festival.</span></label>
     <p class="erro" id="erro-aceite" aria-live="polite"></p>
   </div>
+  <div class="isca" aria-hidden="true"><label>Site <input name="site" tabindex="-1" autocomplete="off" /></label></div>
   <button type="submit" class="botao">Ir para o pagamento →</button>
   <p class="aviso" id="aviso" role="status"></p>
 </form>
@@ -45,7 +46,7 @@ import { EVENTO } from '../config/evento';
   import { validarInscricao } from '../lib/inscricao';
   const form = document.getElementById('form-inscricao') as HTMLFormElement;
   const campos = ['nome', 'cpf', 'email', 'telefone', 'camiseta', 'aceite'];
-  form.addEventListener('submit', (e) => {
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const fd = new FormData(form);
     const entrada: Record<string, unknown> = Object.fromEntries(fd.entries());
@@ -63,11 +64,25 @@ import { EVENTO } from '../config/evento';
       (form.querySelector('[aria-invalid="true"]') as HTMLElement | null)?.focus();
       return;
     }
-    aviso.textContent = 'Dados conferidos. Versão de teste: o pagamento ainda não está conectado.';
+    const botao = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    botao.disabled = true;
+    aviso.textContent = 'Abrindo o pagamento…';
+    try {
+      const resp = await fetch('/api/inscricao', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(entrada) });
+      const j = await resp.json();
+      if (j.ok && typeof j.url === 'string' && j.url.startsWith('https://')) { window.location.href = j.url; return; }
+      aviso.textContent = j.motivo === 'ja_pago'
+        ? 'Este CPF já tem uma inscrição paga. Se precisar de ajuda, fale com a organização pela página Contato.'
+        : 'Não conseguimos abrir o pagamento agora. Confira os dados e tente de novo em alguns minutos.';
+    } catch {
+      aviso.textContent = 'Sem conexão com o servidor. Tente de novo em alguns minutos.';
+    }
+    botao.disabled = false;
   });
 </script>
 
 <style>
+  .isca { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
   .form { display: grid; gap: 18px; }
   .linha { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .campo { display: grid; gap: 6px; border: 0; padding: 0; margin: 0; min-width: 0; }
