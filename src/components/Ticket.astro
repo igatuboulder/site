@@ -53,7 +53,7 @@ const { href = '#inscricao' } = Astro.props;
       const empilhado = () => matchMedia('(max-width: 640px)').matches;
       const abrir = () => (empilhado() ? { rotation: 2.5, x: 4, y: 10 } : { rotation: 4, x: 12, y: 0 });
       const destacar = () => gsap.to(cta, { ...abrir(), duration: 0.45, ease: 'power3.out', overwrite: true });
-      const voltar = () => gsap.to(cta, { rotation: 0, x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)', overwrite: true });
+      const voltar = () => gsap.to(cta, { rotation: 0, x: 0, y: 0, duration: 0.6, ease: 'power3.inOut', overwrite: true });
       t.addEventListener('mouseenter', destacar);
       t.addEventListener('focus', destacar);
       t.addEventListener('mouseleave', voltar);
@@ -61,7 +61,7 @@ const { href = '#inscricao' } = Astro.props;
       // Aviso na entrada: destaca um pouco e volta, para mostrar que é destacável.
       gsap.timeline({ delay: 1.6 })
         .to(cta, { ...abrir(), duration: 0.5, ease: 'power3.out' })
-        .to(cta, { rotation: 0, x: 0, y: 0, duration: 0.9, ease: 'elastic.out(1, 0.45)' }, '+=0.35');
+        .to(cta, { rotation: 0, x: 0, y: 0, duration: 0.8, ease: 'power3.inOut' }, '+=0.35');
     });
   });
 </script>
