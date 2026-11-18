@@ -10,6 +10,7 @@ function dbFalso(o: Partial<Db> = {}): Db {
     criar: vi.fn(async () => 'IGB27-0001'),
     atualizarPendente: vi.fn(async () => {}),
     marcarPago: vi.fn(async () => true),
+    estaPago: vi.fn(async () => false),
     ...o,
   };
 }
@@ -131,5 +132,27 @@ describe('preço de teste (só na prévia)', () => {
     const r = await confirmarPagamento({ order_nsu: 'P', transaction_nsu: 't', slug: 's' },
       { db, handle: 'h', preco: 100, paymentCheck: async () => ({ success: true, paid: true, amount: 100, paid_amount: 100, capture_method: 'pix' }) });
     expect(r.pago).toBe(true);
+  });
+});
+
+describe('confirmarPagamento com o número da InfinitePay', () => {
+  const pago = { success: true, paid: true, amount: 16000, paid_amount: 16000, capture_method: 'pix' };
+  it('consulta com o order_nsu da InfinitePay, mas marca o NOSSO pedido', async () => {
+    const db = dbFalso(); const check = vi.fn(async () => pago);
+    const r = await confirmarPagamento({ pedido: 'IGB27-0001', order_nsu: '805023c1-uuid', transaction_nsu: 't1', slug: 's1' }, { db, handle: 'h', paymentCheck: check });
+    expect(check).toHaveBeenCalledWith({ handle: 'h', order_nsu: '805023c1-uuid', transaction_nsu: 't1', slug: 's1' });
+    expect(db.marcarPago).toHaveBeenCalledWith('IGB27-0001', expect.objectContaining({ transaction_nsu: 't1' }));
+    expect(r.pago).toBe(true);
+  });
+  it('não diz "confirmada" quando nenhum pedido foi marcado nem já estava pago', async () => {
+    const db = dbFalso({ marcarPago: vi.fn(async () => false), estaPago: vi.fn(async () => false) });
+    const r = await confirmarPagamento({ order_nsu: 'nao-existe', transaction_nsu: 't1', slug: 's1' }, { db, handle: 'h', paymentCheck: async () => pago });
+    expect(r.pago).toBe(false);
+  });
+  it('confirma de novo quando o aviso já tinha marcado o pedido antes', async () => {
+    const db = dbFalso({ marcarPago: vi.fn(async () => false), estaPago: vi.fn(async () => true) });
+    const r = await confirmarPagamento({ pedido: 'IGB27-0001', order_nsu: 'u', transaction_nsu: 't1', slug: 's1' }, { db, handle: 'h', paymentCheck: async () => pago });
+    expect(r.pago).toBe(true);
+    expect(db.estaPago).toHaveBeenCalledWith('IGB27-0001');
   });
 });

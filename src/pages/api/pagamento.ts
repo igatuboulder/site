@@ -12,6 +12,9 @@ export const POST: APIRoute = async ({ request, url }) => {
     const corpo = await request.json().catch(() => null);
     if (!corpo || typeof corpo !== 'object') return json({ pago: false }, 400);
     const { db, handle, paymentCheck } = ambiente();
+    // O aviso da InfinitePay chega em /api/pagamento?pedido=IGB27-…
+    const pedido = url.searchParams.get('pedido');
+    if (pedido && !(corpo as Record<string, unknown>).pedido) (corpo as Record<string, unknown>).pedido = pedido;
     return json(await confirmarPagamento(corpo, { db, handle, paymentCheck, preco: precoVigente(process.env, url.hostname) }));
   } catch (e) {
     console.error('pagamento', e);

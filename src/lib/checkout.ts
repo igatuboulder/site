@@ -20,7 +20,7 @@ export function montarCheckout(d: Inscricao, o: { pedido: string; baseUrl: strin
     items: [{ quantity: 1, price: o.preco ?? PRECO_PASSAPORTE, description: `Passaporte ${EVENTO.nome} ${EVENTO.ano}` }],
     order_nsu: o.pedido,
     redirect_url: `${base}/inscricao/obrigado?pedido=${encodeURIComponent(o.pedido)}`,
-    webhook_url: `${base}/api/pagamento`,
+    webhook_url: `${base}/api/pagamento?pedido=${encodeURIComponent(o.pedido)}`,
     customer: { name: d.nome, email: d.email, phone_number: `+55${d.telefone}` },
     // 0 = nenhuma parcela com taxa absorvida pelo festival: no cartão, quem compra paga a taxa.
     // Confirmar num pagamento de teste que vale também para o cartão à vista.

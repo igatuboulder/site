@@ -10,6 +10,7 @@ export interface Db {
   criar(d: Inscricao): Promise<string>;
   atualizarPendente(pedido: string, d: Inscricao): Promise<void>;
   marcarPago(pedido: string, p: Pagamento): Promise<boolean>;
+  estaPago(pedido: string): Promise<boolean>;
 }
 export type CorpoCheckout = ReturnType<typeof montarCheckout> & { options?: unknown };
 

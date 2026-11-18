@@ -34,6 +34,11 @@ export function ambiente(env: Record<string, string | undefined> = process.env) 
       if (error) throw error;
       return data.length > 0;
     },
+    async estaPago(pedido) {
+      const { data, error } = await sb.from('inscricoes').select('status').eq('pedido', pedido).maybeSingle();
+      if (error) throw error;
+      return data?.status === 'pago';
+    },
   };
 
   const cabecalhos = { 'Content-Type': 'application/json', ...(apiKey ? { 'X-Api-Key': apiKey } : {}) };

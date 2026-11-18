@@ -20,7 +20,7 @@ import { EVENTO } from '../../config/evento';
 </Base>
 <script>
   const q = new URLSearchParams(location.search);
-  const pedido = q.get('order_nsu') || q.get('pedido') || '';
+  const pedido = q.get('pedido') || q.get('order_nsu') || '';
   const $ = (id: string) => document.getElementById(id)!;
   if (pedido) $('pedido').textContent = `Pedido ${pedido}`;
   const recibo = q.get('receipt_url');
@@ -32,7 +32,7 @@ import { EVENTO } from '../../config/evento';
   async function conferir(tentativa = 0): Promise<void> {
     try {
       const r = await fetch('/api/pagamento', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ order_nsu: pedido, transaction_nsu: q.get('transaction_nsu'), slug: q.get('slug'), receipt_url: recibo }) });
+        body: JSON.stringify({ pedido, order_nsu: q.get('order_nsu') || pedido, transaction_nsu: q.get('transaction_nsu'), slug: q.get('slug'), receipt_url: recibo }) });
       const j = await r.json();
       if (j.pago) return mostrar('pago', 'Inscrição confirmada!', 'Seu passaporte está garantido. Guarde o número do pedido: ele é usado na retirada do kit.');
     } catch {}

@@ -14,12 +14,14 @@ export async function confirmarPagamento(p: Record<string, unknown>, deps: Deps)
   const r = await deps.paymentCheck({ handle: deps.handle, order_nsu, transaction_nsu, slug });
   if (!r.success || !r.paid) return { pago: false };
   if (!r.amount || r.amount < (deps.preco ?? PRECO_PASSAPORTE) || !r.paid_amount || r.paid_amount < r.amount) return { pago: false };
+  // A InfinitePay pode trocar o order_nsu pelo número dela; o nosso pedido volta no parâmetro "pedido".
+  const pedido = texto(p.pedido) || order_nsu;
   const receipt = texto(p.receipt_url);
-  await deps.db.marcarPago(order_nsu, {
+  const marcou = await deps.db.marcarPago(pedido, {
     valor_pago: r.paid_amount,
     forma: r.capture_method === 'pix' ? 'pix' : 'cartao',
     transaction_nsu, invoice_slug: slug,
     ...(receipt.startsWith('https://') ? { receipt_url: receipt } : {}),
   });
-  return { pago: true };
+  return { pago: marcou || (await deps.db.estaPago(pedido)) };
 }
