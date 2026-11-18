@@ -13,7 +13,7 @@ export interface Db {
 }
 export type CorpoCheckout = ReturnType<typeof montarCheckout> & { options?: unknown };
 
-interface Deps { db: Db; criarLink: (corpo: CorpoCheckout) => Promise<string>; handle: string; apiKey?: string; baseUrl: string }
+interface Deps { db: Db; criarLink: (corpo: CorpoCheckout) => Promise<string>; handle: string; apiKey?: string; baseUrl: string; preco?: number }
 
 export type Resposta =
   | { ok: true; pedido: string; url: string }
@@ -32,7 +32,7 @@ export async function inscrever(entrada: Record<string, unknown>, deps: Deps): P
   if (existente) { pedido = existente.pedido; await deps.db.atualizarPendente(pedido, r.dados); }
   else pedido = await deps.db.criar(r.dados);
 
-  const corpo: CorpoCheckout = montarCheckout(r.dados, { pedido, baseUrl: deps.baseUrl, handle: deps.handle });
+  const corpo: CorpoCheckout = montarCheckout(r.dados, { pedido, baseUrl: deps.baseUrl, handle: deps.handle, preco: deps.preco });
   // As opções (taxa do cartão para quem compra) só valem com a chave da API.
   if (!deps.apiKey) delete corpo.options;
   const url = await deps.criarLink(corpo);

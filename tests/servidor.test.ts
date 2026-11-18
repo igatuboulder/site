@@ -108,3 +108,28 @@ describe('confirmarPagamento', () => {
     expect(check).not.toHaveBeenCalled();
   });
 });
+
+describe('preço de teste (só na prévia)', () => {
+  it('vale só com a variável E num endereço de prévia', async () => {
+    const { precoVigente } = await import('../src/lib/preco');
+    expect(precoVigente({ PRECO_TESTE_CENTAVOS: '100' }, 'deploy-preview-18--igatuboulder.netlify.app')).toBe(100);
+    expect(precoVigente({ PRECO_TESTE_CENTAVOS: '100' }, 'igatuboulder.netlify.app')).toBe(16000);
+    expect(precoVigente({ PRECO_TESTE_CENTAVOS: '100' }, 'igatuboulder.com.br')).toBe(16000);
+    expect(precoVigente({}, 'deploy-preview-18--igatuboulder.netlify.app')).toBe(16000);
+  });
+  it('nunca abaixo de R$ 1 nem acima do preço real', async () => {
+    const { precoVigente } = await import('../src/lib/preco');
+    expect(precoVigente({ PRECO_TESTE_CENTAVOS: '10' }, 'deploy-preview-1--igatuboulder.netlify.app')).toBe(100);
+    expect(precoVigente({ PRECO_TESTE_CENTAVOS: '99999' }, 'deploy-preview-1--igatuboulder.netlify.app')).toBe(16000);
+    expect(precoVigente({ PRECO_TESTE_CENTAVOS: 'abc' }, 'deploy-preview-1--igatuboulder.netlify.app')).toBe(16000);
+  });
+  it('o checkout e a confirmação usam o preço vigente', async () => {
+    const link = vi.fn(async () => 'u');
+    await inscrever(valido, { handle: 'h', baseUrl: 'https://x', preco: 100, db: dbFalso(), criarLink: link });
+    expect(link.mock.calls[0][0].items[0].price).toBe(100);
+    const db = dbFalso();
+    const r = await confirmarPagamento({ order_nsu: 'P', transaction_nsu: 't', slug: 's' },
+      { db, handle: 'h', preco: 100, paymentCheck: async () => ({ success: true, paid: true, amount: 100, paid_amount: 100, capture_method: 'pix' }) });
+    expect(r.pago).toBe(true);
+  });
+});

@@ -12,12 +12,12 @@ export function infiniteTag(env: Record<string, string | undefined>): string {
   return tag;
 }
 
-export function montarCheckout(d: Inscricao, o: { pedido: string; baseUrl: string; handle: string }) {
+export function montarCheckout(d: Inscricao, o: { pedido: string; baseUrl: string; handle: string; preco?: number }) {
   if (!o.handle) throw new Error('InfiniteTag ausente');
   const base = o.baseUrl.replace(/\/$/, '');
   return {
     handle: o.handle,
-    items: [{ quantity: 1, price: PRECO_PASSAPORTE, description: `Passaporte ${EVENTO.nome} ${EVENTO.ano}` }],
+    items: [{ quantity: 1, price: o.preco ?? PRECO_PASSAPORTE, description: `Passaporte ${EVENTO.nome} ${EVENTO.ano}` }],
     order_nsu: o.pedido,
     redirect_url: `${base}/inscricao/obrigado?pedido=${encodeURIComponent(o.pedido)}`,
     webhook_url: `${base}/api/pagamento`,
