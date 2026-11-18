@@ -39,13 +39,13 @@ describe('autoria das fotos', () => {
     expect(readFileSync('src/pages/fotos.astro', 'utf8')).toMatch(/v-credito/);
   });
 
-  it('existe a galeria "A vila"', () => {
-    expect(montarAlbuns(FOTOS).map((a) => a.titulo)).toContain('A vila');
+  it('existe a galeria "Igatu"', () => {
+    expect(montarAlbuns(FOTOS).map((a) => a.titulo)).toContain('Igatu');
   });
 });
 
 describe('fotos do Pedro espalhadas pelo site', () => {
-  const paginas = ['a-vila', 'como-chegar', 'setores', 'programacao', 'historia', 'sobre'];
+  const paginas = ['igatu', 'como-chegar', 'setores', 'programacao', 'historia', 'sobre'];
   for (const p of paginas) {
     it(`${p} mostra pelo menos uma foto do Pedro`, () => {
       expect(readFileSync(`src/pages/${p}.astro`, 'utf8')).toMatch(/pp-[a-z0-9-]+/);

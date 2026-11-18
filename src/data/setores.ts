@@ -9,6 +9,6 @@ import dados from './setores.json';
 
 export const SETORES: Setor[] = dados;
 
-// Ordem da trilha desenhada no mapa ilustrado (sai da vila e passa por todos os setores).
+// Ordem da trilha desenhada no mapa ilustrado (sai do centro de Igatu e passa por todos os setores).
 export const ORDEM_TRILHA = ['Cemitério', 'Lagartos', 'Laranjeiras', 'Cruzeiro', 'Disco Voador', 'Labirinto', 'Verruga', 'Corredor', 'Besouro', 'Califórnia', 'Coisa Boa', 'Degredo'];
 

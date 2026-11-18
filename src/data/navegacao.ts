@@ -1,6 +1,6 @@
 export const PAGINAS = [
   { href: '/sobre', rotulo: 'Sobre' },
-  { href: '/a-vila', rotulo: 'A vila' },
+  { href: '/igatu', rotulo: 'Igatu' },
   { href: '/historia', rotulo: 'História' },
   { href: '/programacao', rotulo: 'Programação' },
   { href: '/fotos', rotulo: 'Fotos' },
