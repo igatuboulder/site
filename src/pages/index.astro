@@ -36,7 +36,6 @@ const destaques = [
   </section>
 
   <section class="secao papel com-id">
-    <img class="rocha" src="/img/id-ig-simbolo.png" alt="" width="693" height="369" loading="lazy" />
     <div class="conteudo">
       <div class="cards" data-loop>
         {destaques.map((d) => (
@@ -97,8 +96,6 @@ const destaques = [
   .faixa :global(.faixa-img) { width: 100%; height: auto; aspect-ratio: 3 / 4; object-fit: cover; }
   .com-id { position: relative; overflow: hidden; padding-block: clamp(96px, 14vw, 180px); }
   .com-id .conteudo { position: relative; }
-  .rocha { position: absolute; right: -4%; top: 50%; width: min(78vw, 1000px); height: auto; transform: translateY(-50%); opacity: .14; pointer-events: none; max-width: none; }
-  @media (max-width: 760px) { .rocha { width: 200vw; right: -70vw; opacity: .1; } }
   .mote { line-height: .95; font-size: var(--t-titulo); color: var(--verde); text-transform: uppercase; margin: 0 0 48px; }
   .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
   .card { display: flex; flex-direction: column; gap: 12px; padding: 24px; border: 2px solid var(--verde); text-decoration: none; color: var(--verde); min-height: 200px; transition: background .2s, color .2s, transform .25s cubic-bezier(.2,.8,.2,1.2); }
