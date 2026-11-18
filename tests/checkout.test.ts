@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { montarCheckout } from '../src/lib/checkout';
+import { montarCheckout, infiniteTag } from '../src/lib/checkout';
 
 const dados = { nome: 'Ana Souza', cpf: '52998224725', email: 'ana@exemplo.com', telefone: '75981707643', camiseta: 'M', aceite: true as const };
 
 describe('montarCheckout', () => {
-  const c = montarCheckout(dados, { pedido: 'IGB27-0001', baseUrl: 'https://igatuboulder.com.br' });
+  const c = montarCheckout(dados, { pedido: 'IGB27-0001', baseUrl: 'https://igatuboulder.com.br', handle: 'loja_teste' });
   it('cobra um passaporte pelo preço único de R$ 160', () => {
     expect(c.items).toEqual([{ quantity: 1, price: 16000, description: 'Passaporte Festival IgatuBoulder 2027' }]);
   });
@@ -19,5 +19,20 @@ describe('montarCheckout', () => {
   it('envia os dados do comprador sem o CPF', () => {
     expect(c.customer).toEqual({ name: 'Ana Souza', email: 'ana@exemplo.com', phone_number: '+5575981707643' });
     expect(JSON.stringify(c)).not.toContain('52998224725');
+  });
+});
+
+describe('InfiniteTag da conta que recebe', () => {
+  it('vai no corpo do checkout', () => {
+    const c = montarCheckout(dados, { pedido: 'P1', baseUrl: 'https://x.com.br', handle: 'loja_teste' });
+    expect(c.handle).toBe('loja_teste');
+  });
+  it('vem só da variável de ambiente do servidor, sem o $ do app', () => {
+    expect(infiniteTag({ INFINITEPAY_HANDLE: '$loja_teste' })).toBe('loja_teste');
+    expect(infiniteTag({ INFINITEPAY_HANDLE: ' loja_teste ' })).toBe('loja_teste');
+  });
+  it('não abre checkout sem a InfiniteTag configurada', () => {
+    expect(() => infiniteTag({})).toThrow();
+    expect(() => montarCheckout(dados, { pedido: 'P1', baseUrl: 'https://x.com.br', handle: '' })).toThrow();
   });
 });

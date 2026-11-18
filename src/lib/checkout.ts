@@ -4,9 +4,19 @@ import { EVENTO } from '../config/evento';
 
 // Corpo do link de checkout da InfinitePay. Formato a confirmar na documentação oficial
 // antes de ligar o pagamento de verdade. O CPF nunca sai do nosso servidor.
-export function montarCheckout(d: Inscricao, o: { pedido: string; baseUrl: string }) {
+// InfiniteTag da conta que recebe. Fica só na variável de ambiente INFINITEPAY_HANDLE (painel da Netlify),
+// nunca no código: o repositório é público.
+export function infiniteTag(env: Record<string, string | undefined>): string {
+  const tag = (env.INFINITEPAY_HANDLE ?? '').trim().replace(/^\$/, '');
+  if (!tag) throw new Error('INFINITEPAY_HANDLE não configurada');
+  return tag;
+}
+
+export function montarCheckout(d: Inscricao, o: { pedido: string; baseUrl: string; handle: string }) {
+  if (!o.handle) throw new Error('InfiniteTag ausente');
   const base = o.baseUrl.replace(/\/$/, '');
   return {
+    handle: o.handle,
     items: [{ quantity: 1, price: PRECO_PASSAPORTE, description: `Passaporte ${EVENTO.nome} ${EVENTO.ano}` }],
     order_nsu: o.pedido,
     redirect_url: `${base}/inscricao/obrigado?pedido=${encodeURIComponent(o.pedido)}`,
