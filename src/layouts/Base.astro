@@ -53,7 +53,10 @@ const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
     <div class="parceiros">
       {grupos.map(([rotulo, lista, cls]) => (
         <div class:list={['grupo', cls]}><p class="rotulo">{rotulo}</p><div class="logos">
-          {lista.map((p) => p.arquivo ? <img src={`/img/logos/${p.arquivo}.png`} alt={p.nome} loading="lazy" /> : <span class="nome-parceiro">{p.nome.toUpperCase()}</span>)}
+          {lista.map((p) => {
+            const marca = p.arquivo ? <img src={`/img/logos/${p.arquivo}.png`} alt={p.nome} loading="lazy" /> : <span class="nome-parceiro">{p.nome.toUpperCase()}</span>;
+            return p.link ? <a class="marca" href={p.link} target="_blank" rel="noopener" aria-label={`${p.nome} (abre o site da marca)`}>{marca}</a> : marca;
+          })}
         </div></div>
       ))}
     </div>
@@ -172,7 +175,10 @@ const atual = Astro.url.pathname.replace(/\/$/, '') || '/';
   .grupo .logos { display: flex; flex-wrap: wrap; align-items: center; gap: 22px; }
   .grupo img { height: 46px; width: auto; }
   .realizacao img { height: 68px; }
-  .patrocinio img { height: 76px; }
+  .patrocinio img { height: 88px; }
+  .marca { display: inline-flex; transition: opacity .2s; }
+  .marca:hover { opacity: .7; }
+  .marca:focus-visible { outline: 3px solid var(--laranja); outline-offset: 4px; }
   .apoio .logos { gap: 16px 22px; }
   .acess { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 6px var(--margem); background: var(--verde); color: var(--papel); }
   .acess .rotulo { margin-right: auto; }

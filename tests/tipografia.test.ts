@@ -31,10 +31,10 @@ describe('escala tipográfica única', () => {
 });
 
 describe('Sobre', () => {
-  it('Sobre: Feito com a vila e a apresentação do festival estão no mesmo bloco', () => {
+  it('Sobre: Feito com Igatu e a apresentação do festival estão no mesmo bloco', () => {
     const sobre = readFileSync('src/pages/sobre.astro', 'utf8');
     const secoes = sobre.split('<section').slice(1);
-    const bloco = secoes.find((s) => s.includes('Feito com a vila')) ?? '';
+    const bloco = secoes.find((s) => s.includes('Feito com Igatu')) ?? '';
     expect(bloco).toContain('O IgatuBoulder é um festival de escalada em blocos');
   });
 });

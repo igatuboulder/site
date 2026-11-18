@@ -1,6 +1,6 @@
 ---
 // Mapa ilustrado dos setores: relevo real (curvas de nível a cada 30 m), rios, trilhas e pontos de
-// referência do OpenStreetMap, fora de escala, com uma trilha pontilhada saindo da vila e passando
+// referência do OpenStreetMap, fora de escala, com uma trilha pontilhada saindo do centro de Igatu e passando
 // por todos os setores. Clicar num setor (no mapa ou na lista) abre o painel com o acesso estimado.
 import mapa from '../data/mapa-setores.json';
 import { SETORES, ORDEM_TRILHA } from '../data/setores';
@@ -9,9 +9,9 @@ import { formatarAcesso, type Acesso } from '../lib/acesso';
 import { slugSetor } from '../lib/slug';
 
 const pos = mapa.setores as Record<string, Ponto>;
-const vila = mapa.vila as Ponto;
+const centro = mapa.vila as Ponto;
 const acessos = mapa.acessos as Record<string, Acesso>;
-const d = trilha([vila, ...ORDEM_TRILHA.map((n) => pos[n])]);
+const d = trilha([centro, ...ORDEM_TRILHA.map((n) => pos[n])]);
 // Setores no mesmo ponto viram um marcador só, com os dois números.
 type Marca = { nomes: string[]; nums: string[]; x: number; y: number; lado: 'e' | 'd' };
 const LADO: Record<string, 'e' | 'd'> = { Labirinto: 'e', Verruga: 'e', Corredor: 'e', Cruzeiro: 'e' };
@@ -45,7 +45,7 @@ const ICONE: Record<string, string> = {
     <div class="rolagem" tabindex="0" aria-label="Mapa dos setores; arraste para os lados para ver tudo">
       <svg viewBox={`0 0 ${mapa.w} ${mapa.h}`} role="img" aria-labelledby="mapa-tit mapa-desc">
         <title id="mapa-tit">Mapa ilustrado dos setores de boulder ao redor de Igatu</title>
-        <desc id="mapa-desc">Desenho fora de escala com as curvas de nível da serra, os rios e as trilhas. Uma trilha pontilhada sai da vila de Igatu, no centro, e passa por todos os setores: {ORDEM_TRILHA.join(', ')}. Califórnia, Coisa Boa e Degredo ficam mais ao norte, mais afastados da vila.</desc>
+        <desc id="mapa-desc">Desenho fora de escala com as curvas de nível da serra, os rios e as trilhas. Uma trilha pontilhada sai do distrito de Igatu, no centro, e passa por todos os setores: {ORDEM_TRILHA.join(', ')}. Califórnia, Coisa Boa e Degredo ficam mais ao norte, mais afastados do distrito.</desc>
         <defs>
           <radialGradient id="mapa-fade" cx="50%" cy="52%" r="62%">
             <stop offset="0.55" stop-color="#fff" />
@@ -69,10 +69,10 @@ const ICONE: Record<string, string> = {
           ))}
         </g>
         <path class="trilha" d={d} mask="url(#mapa-mask-trilha)" />
-        <g class="vila" transform={`translate(${vila[0]} ${vila[1]})`}>
+        <g class="centro" transform={`translate(${centro[0]} ${centro[1]})`}>
           {casas.map(([x, y]) => <g transform={`translate(${x} ${y})`}><rect x="-5" y="-3" width="10" height="8" /><path d="M-6.5 -3 L0 -9 L6.5 -3 Z" /></g>)}
           <text class="vila-nome" x="34" y="34">IGATU</text>
-          <text class="vila-sub" x="35" y="52">a vila</text>
+          <text class="vila-sub" x="35" y="52">o distrito</text>
         </g>
         {marcas.map((m) => (
           <a class="marca" href={`#setor-${slugSetor(m.nomes[0])}`} data-setor={slugSetor(m.nomes[0])} data-setores={m.nomes.map(slugSetor).join(' ')} data-x={m.x} data-y={m.y}>
@@ -81,7 +81,7 @@ const ICONE: Record<string, string> = {
             <text class="rot" x={m.lado === 'd' ? m.x + 24 : m.x - 24} y={m.y + 7} text-anchor={m.lado === 'd' ? 'start' : 'end'}>{m.nomes.join(' · ')}</text>
           </a>
         ))}
-        <circle class="viajante" cx={vila[0]} cy={vila[1]} r="8" />
+        <circle class="viajante" cx={centro[0]} cy={centro[1]} r="8" />
         <g class="norte" transform={`translate(${mapa.w - 60} 64)`} aria-hidden="true">
           <circle r="34" />
           <path d="M0 -26 L8 6 L0 1 L-8 6 Z" />
@@ -109,7 +109,7 @@ const ICONE: Record<string, string> = {
       <div class="p-boulders"></div>
     </aside>
   </div>
-  <figcaption>Mapa ilustrativo, fora de escala. Toque num setor para ver o acesso. Para ir aos setores, combine com alguém da vila ou um guia local. Rios e trilhas: © colaboradores do OpenStreetMap.</figcaption>
+  <figcaption>Mapa ilustrativo, fora de escala. Toque num setor para ver o acesso. Para ir aos setores, combine com alguém de Igatu ou um guia local. Rios e trilhas: © colaboradores do OpenStreetMap.</figcaption>
   <script type="application/json" id="setores-dados" set:html={JSON.stringify(dados)} />
 </figure>
 
@@ -222,7 +222,7 @@ const ICONE: Record<string, string> = {
   .pontos .ic.ruina { fill: var(--verde); stroke: none; opacity: .75; }
   .pontos text { font-family: var(--mono); font-size: 12px; fill: var(--verde); paint-order: stroke; stroke: var(--papel); stroke-width: 4px; }
   .trilha { fill: none; stroke: var(--laranja); stroke-width: 5; stroke-linecap: round; stroke-dasharray: 0 13; }
-  .vila rect, .vila path { fill: var(--verde); }
+  .centro rect, .centro path { fill: var(--verde); }
   .vila-nome { font-weight: 900; font-stretch: 70%; font-size: 34px; fill: var(--verde); letter-spacing: .02em; paint-order: stroke; stroke: var(--papel); stroke-width: 6px; }
   .vila-sub { font-family: var(--mono); font-size: 13px; fill: var(--verde); paint-order: stroke; stroke: var(--papel); stroke-width: 5px; }
   .marca { cursor: pointer; }

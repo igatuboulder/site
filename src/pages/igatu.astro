@@ -6,19 +6,19 @@ import FotoLarga from '../components/FotoLarga.astro';
 import FaixaFotos from '../components/FaixaFotos.astro';
 const marcos = [
   { ano: 'Séc. XIX', t: 'O garimpo', d: 'A descoberta de diamantes na Serra do Sincorá atrai garimpeiros para a região. Nasce o povoado de Xique-Xique, hoje Xique-Xique do Igatu.' },
-  { ano: 'Auge', t: 'Cidade de pedra', d: 'Sem madeira por perto, as casas, muros e caminhos são feitos de pedra empilhada. A vila cresce com o diamante e chega a ter milhares de moradores.' },
+  { ano: 'Auge', t: 'Cidade de pedra', d: 'Sem madeira por perto, as casas, muros e caminhos são feitos de pedra empilhada. O povoado cresce com o diamante e chega a ter milhares de moradores.' },
   { ano: 'Declínio', t: 'O fim do diamante', d: 'Com o esgotamento do garimpo, a maior parte da população vai embora. Ficam as ruínas, que hoje são a marca de Igatu.' },
   { ano: '2000', t: 'Patrimônio', d: 'O conjunto arquitetônico, urbanístico e paisagístico de Igatu é tombado pelo IPHAN, com cerca de 200 edificações de pedra.' },
-  { ano: 'Hoje', t: 'Vila viva', d: 'Distrito de Andaraí, com algumas centenas de moradores, Igatu vive do turismo, da arte e da escalada, guardando a memória do garimpo.' },
+  { ano: 'Hoje', t: 'Distrito vivo', d: 'Distrito de Andaraí, com algumas centenas de moradores, Igatu vive do turismo, da arte e da escalada, guardando a memória do garimpo.' },
 ];
 ---
-<Base titulo="A vila" descricao="A história de Igatu, a vila de pedra do garimpo na Chapada Diamantina.">
-  <Cabecalho rotulo="A vila" titulo="Igatu" />
+<Base titulo="Igatu" descricao="A história de Igatu, distrito de pedra do garimpo na Chapada Diamantina.">
+  <Cabecalho rotulo="O distrito" titulo="Igatu" />
   <section class="secao papel">
     <div class="conteudo duas">
       <div class="texto revela">
-        <p class="lead">Igatu é uma vila de pedra no alto da Serra do Sincorá, distrito de Andaraí, no coração da Chapada Diamantina.</p>
-        <p>Ela nasceu com o garimpo de diamantes no século XIX. As casas, os muros e os caminhos foram erguidos com as pedras da própria serra, e muitas dessas construções estão de pé até hoje, inteiras ou em ruínas. Por isso a vila ganhou apelidos como Cidade de Pedra e Machu Picchu baiana.</p>
+        <p class="lead">Igatu é um distrito de Andaraí, feito de pedra, no alto da Serra do Sincorá, no coração da Chapada Diamantina.</p>
+        <p>Ela nasceu com o garimpo de diamantes no século XIX. As casas, os muros e os caminhos foram erguidos com as pedras da própria serra, e muitas dessas construções estão de pé até hoje, inteiras ou em ruínas. Por isso Igatu ganhou apelidos como Cidade de Pedra e Machu Picchu baiana.</p>
         <p>É nessa paisagem, entre ruínas e blocos de quartzito, que acontece o IgatuBoulder.</p>
       </div>
       <FotoAD class="foto revela" arquivo="IMG_1092" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
@@ -37,7 +37,7 @@ const marcos = [
   <section class="secao papel">
     <div class="conteudo">
       <p class="rotulo">Retratos</p>
-      <h2 class="display h2">O dia a dia da vila</h2>
+      <h2 class="display h2">O dia a dia de Igatu</h2>
       <FaixaFotos arquivos={['pp-vila-casas', 'pp-vila-rua', 'pp-vila-senhora', 'pp-vila-placa']} proporcao="4 / 3" />
       <div class="espaco"></div>
       <FaixaFotos arquivos={['pp-vila-porta', 'pp-vila-casa-pedra', 'pp-vila-casa-morro', 'pp-vila-bar']} />
@@ -49,10 +49,10 @@ const marcos = [
       <FotoAD class="foto revela" arquivo="IMG_1322" widths={[600, 1000]} sizes="(max-width: 760px) 100vw, 50vw" />
       <div class="texto revela">
         <p class="rotulo">Preservar</p>
-        <h2 class="display h2">A vila é a casa de quem mora aqui</h2>
+        <h2 class="display h2">Igatu é a casa de quem mora aqui</h2>
         <p>As ruínas são patrimônio tombado. Não suba, não retire nem mude pedras de lugar, e não risque as paredes.</p>
         <p>Respeite o silêncio à noite, leve seu lixo de volta e prefira comprar dos moradores: pousadas, restaurantes, guias e artesãos.</p>
-        <p>O festival existe para a vila. Cada edição deixa um pouco na comunidade, e é isso que mantém o IgatuBoulder vivo.</p>
+        <p>O festival existe para Igatu. Cada edição deixa um pouco na comunidade, e é isso que mantém o IgatuBoulder vivo.</p>
       </div>
     </div>
   </section>

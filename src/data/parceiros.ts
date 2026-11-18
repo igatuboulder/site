@@ -1,6 +1,7 @@
 // Logos em public/img/logos/<arquivo>.png. `nome` vira o texto alternativo da logo.
 // Parceiro sem `arquivo` aparece só com o nome escrito (ainda sem logo).
-export interface Parceiro { nome: string; arquivo?: string }
+// `link`: site ou Instagram da marca (https). Com link, a logo do rodapé vira link e abre em outra aba.
+export interface Parceiro { nome: string; arquivo?: string; link?: string }
 
 export const REALIZACAO: Parceiro[] = [
   { nome: 'IgatuLands', arquivo: 'igatulands' },

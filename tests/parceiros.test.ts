@@ -36,3 +36,22 @@ describe('destaque de realização e patrocínio no rodapé', () => {
     expect(altura(b, '.patrocinio')).toBeGreaterThan(altura(b, '.realizacao'));
   });
 });
+
+describe('Km10 com ainda mais destaque e links das marcas', () => {
+  it('logo da Km10 tem pelo menos 1,9× a altura dos apoios', async () => {
+    const b = (await import('node:fs')).readFileSync('src/layouts/Base.astro', 'utf8');
+    const apoio = Number(b.match(/\.grupo img \{ height: (\d+)px/)?.[1]);
+    const pat = Number(b.match(/\.patrocinio img \{ height: (\d+)px/)?.[1]);
+    expect(pat / apoio).toBeGreaterThanOrEqual(1.9);
+  });
+
+  it('link de parceiro, quando existe, é https', () => {
+    for (const p of [...REALIZACAO, ...PATROCINIO, ...APOIOS]) if (p.link) expect(p.link, p.nome).toMatch(/^https:\/\//);
+  });
+
+  it('o rodapé transforma a logo em link para a marca, abrindo em outra aba', async () => {
+    const b = (await import('node:fs')).readFileSync('src/layouts/Base.astro', 'utf8');
+    expect(b).toMatch(/href=\{p\.link\}/);
+    expect(b).toMatch(/target="_blank" rel="noopener"/);
+  });
+});
