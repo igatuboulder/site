@@ -61,3 +61,13 @@ describe('parceiros em negociação ficam fora do site', () => {
     expect([...REALIZACAO, ...PATROCINIO, ...APOIOS].map((p) => p.nome)).not.toContain('Fullgrip');
   });
 });
+
+describe('Instagram centralizado embaixo do patrocínio', () => {
+  it('a base do rodapé usa as mesmas colunas dos parceiros e centraliza o Instagram', async () => {
+    const b = (await import('node:fs')).readFileSync('src/layouts/Base.astro', 'utf8');
+    const cols = 'grid-template-columns: var(--col-realizacao) var(--col-patrocinio) minmax(0, 1fr)';
+    expect(b.match(/\.parceiros \{[^}]*\}/)?.[0]).toContain(cols);
+    expect(b.match(/\.base \{[^}]*\}/)?.[0]).toContain(cols);
+    expect(b).toMatch(/\.col-ig \{ text-align: center; \}/);
+  });
+});
