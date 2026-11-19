@@ -47,7 +47,7 @@ import { EVENTO } from '../config/evento';
       <div class="card card-pago">
         <p class="rotulo">Pagos</p>
         <p class="numero display" id="n-pagos">0</p>
-        <p class="nota">kits garantidos</p>
+        <p class="nota" id="n-entregues">kits garantidos</p>
       </div>
       <div class="card card-pendente">
         <p class="rotulo">Pendentes</p>
@@ -73,6 +73,8 @@ import { EVENTO } from '../config/evento';
           <button type="button" role="tab" data-status="todos" aria-selected="true">Todos <span></span></button>
           <button type="button" role="tab" data-status="pago" aria-selected="false">Pagos <span></span></button>
           <button type="button" role="tab" data-status="pendente" aria-selected="false">Pendentes <span></span></button>
+          <button type="button" role="tab" data-status="entregar" aria-selected="false">Falta entregar <span></span></button>
+          <button type="button" role="tab" data-status="entregue" aria-selected="false">Entregues <span></span></button>
         </div>
         <label class="busca">
           <span class="sr-only">Buscar</span>
@@ -90,6 +92,22 @@ import { EVENTO } from '../config/evento';
     </section>
   </main>
 
+  <!-- Confirmação da entrega do kit: tamanho bem grande para quem está no balcão -->
+  <dialog id="confirmar" class="confirmar" aria-labelledby="conf-nome">
+    <form method="dialog">
+      <p class="rotulo">Entregar kit</p>
+      <p class="h3 display" id="conf-nome"></p>
+      <p class="nota" id="conf-pedido"></p>
+      <p class="conf-tam display" id="conf-tam"></p>
+      <p class="nota">Camiseta</p>
+      <p class="conf-msg" id="conf-msg" role="status"></p>
+      <div class="conf-botoes">
+        <button type="button" class="btn-confirmar" id="conf-ok">Confirmar entrega</button>
+        <button value="cancelar" class="btn-cancelar">Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+
   <!-- Só aparece na impressão -->
   <section class="impressao" aria-hidden="true">
     <h1>Entrega de kits · {EVENTO.edicao}º {EVENTO.nome}</h1>
@@ -102,7 +120,7 @@ import { EVENTO } from '../config/evento';
   </section>
 
   <script>
-    import { resumir, filtrar, listaKits, cpfMascarado, linkCobranca, porNome, type Registro, type Status } from '../lib/painel';
+    import { resumir, filtrar, listaKits, cpfMascarado, linkCobranca, porNome, type Registro, type Aba } from '../lib/painel';
     import { formatarReais } from '../lib/preco';
     import { REGISTROS_DEMO } from '../data/painel-demo';
     import { deBanco } from '../lib/painel';
@@ -118,7 +136,9 @@ import { EVENTO } from '../config/evento';
     let registros: Registro[] = [];
     const sb = createClient(SUPABASE_URL, SUPABASE_PUBLICA);
 
-    let status: Status | 'todos' = 'todos';
+    let status: Aba = 'todos';
+    let demo = false;
+    const hora = (iso?: string) => iso ? new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : '';
     let busca = '';
 
     function desenharResumo() {
@@ -127,11 +147,12 @@ import { EVENTO } from '../config/evento';
       $('n-pendentes').textContent = String(s.pendentes);
       $('arrecadado').textContent = formatarReais(s.arrecadado).replace(/,00$/, '');
       $('n-total').textContent = `${s.total} inscrições no total`;
+      $('n-entregues').textContent = s.entregues ? `kits garantidos · ${s.entregues} de ${s.pagos} entregues` : 'kits garantidos';
       ($('barra-pago') as HTMLElement).style.width = s.total ? `${(s.pagos / s.total) * 100}%` : '0';
       $('tamanhos').innerHTML = Object.entries(s.camisetas)
         .map(([t, n]) => `<li class="${n ? '' : 'zero'}"><span class="t">${t}</span><span class="n">${n}</span></li>`).join('');
       const abas = document.querySelectorAll<HTMLButtonElement>('.abas button');
-      const contagem = { todos: s.total, pago: s.pagos, pendente: s.pendentes } as const;
+      const contagem = { todos: s.total, pago: s.pagos, pendente: s.pendentes, entregar: s.pagos - s.entregues, entregue: s.entregues } as const;
       abas.forEach((b) => { b.querySelector('span')!.textContent = String(contagem[b.dataset.status as keyof typeof contagem]); });
     }
 
@@ -140,8 +161,11 @@ import { EVENTO } from '../config/evento';
       $('linhas').innerHTML = lista.map((x) => {
         const pago = x.status === 'pago';
         const pagamento = pago ? `${x.forma === 'cartao' ? 'Cartão' : 'Pix'} · ${dataCurta(x.pagoEm)}` : `inscrito em ${dataCurta(x.criadoEm)}`;
-        const acao = pago ? '' : `<a class="cobrar" href="${linkCobranca(x)}" target="_blank" rel="noopener">Chamar no WhatsApp</a>`;
-        return `<tr class="${x.status}">
+        const kit = x.kitEntregueEm
+          ? `<span class="entregue">✓ Kit entregue ${hora(x.kitEntregueEm)}</span> <button type="button" class="btn-desfazer" data-desfazer="${esc(x.pedido)}">Desfazer</button>`
+          : `<button type="button" class="btn-entregar" data-entregar="${esc(x.pedido)}">Entregar kit</button>`;
+        const acao = pago ? kit : `<a class="cobrar" href="${linkCobranca(x)}" target="_blank" rel="noopener">Chamar no WhatsApp</a>`;
+        return `<tr class="${x.status}${x.kitEntregueEm ? ' com-kit' : ''}">
           <td class="c-nome" data-r="Nome"><strong>${esc(x.nome)}</strong><span class="nota">CPF ${cpfMascarado(x.cpf)}</span></td>
           <td class="c-cam" data-r="Camiseta"><span class="tam">${x.camiseta}</span></td>
           <td class="c-sit" data-r="Situação"><span class="selo ${x.status}">${pago ? 'Pago' : 'Pendente'}</span></td>
@@ -170,6 +194,53 @@ import { EVENTO } from '../config/evento';
     ($('busca') as HTMLInputElement).addEventListener('input', (e) => { busca = (e.target as HTMLInputElement).value; desenharLista(); });
     $('imprimir').addEventListener('click', () => { desenharImpressao(); window.print(); });
     window.addEventListener('beforeprint', desenharImpressao);
+
+    // Entrega do kit: confirma num quadro com o tamanho grande, grava no banco e atualiza a lista.
+    const dlg = $('confirmar') as HTMLDialogElement;
+    let escolhido: Registro | undefined;
+    function abrirEntrega(x: Registro) {
+      escolhido = x;
+      $('conf-nome').textContent = x.nome;
+      $('conf-pedido').textContent = `Pedido ${x.pedido} · CPF ${cpfMascarado(x.cpf)}`;
+      $('conf-tam').textContent = x.camiseta;
+      $('conf-msg').textContent = '';
+      ($('conf-ok') as HTMLButtonElement).disabled = false;
+      dlg.showModal();
+    }
+    async function gravarEntrega(pedido: string, entregar: boolean) {
+      if (demo) {
+        const x = registros.find((r) => r.pedido === pedido);
+        if (x) { if (entregar) { x.kitEntregueEm = new Date().toISOString(); x.kitEntreguePor = 'demo'; } else { delete x.kitEntregueEm; delete x.kitEntreguePor; } }
+        return { resultado: entregar ? 'entregue' : 'desfeito' };
+      }
+      const { data, error } = await sb.rpc('entregar_kit', { p_pedido: pedido, p_entregar: entregar });
+      if (error) return { resultado: 'erro' };
+      return data as { resultado: string; em?: string; por?: string };
+    }
+    $('conf-ok').addEventListener('click', async () => {
+      if (!escolhido) return;
+      const ok = $('conf-ok') as HTMLButtonElement;
+      ok.disabled = true; $('conf-msg').textContent = 'Gravando…';
+      const r = await gravarEntrega(escolhido.pedido, true);
+      if (r.resultado === 'entregue') { dlg.close(); if (demo) { desenharResumo(); desenharLista(); } else await carregar(); return; }
+      ok.disabled = r.resultado === 'ja_entregue';
+      $('conf-msg').textContent = r.resultado === 'ja_entregue'
+        ? `Esse kit já foi entregue às ${hora(r.em)} por ${r.por ?? 'outra pessoa'}.`
+        : r.resultado === 'nao_pago' ? 'Essa inscrição não está paga.'
+        : 'Não conseguimos gravar. Confira a internet e tente de novo.';
+      if (!demo) carregar();
+    });
+    $('linhas').addEventListener('click', async (e) => {
+      const alvo = e.target as HTMLElement;
+      const ent = alvo.closest<HTMLButtonElement>('[data-entregar]');
+      if (ent) { const x = registros.find((r) => r.pedido === ent.dataset.entregar); if (x) abrirEntrega(x); return; }
+      const des = alvo.closest<HTMLButtonElement>('[data-desfazer]');
+      if (des) {
+        des.disabled = true;
+        await gravarEntrega(des.dataset.desfazer!, false);
+        if (demo) { desenharResumo(); desenharLista(); } else await carregar();
+      }
+    });
 
     function mostrarPainel() {
       $('entrar').hidden = true; $('conteudo').hidden = false; $('imprimir').hidden = false;
@@ -203,12 +274,13 @@ import { EVENTO } from '../config/evento';
     $('sair').addEventListener('click', async () => { await sb.auth.signOut(); location.href = '/painel'; });
 
     if (new URLSearchParams(location.search).get('demo') !== null) {
-      registros = REGISTROS_DEMO; $('aviso-demo').hidden = false; mostrarPainel();
+      demo = true; registros = REGISTROS_DEMO.map((x) => ({ ...x })); $('aviso-demo').hidden = false; mostrarPainel();
     } else {
       const { data } = await sb.auth.getSession();
       if (data.session) await carregar(); else $('entrar').hidden = false;
       sb.auth.onAuthStateChange((ev) => { if (ev === 'SIGNED_IN') carregar(); });
-      setInterval(() => { if (!$('conteudo').hidden) carregar(); }, 60000);
+      // Vários voluntários no balcão: atualiza a cada 20 s (menos quando o quadro de entrega está aberto).
+      setInterval(() => { if (!$('conteudo').hidden && !dlg.open) carregar(); }, 20000);
     }
   </script>
 </body>
@@ -273,6 +345,20 @@ import { EVENTO } from '../config/evento';
   .painel .selo.pendente { background: var(--laranja); color: #fff; }
   .painel .c-pag, .painel .c-ped { font-size: var(--t-nota); }
   .painel .cobrar { font-size: var(--t-nota); font-weight: 600; color: var(--verde); white-space: nowrap; }
+  .painel .btn-entregar { font: inherit; font-weight: 600; background: var(--amarelo); color: var(--tinta); border: 2px solid var(--verde); padding: 8px 14px; cursor: pointer; white-space: nowrap; }
+  .painel .btn-entregar:hover { background: var(--verde); color: var(--papel); }
+  .painel .entregue { font-size: var(--t-nota); font-weight: 600; color: var(--verde); white-space: nowrap; }
+  .painel .btn-desfazer { font: inherit; font-size: var(--t-nota); background: none; border: 0; text-decoration: underline; color: #6B6258; cursor: pointer; padding: 4px; }
+  .painel .tabela tr.com-kit td { background: #F1F5EE; }
+  .painel .confirmar { border: 3px solid var(--verde); padding: 24px; max-width: 420px; width: calc(100% - 32px); background: var(--papel); color: var(--tinta); }
+  .painel .confirmar::backdrop { background: rgba(20, 30, 24, .6); }
+  .painel .confirmar p { margin: 0 0 6px; }
+  .painel .conf-tam { font-size: var(--t-titulo); line-height: 1; color: var(--verde); margin: 12px 0 0 !important; }
+  .painel .conf-msg { min-height: 1.4em; font-weight: 600; color: var(--laranja); }
+  .painel .conf-botoes { display: grid; gap: 8px; margin-top: 12px; }
+  .painel .btn-confirmar { font: inherit; font-weight: 600; background: var(--verde); color: var(--papel); border: 0; padding: 14px; cursor: pointer; }
+  .painel .btn-confirmar:disabled { opacity: .5; cursor: default; }
+  .painel .btn-cancelar { font: inherit; background: #fff; border: 2px solid var(--verde); padding: 12px; cursor: pointer; }
   .painel .vazio { padding: 24px; text-align: center; background: #fff; border: 2px solid var(--verde); border-top: 0; margin: 0; }
 
   @media (max-width: 760px) {
@@ -288,6 +374,8 @@ import { EVENTO } from '../config/evento';
     .painel .c-cam, .painel .c-pag, .painel .c-ped { grid-column: 1 / -1; display: inline !important; }
     .painel .c-cam::before { content: 'Camiseta '; font-size: var(--t-nota); }
     .painel .c-acao { grid-column: 1 / -1; }
+    .painel .btn-entregar { width: 100%; padding: 12px; }
+    .painel .abas { flex-wrap: wrap; }
   }
 
   .painel .impressao { display: none; }

@@ -87,3 +87,10 @@ describe('links das marcas', () => {
     expect(semLink).toEqual(['IgatuBoulder Social', 'IgatuLands']);
   });
 });
+
+describe('link da Gênesis', () => {
+  it('vai para o Instagram (site ainda em construção)', () => {
+    const todos = [...REALIZACAO, ...PATROCINIO, ...APOIOS];
+    expect(todos.find((p) => p.nome === 'Gênesis')?.link).toBe('https://www.instagram.com/genesisclimb/');
+  });
+});

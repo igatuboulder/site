@@ -9,7 +9,9 @@ export interface Registro {
   camiseta: Camiseta; status: Status; criadoEm: string; pagoEm?: string;
   valorPago?: number; // centavos, o que entrou de fato
   forma?: 'pix' | 'cartao';
+  kitEntregueEm?: string; kitEntreguePor?: string; // entrega do kit no festival
 }
+export type Aba = Status | 'todos' | 'entregar' | 'entregue';
 
 export function resumir(lista: Registro[]) {
   const pagos = lista.filter((x) => x.status === 'pago');
@@ -19,6 +21,7 @@ export function resumir(lista: Registro[]) {
     total: lista.length,
     pagos: pagos.length,
     pendentes: lista.length - pagos.length,
+    entregues: pagos.filter((p) => p.kitEntregueEm).length,
     arrecadado: pagos.reduce((s, p) => s + (p.valorPago ?? 0), 0),
     camisetas,
   };
@@ -26,11 +29,13 @@ export function resumir(lista: Registro[]) {
 
 const normalizar = (s: string) => s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase().trim();
 
-export function filtrar(lista: Registro[], o: { status?: Status | 'todos'; busca?: string }) {
+export function filtrar(lista: Registro[], o: { status?: Aba; busca?: string }) {
   const q = normalizar(o.busca ?? '');
   const digitos = q.replace(/\D/g, '');
   return lista.filter((x) => {
-    if (o.status && o.status !== 'todos' && x.status !== o.status) return false;
+    if (o.status === 'entregar') { if (x.status !== 'pago' || x.kitEntregueEm) return false; }
+    else if (o.status === 'entregue') { if (x.status !== 'pago' || !x.kitEntregueEm) return false; }
+    else if (o.status && o.status !== 'todos' && x.status !== o.status) return false;
     if (!q) return true;
     return normalizar(x.nome).includes(q) || normalizar(x.pedido).includes(q) || normalizar(x.email).includes(q)
       || (digitos.length >= 3 && x.cpf.endsWith(digitos));
@@ -62,5 +67,6 @@ export function deBanco(l: Record<string, any>): Registro {
     ...(l.pago_em ? { pagoEm: l.pago_em } : {}),
     ...(l.valor_pago != null ? { valorPago: l.valor_pago } : {}),
     ...(l.forma ? { forma: l.forma } : {}),
+    ...(l.kit_entregue_em ? { kitEntregueEm: l.kit_entregue_em, kitEntreguePor: l.kit_entregue_por ?? '' } : {}),
   };
 }

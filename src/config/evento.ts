@@ -11,5 +11,5 @@ export const EVENTO = {
   // Preço único do passaporte, em centavos. No cartão, a taxa é repassada ao comprador
   // pelo checkout da InfinitePay (o festival não arca com ela).
   preco: 16000,
-  camisetas: ['PP', 'P', 'M', 'G', 'GG', 'XG'] as const,
+  camisetas: ['P', 'M', 'G', 'GG'] as const,
 } as const;
