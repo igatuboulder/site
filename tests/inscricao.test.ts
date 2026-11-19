@@ -55,5 +55,39 @@ describe('validarInscricao', () => {
 
 import { EVENTO as EV } from '../src/config/evento';
 describe('tamanhos de camiseta 2027', () => {
-  it('só P, M, G e GG (sem PP e XG)', () => { expect([...EV.camisetas]).toEqual(['P', 'M', 'G', 'GG']); });
+  it('masculina só P, M, G e GG (sem PP e XG)', () => { expect([...EV.camisetasMasc]).toEqual(['P', 'M', 'G', 'GG']); });
+  it('feminina tem tamanho único, gravado como FEM', () => {
+    expect([...EV.camisetas]).toEqual(['FEM', 'P', 'M', 'G', 'GG']);
+    const r = validarInscricao({ ...valida, camiseta: 'FEM' });
+    expect(r.ok && r.dados.camiseta).toBe('FEM');
+  });
+});
+
+import { readFileSync } from 'node:fs';
+describe('escolha da camiseta no formulário', () => {
+  const src = readFileSync('src/components/FormInscricao.astro', 'utf8');
+  it('pergunta primeiro feminina ou masculina', () => {
+    expect(src).toMatch(/name="modelo"[^>]*value="fem"|value="fem"[^>]*name="modelo"/);
+    expect(src).toMatch(/name="modelo"[^>]*value="masc"|value="masc"[^>]*name="modelo"/);
+    expect(src).toContain('Feminina');
+    expect(src).toContain('Masculina');
+  });
+  it('feminina mostra o tamanho único já marcado; masculina mostra P a GG para escolher um', () => {
+    expect(src).toContain('Tamanho único');
+    expect(src).toContain('value="FEM"');
+    expect(src).toContain('EVENTO.camisetasMasc.map');
+    expect(src).toMatch(/fem\.checked = true/);
+  });
+  it('pede para escolher o modelo antes do tamanho', () => {
+    expect(src).toContain('Escolha feminina ou masculina');
+  });
+});
+
+describe('banco aceita a camiseta feminina', () => {
+  it('tem migração liberando FEM', () => {
+    const { readdirSync } = require('node:fs');
+    const ultimas = (readdirSync('supabase/migrations') as string[]).sort();
+    const sql = readFileSync(`supabase/migrations/${ultimas.at(-1)}`, 'utf8');
+    expect(sql).toMatch(/camiseta in \('FEM', 'P', 'M', 'G', 'GG'\)/);
+  });
 });

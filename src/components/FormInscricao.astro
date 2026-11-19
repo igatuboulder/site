@@ -25,9 +25,16 @@ import { EVENTO } from '../config/evento';
     <p class="erro" id="erro-email" aria-live="polite"></p>
   </div>
   <fieldset class="campo">
-    <legend>Tamanho da camiseta</legend>
-    <div class="opcoes tamanhos">
-      {EVENTO.camisetas.map((t) => (
+    <legend>Camiseta</legend>
+    <div class="opcoes modelos">
+      <label class="chip grande"><input type="radio" name="modelo" value="fem" /><span>Feminina</span></label>
+      <label class="chip grande"><input type="radio" name="modelo" value="masc" /><span>Masculina</span></label>
+    </div>
+    <div class="opcoes tamanhos" id="tam-fem" hidden>
+      <label class="chip"><input type="radio" name="camiseta" value="FEM" /><span>Tamanho único</span></label>
+    </div>
+    <div class="opcoes tamanhos" id="tam-masc" hidden>
+      {EVENTO.camisetasMasc.map((t) => (
         <label class="chip"><input type="radio" name="camiseta" value={t} /><span>{t}</span></label>
       ))}
     </div>
@@ -47,17 +54,34 @@ import { EVENTO } from '../config/evento';
   import { validarInscricao } from '../lib/inscricao';
   const form = document.getElementById('form-inscricao') as HTMLFormElement;
   const campos = ['nome', 'cpf', 'email', 'telefone', 'camiseta', 'aceite'];
+
+  // Feminina: tamanho único já marcado. Masculina: mostra P a GG para escolher um.
+  const tamFem = document.getElementById('tam-fem')!;
+  const tamMasc = document.getElementById('tam-masc')!;
+  const fem = form.querySelector('input[value="FEM"]') as HTMLInputElement;
+  form.querySelectorAll<HTMLInputElement>('input[name="modelo"]').forEach((m) => m.addEventListener('change', () => {
+    const ehFem = m.value === 'fem';
+    tamFem.hidden = !ehFem; tamMasc.hidden = ehFem;
+    if (ehFem) fem.checked = true;
+    else { fem.checked = false; }
+    document.getElementById('erro-camiseta')!.textContent = '';
+  }));
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
     const fd = new FormData(form);
     const entrada: Record<string, unknown> = Object.fromEntries(fd.entries());
     entrada.aceite = fd.get('aceite') === 'on';
+    delete entrada.modelo;
     const r = validarInscricao(entrada);
     for (const c of campos) {
       const el = document.getElementById(`erro-${c}`)!;
       el.textContent = !r.ok ? (r.erros as Record<string, string>)[c] ?? '' : '';
       const input = form.querySelector(`[name="${c}"]`);
       input?.setAttribute('aria-invalid', String(!r.ok && c in r.erros));
+    }
+    if (!r.ok && r.erros.camiseta && !fd.get('modelo')) {
+      document.getElementById('erro-camiseta')!.textContent = 'Escolha feminina ou masculina.';
+      form.querySelector('[name="modelo"]')?.setAttribute('aria-invalid', 'true');
     }
     const aviso = document.getElementById('aviso')!;
     if (!r.ok) {
@@ -98,6 +122,7 @@ import { EVENTO } from '../config/evento';
   .chip input:checked + span { background: var(--verde); color: var(--papel); }
   .chip input:focus-visible + span { outline: 3px solid var(--laranja); outline-offset: 2px; }
   .chip.grande span { padding: 12px 18px; }
+  .tamanhos[hidden] { display: none; }
   .aceite { display: flex; gap: 10px; align-items: flex-start; text-transform: none; letter-spacing: 0; font-weight: 400; font-size: 15px; }
   .aceite input { width: 20px; height: 20px; accent-color: var(--verde); margin-top: 2px; }
   .privacidade { margin: 0; font-size: 13px; opacity: .8; }

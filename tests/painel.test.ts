@@ -21,8 +21,11 @@ describe('resumo do painel', () => {
   it('soma o que entrou de fato (com a taxa do cartão paga pelo comprador)', () => {
     expect(s.arrecadado).toBe(16000 + 16672 + 16000);
   });
+  it('conta a feminina junto', () => {
+    expect(resumir([r({ status: 'pago', camiseta: 'FEM' })]).camisetas.FEM).toBe(1);
+  });
   it('conta camisetas só de quem pagou, em todos os tamanhos, na ordem', () => {
-    expect(s.camisetas).toEqual({ P: 0, M: 2, G: 1, GG: 0 });
+    expect(s.camisetas).toEqual({ FEM: 0, P: 0, M: 2, G: 1, GG: 0 });
   });
 });
 
