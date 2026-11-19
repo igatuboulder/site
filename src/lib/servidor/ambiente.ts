@@ -41,7 +41,8 @@ export function ambiente(env: Record<string, string | undefined> = process.env) 
     },
   };
 
-  const cabecalhos = { 'Content-Type': 'application/json', ...(apiKey ? { 'X-Api-Key': apiKey } : {}) };
+  // O Cloudflare não manda User-Agent sozinho, e a InfinitePay respondeu 403 a chamadas sem identificação.
+  const cabecalhos = { 'Content-Type': 'application/json', Accept: 'application/json', 'User-Agent': 'igatuboulder-site/1.0 (+https://igatuboulder.com.br)', ...(apiKey ? { 'X-Api-Key': apiKey } : {}) };
   async function criarLink(corpo: CorpoCheckout) {
     const r = await fetch(`${API}/links`, { method: 'POST', headers: cabecalhos, body: JSON.stringify(corpo) });
     const j = await r.json().catch(() => ({}));

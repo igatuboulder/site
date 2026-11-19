@@ -55,3 +55,20 @@ describe('página não encontrada', () => {
     expect(readFileSync('src/pages/404.astro', 'utf8')).toMatch(/href="\/"/);
   });
 });
+
+describe('chamadas à InfinitePay saindo do Cloudflare', () => {
+  it('se identificam (User-Agent e Accept), porque o Cloudflare não manda User-Agent sozinho', async () => {
+    const { ambiente } = await import('../src/lib/servidor/ambiente');
+    const chamadas: RequestInit[] = [];
+    const original = globalThis.fetch;
+    globalThis.fetch = (async (_u: unknown, init: RequestInit) => { chamadas.push(init); return new Response(JSON.stringify({ url: 'https://x' }), { status: 200 }); }) as typeof fetch;
+    try {
+      const { criarLink } = ambiente({ SUPABASE_SECRET_KEY: 'k', INFINITEPAY_HANDLE: 'h', INFINITEPAY_API_KEY: 'inchk_x' });
+      await criarLink({} as never);
+    } finally { globalThis.fetch = original; }
+    const h = chamadas[0].headers as Record<string, string>;
+    expect(h['User-Agent']).toMatch(/igatuboulder/i);
+    expect(h['Accept']).toBe('application/json');
+    expect(h['X-Api-Key']).toBe('inchk_x');
+  });
+});
