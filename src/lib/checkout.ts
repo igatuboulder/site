@@ -4,7 +4,7 @@ import { EVENTO } from '../config/evento';
 
 // Corpo do link de checkout da InfinitePay. Formato a confirmar na documentação oficial
 // antes de ligar o pagamento de verdade. O CPF nunca sai do nosso servidor.
-// InfiniteTag da conta que recebe. Fica só na variável de ambiente INFINITEPAY_HANDLE (painel da Netlify),
+// InfiniteTag da conta que recebe. Fica só na variável de ambiente INFINITEPAY_HANDLE (painel do Cloudflare),
 // nunca no código: o repositório é público.
 export function infiniteTag(env: Record<string, string | undefined>): string {
   const tag = (env.INFINITEPAY_HANDLE ?? '').trim().replace(/^\$/, '');
