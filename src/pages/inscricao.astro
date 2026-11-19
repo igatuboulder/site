@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import FormInscricao from '../components/FormInscricao.astro';
+import Kit from '../components/Kit.astro';
 import { EVENTO } from '../config/evento';
 import { formatarReais, PRECO_PASSAPORTE } from '../lib/preco';
 ---
@@ -11,9 +12,10 @@ import { formatarReais, PRECO_PASSAPORTE } from '../lib/preco';
     <div class="conteudo duas">
       <div class="texto">
         <p>O passaporte vale para os 3 dias de festival, de {EVENTO.datas}.</p>
-        <dl class="precos">
-          <div><dt>Passaporte</dt><dd class="display">{formatarReais(PRECO_PASSAPORTE)}</dd></div>
-        </dl>
+        <div class="quadro">
+          <div class="valor"><span class="rotulo">Passaporte + kit</span><span class="display preco">{formatarReais(PRECO_PASSAPORTE)}</span></div>
+          <div class="itens"><Kit variante="lista" /></div>
+        </div>
         <p class="nota">Você escolhe Pix ou cartão na hora de pagar. No cartão, a taxa é acrescentada ao valor. O pagamento é feito pela InfinitePay, em ambiente seguro.</p>
         <p class="nota">Dúvidas? <a href="/contato">Fale com a gente</a></p>
       </div>
@@ -22,8 +24,8 @@ import { formatarReais, PRECO_PASSAPORTE } from '../lib/preco';
   </section>
 </Base>
 <style>
-  .precos { display: grid; grid-template-columns: minmax(0, 1fr); max-width: 320px; gap: 12px; margin: 24px 0; }
-  .precos div { border: 2px solid var(--verde); padding: 14px 16px; }
-  dt { font-size: var(--t-rotulo); letter-spacing: .16em; font-weight: 600; text-transform: uppercase; }
-  dd { margin: 4px 0 0; font-size: var(--t-item); white-space: nowrap; color: var(--verde); }
+  .quadro { max-width: 340px; margin: 24px 0; border: 2px solid var(--verde); background: var(--papel); color: var(--verde); }
+  .valor, .itens { padding: 16px 18px; }
+  .valor { display: grid; gap: 4px; border-bottom: 2px dotted var(--verde); }
+  .preco { font-size: var(--t-item); white-space: nowrap; line-height: 1; }
 </style>

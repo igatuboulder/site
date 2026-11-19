@@ -1,32 +1,36 @@
 ---
 import { EVENTO } from '../config/evento';
+import Kit from './Kit.astro';
 const pix = EVENTO.preco / 100;
 const { href = '#inscricao' } = Astro.props;
 ---
-<a class="ticket" href={href} aria-label={`Passaporte: R$ ${pix} no Pix. Garanta o seu`}>
+<a class="ticket" href={href} aria-label={`Passaporte com kit: R$ ${pix} no Pix. Garanta o seu kit e inscreva-se`}>
   <div class="parte canhoto">
     <span class="titulo">Passaporte</span>
-    <span class="rotulo">3 dias de festival</span>
+    <span class="rotulo">3 dias de festival + kit</span>
   </div>
   <div class="parte preco">
     <span class="display valor"><small>R$</small>{pix}<sup>*</sup></span>
     <span class="rotulo">*no Pix</span>
   </div>
   <div class="parte cta">
-    <span class="rotulo">Garanta o seu</span>
+    <span class="rotulo">Garanta o seu kit</span>
     <span class="acao">Inscreva-se →</span>
   </div>
+  <div class="parte linha-kit"><Kit /></div>
 </a>
 <style>
   .ticket { --furo: 12px; --l: 2px solid var(--verde); --p: 2px dotted var(--verde); display: grid; grid-template-columns: 1fr 1.3fr 1.5fr; text-decoration: none; color: var(--verde); position: relative; }
   .parte { background: var(--papel); border-top: var(--l); border-bottom: var(--l); padding: 20px 22px; display: flex; flex-direction: column; justify-content: center; gap: 6px; position: relative; }
   .canhoto { border-left: var(--l); }
   .preco { border-right: var(--p); align-items: center; }
-  .cta { border-right: var(--l); border-left: var(--p); margin-left: -2px; transform-origin: 0% 100%; will-change: transform; }
+  .cta { border-right: var(--l); border-left: var(--p); margin-left: -2px; align-items: center; text-align: center; transform-origin: 0% 0%; will-change: transform; z-index: 1; }
+  /* Faixa do kit: mesma caixa do ticket, separada pela linha pontilhada. */
+  .canhoto, .preco, .cta { border-bottom: var(--p); }
+  .linha-kit { grid-column: 1 / -1; border: var(--l); border-top: 0; padding: 14px 22px; }
   .preco { border-left: var(--p); margin-left: -2px; }
-  .preco::before, .preco::after, .cta::before, .cta::after { content: ''; position: absolute; left: calc(var(--furo) * -1 - 1px); width: calc(var(--furo) * 2); height: var(--furo); background: var(--amarelo); border: 2px solid var(--verde); }
+  .preco::before, .cta::before { content: ''; position: absolute; left: calc(var(--furo) * -1 - 1px); width: calc(var(--furo) * 2); height: var(--furo); background: var(--amarelo); border: 2px solid var(--verde); }
   .preco::before, .cta::before { top: -2px; border-top: 0; border-radius: 0 0 var(--furo) var(--furo); }
-  .preco::after, .cta::after { bottom: -2px; border-bottom: 0; border-radius: var(--furo) var(--furo) 0 0; }
   .titulo { font-family: var(--display); font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: .03em; }
   .valor { font-size: 68px; display: flex; align-items: flex-start; }
   .valor small { font-size: 26px; margin: 5px 5px 0 0; }
@@ -36,22 +40,22 @@ const { href = '#inscricao' } = Astro.props;
   @media (max-width: 640px) {
     .ticket { grid-template-columns: 1fr 1fr; }
     .preco { border-right: var(--l); }
-    .canhoto, .preco { border-bottom: var(--p); }
-    .cta { grid-column: 1 / -1; margin: -2px 0 0; border-left: var(--l); border-top: var(--p); align-items: center; transform-origin: 0% 0%; }
-    .preco::after, .cta::before, .cta::after { display: none; }
+    .linha-kit { order: 1; border-bottom: var(--p); }
+    .cta { order: 2; grid-column: 1 / -1; margin: 0; border-left: var(--l); border-top: 0; border-bottom: var(--l); }
+    .cta::before { display: none; }
     .valor { font-size: 52px; }
   }
   @media (max-width: 400px) { .parte { padding: 16px 14px; } .valor { font-size: 42px; } .valor small { font-size: 20px; } .valor sup { font-size: 22px; } .titulo { font-size: 17px; } }
 </style>
 <script>
   import { gsap } from 'gsap';
-  // Destaca o canhoto "Inscreva-se" pela linha pontilhada: abre de cima para baixo (ou da direita para a esquerda no celular).
+  // Destaca o canhoto "Inscreva-se" pela linha pontilhada: levanta para cima no computador (o kit fica embaixo) e desce no celular (o canhoto é a última parte).
   gsap.matchMedia().add('(prefers-reduced-motion: no-preference)', () => {
     document.querySelectorAll<HTMLElement>('.ticket').forEach((t) => {
       const cta = t.querySelector<HTMLElement>('.cta');
       if (!cta) return;
       const empilhado = () => matchMedia('(max-width: 640px)').matches;
-      const abrir = () => (empilhado() ? { rotation: 2.5, x: 4, y: 10 } : { rotation: 4, x: 12, y: 0 });
+      const abrir = () => (empilhado() ? { rotation: 2.5, x: 4, y: 10 } : { rotation: -4, x: 10, y: -4 });
       const destacar = () => gsap.to(cta, { ...abrir(), duration: 0.45, ease: 'power3.out', overwrite: true });
       const voltar = () => gsap.to(cta, { rotation: 0, x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.5)', overwrite: true });
       t.addEventListener('mouseenter', destacar);

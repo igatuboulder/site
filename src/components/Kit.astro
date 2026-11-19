@@ -1,0 +1,28 @@
+---
+import { EVENTO } from '../config/evento';
+// O que vem com o passaporte. "faixa" = parte de baixo do ticket da home; "lista" = dentro do quadro da inscrição.
+const { variante = 'faixa' } = Astro.props as { variante?: 'faixa' | 'lista' };
+---
+<div class:list={['kit', variante]}>
+  <span class="titulo">O kit</span>
+  <ul>
+    {EVENTO.kit.map((item) => <li>{item}</li>)}
+  </ul>
+</div>
+<style>
+  .kit { color: var(--verde); display: flex; align-items: baseline; gap: 6px 18px; flex-wrap: wrap; }
+  .titulo { font-family: var(--display); font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 0; font-size: var(--t-corpo); font-weight: 600; }
+  li { white-space: nowrap; }
+  li + li::before { content: '+'; color: var(--laranja); font-weight: 700; margin: 0 10px; }
+  .faixa { justify-content: center; }
+  .lista { display: grid; gap: 8px; }
+  .lista ul { display: grid; gap: 4px; }
+  .lista li::before, .lista li + li::before { content: '+'; color: var(--laranja); font-weight: 700; margin: 0 10px 0 0; }
+  /* No celular a faixa vira lista, como na inscrição: "+" na frente de cada item. */
+  @media (max-width: 640px) {
+    .faixa { display: grid; gap: 8px; justify-content: start; }
+    .faixa ul { display: grid; gap: 4px; }
+    .faixa li::before, .faixa li + li::before { content: '+'; color: var(--laranja); font-weight: 700; margin: 0 10px 0 0; }
+  }
+</style>
