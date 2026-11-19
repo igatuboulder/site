@@ -3,7 +3,6 @@ import FotoAD from '../components/FotoAD.astro';
 import Base from '../layouts/Base.astro';
 import NomeSvg from '../components/NomeSvg.astro';
 import Ticket from '../components/Ticket.astro';
-import Kit from '../components/Kit.astro';
 import { EVENTO } from '../config/evento';
 const destaques = [
   { href: '/sobre', rotulo: 'O festival', titulo: 'Três dias de boulder em Igatu' },
@@ -29,7 +28,7 @@ const destaques = [
         <p class="data"><strong>{EVENTO.datas}</strong><span>{EVENTO.dias}</span></p>
       </div>
     </div>
-    <div class="ticket-wrap"><Ticket href="/inscricao" /><Kit /></div>
+    <div class="ticket-wrap"><Ticket href="/inscricao" /></div>
   </section>
 
   <section class="faixa" aria-label="Fotos do festival">

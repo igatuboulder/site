@@ -1,23 +1,28 @@
 ---
 import { EVENTO } from '../config/evento';
-// Kit que vem com o passaporte. "faixa" = colado embaixo do ticket da home; "bloco" = página de inscrição.
-const { variante = 'faixa' } = Astro.props as { variante?: 'faixa' | 'bloco' };
+// O que vem com o passaporte. "faixa" = parte de baixo do ticket da home; "lista" = dentro do quadro da inscrição.
+const { variante = 'faixa' } = Astro.props as { variante?: 'faixa' | 'lista' };
 ---
 <div class:list={['kit', variante]}>
-  <p class="rotulo">Seu kit</p>
+  <span class="titulo">O kit</span>
   <ul>
     {EVENTO.kit.map((item) => <li>{item}</li>)}
   </ul>
 </div>
 <style>
-  .kit { color: var(--verde); }
-  .kit .rotulo { margin: 0; }
-  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
-  li { border: 2px solid var(--verde); padding: 6px 12px; font-weight: 600; font-size: 15px; background: var(--papel); }
-  /* Home: faixa colada embaixo do ticket, separada pela linha pontilhada de "destacar". */
-  .faixa { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border: 2px solid var(--verde); border-top: 2px dotted var(--verde); margin-top: -2px; padding: 14px 22px; background: var(--papel); }
-  .faixa .rotulo { font-family: var(--display); font-weight: 900; font-size: 20px; letter-spacing: .03em; }
-  .faixa li { background: transparent; }
-  .bloco { display: grid; gap: 10px; margin: -8px 0 24px; }
-  @media (max-width: 400px) { .faixa { padding: 12px 14px; } li { font-size: 14px; padding: 5px 10px; } }
+  .kit { color: var(--verde); display: flex; align-items: baseline; gap: 6px 18px; flex-wrap: wrap; }
+  .titulo { font-family: var(--display); font-weight: 900; font-size: 20px; text-transform: uppercase; letter-spacing: .03em; white-space: nowrap; }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 2px 0; font-size: var(--t-corpo); font-weight: 600; }
+  li { white-space: nowrap; }
+  li + li::before { content: '+'; color: var(--laranja); font-weight: 700; margin: 0 10px; }
+  .faixa { justify-content: center; }
+  .lista { display: grid; gap: 8px; }
+  .lista ul { display: grid; gap: 4px; }
+  .lista li::before, .lista li + li::before { content: '+'; color: var(--laranja); font-weight: 700; margin: 0 10px 0 0; }
+  /* No celular a faixa vira lista, como na inscrição: "+" na frente de cada item. */
+  @media (max-width: 640px) {
+    .faixa { display: grid; gap: 8px; justify-content: start; }
+    .faixa ul { display: grid; gap: 4px; }
+    .faixa li::before, .faixa li + li::before { content: '+'; color: var(--laranja); font-weight: 700; margin: 0 10px 0 0; }
+  }
 </style>
