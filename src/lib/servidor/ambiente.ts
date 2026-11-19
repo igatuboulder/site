@@ -47,7 +47,7 @@ export function ambiente(env: Record<string, string | undefined> = process.env) 
     const r = await fetch(`${API}/links`, { method: 'POST', headers: cabecalhos, body: JSON.stringify(corpo) });
     const j = await r.json().catch(() => ({}));
     const url = j.url ?? j.link ?? j.checkout_url;
-    if (!r.ok || typeof url !== 'string') throw new Error(`InfinitePay /links ${r.status}: ${JSON.stringify(j).slice(0, 300)}`);
+    if (!r.ok || typeof url !== 'string') throw new Error(`InfinitePay /links ${r.status}: ${JSON.stringify(j).slice(0, 300)} [server=${r.headers.get('server') ?? '-'} chave=${apiKey ? `${apiKey.slice(0, 6)}…(${apiKey.length})` : 'sem'}]`);
     return url;
   }
   async function paymentCheck(q: { handle: string; order_nsu: string; transaction_nsu: string; slug: string }): Promise<RespostaCheck> {
