@@ -23,6 +23,9 @@ describe('kit do festival', () => {
     const home = ler('src/pages/index.astro');
     expect(home).not.toContain('<Kit');
   });
+  it('o canhoto do passaporte diz "3 dias de festival + kit"', () => {
+    expect(ler('src/components/Ticket.astro')).toContain('3 dias de festival + kit');
+  });
   it('o canhoto "Garanta o seu kit / Inscreva-se" é centralizado', () => {
     const ticket = ler('src/components/Ticket.astro');
     expect(ticket).toMatch(/\.cta \{[^}]*align-items: center[^}]*text-align: center/);
