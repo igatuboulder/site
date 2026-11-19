@@ -25,9 +25,21 @@ describe('página do painel', () => {
 
 describe('acesso ao painel', () => {
   const src = readFileSync('src/pages/painel.astro', 'utf8');
-  it('entra por link no e-mail, sem criar conta nova', () => {
+  it('entra com e-mail e senha (sem gastar o limite de e-mails)', () => {
+    expect(src).toContain('signInWithPassword');
+    expect(src).toMatch(/id="senha-entrar"[^>]*type="password"|type="password"[^>]*id="senha-entrar"/);
+    expect(src).toContain('autocomplete="current-password"');
+  });
+  it('o link no e-mail fica só para o primeiro acesso ou senha esquecida, sem criar conta nova', () => {
     expect(src).toContain('signInWithOtp');
     expect(src).toContain('shouldCreateUser: false');
+    expect(src).toMatch(/esqueci|primeiro acesso/i);
+  });
+  it('quem já entrou pode criar ou trocar a senha, com no mínimo 10 caracteres', () => {
+    expect(src).toContain('updateUser({ password');
+    expect(src).toContain('autocomplete="new-password"');
+    expect(src).toContain('minlength="10"');
+    expect(src).toMatch(/length < 10/);
   });
   it('usa só a chave pública no navegador', () => {
     expect(src).not.toMatch(/SECRET|service_role|sb_secret/);
