@@ -308,7 +308,8 @@ import { EVENTO } from '../config/evento';
       if (campo.value.length < 10) { msg.textContent = 'Use pelo menos 10 caracteres.'; return; }
       msg.textContent = 'Salvando…';
       const { error } = await sb.auth.updateUser({ password: campo.value });
-      if (error) { msg.textContent = 'Não foi possível salvar. Saia, entre de novo e tente outra vez.'; return; }
+      // Clicar duas vezes em salvar volta "same_password": a senha já está gravada.
+      if (error && error.code !== 'same_password') { msg.textContent = 'Não foi possível salvar. Saia, entre de novo e tente outra vez.'; return; }
       campo.value = '';
       msg.textContent = 'Senha salva! Da próxima vez, entre com e-mail e senha.';
     });

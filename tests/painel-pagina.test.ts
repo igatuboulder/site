@@ -41,6 +41,9 @@ describe('acesso ao painel', () => {
     expect(src).toContain('minlength="10"');
     expect(src).toMatch(/length < 10/);
   });
+  it('salvar de novo a mesma senha não aparece como erro', () => {
+    expect(src).toContain("'same_password'");
+  });
   it('usa só a chave pública no navegador', () => {
     expect(src).not.toMatch(/SECRET|service_role|sb_secret/);
     expect(src).toContain('SUPABASE_PUBLICA');
