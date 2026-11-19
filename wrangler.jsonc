@@ -1,0 +1,7 @@
+// Cloudflare Pages: o site estático + as rotas /api/* rodam aqui. Chaves secretas ficam no painel do Cloudflare.
+{
+  "name": "igatuboulder",
+  "pages_build_output_dir": "./dist",
+  "compatibility_date": "2025-09-01",
+  "compatibility_flags": ["nodejs_compat"]
+}

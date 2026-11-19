@@ -23,17 +23,33 @@ import { EVENTO } from '../config/evento';
         <p class="display nome">Inscrições {EVENTO.ano}</p>
       </div>
       <button type="button" class="btn-imprimir" id="imprimir" hidden>Imprimir lista de kits</button>
+      <button type="button" class="btn-sair" id="btn-senha" hidden>Criar ou trocar senha</button>
       <button type="button" class="btn-sair" id="sair" hidden>Sair</button>
     </div>
   </header>
 
+  <section class="entrar" id="trocar-senha" hidden>
+    <form id="form-senha" class="caixa-entrar">
+      <p class="h3 display">Criar ou trocar senha</p>
+      <p class="nota">Depois disso você entra só com e-mail e senha, sem esperar link. Use pelo menos 10 caracteres.</p>
+      <label for="senha-nova" class="rotulo">Nova senha</label>
+      <input id="senha-nova" type="password" autocomplete="new-password" minlength="10" required />
+      <button type="submit">Salvar senha</button>
+      <button type="button" class="btn-link" id="cancelar-senha">Voltar ao painel</button>
+      <p class="nota" id="msg-senha" role="status"></p>
+    </form>
+  </section>
+
   <section class="entrar" id="entrar" hidden>
     <form id="form-entrar" class="caixa-entrar">
       <p class="h3 display">Entrar no painel</p>
-      <p class="nota">Só os e-mails da organização têm acesso. Você recebe um link no e-mail e entra sem senha.</p>
+      <p class="nota">Só os e-mails da organização têm acesso.</p>
       <label for="email-entrar" class="rotulo">Seu e-mail</label>
       <input id="email-entrar" type="email" autocomplete="email" required />
-      <button type="submit">Receber link de acesso</button>
+      <label for="senha-entrar" class="rotulo">Senha</label>
+      <input id="senha-entrar" type="password" autocomplete="current-password" />
+      <button type="submit">Entrar</button>
+      <button type="button" class="btn-link" id="pedir-link">Primeiro acesso ou esqueci a senha: receber link no e-mail</button>
       <p class="nota" id="msg-entrar" role="status"></p>
     </form>
   </section>
@@ -257,19 +273,45 @@ import { EVENTO } from '../config/evento';
       const { data, error } = await sb.from('inscricoes').select('*').order('criado_em', { ascending: false });
       if (error) { $('msg-entrar').textContent = 'Não foi possível carregar as inscrições. Tente recarregar a página.'; return; }
       registros = (data ?? []).map(deBanco);
-      $('sair').hidden = false;
+      $('sair').hidden = false; $('btn-senha').hidden = false;
       mostrarPainel();
     }
 
+    // Entrar com senha não manda e-mail (o Supabase grátis só manda ~2 links por hora).
     $('form-entrar').addEventListener('submit', async (e) => {
       e.preventDefault();
       const email = ($('email-entrar') as HTMLInputElement).value.trim().toLowerCase();
+      const senha = ($('senha-entrar') as HTMLInputElement).value;
       const msg = $('msg-entrar');
+      if (!senha) { msg.textContent = 'Digite a senha. Se ainda não criou uma, use o link de primeiro acesso abaixo.'; return; }
+      msg.textContent = 'Entrando…';
+      const { error } = await sb.auth.signInWithPassword({ email, password: senha });
+      msg.textContent = error ? 'E-mail ou senha não conferem. Se esqueceu a senha, peça o link abaixo.' : '';
+    });
+    // Primeiro acesso ou senha esquecida: link no e-mail; depois de entrar, cria a senha no botão do topo.
+    $('pedir-link').addEventListener('click', async () => {
+      const email = ($('email-entrar') as HTMLInputElement).value.trim().toLowerCase();
+      const msg = $('msg-entrar');
+      if (!email) { msg.textContent = 'Digite o seu e-mail primeiro.'; return; }
       msg.textContent = 'Enviando…';
       const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: false, emailRedirectTo: `${location.origin}/painel` } });
       msg.textContent = error
-        ? 'Não conseguimos enviar o link. Confira se é o e-mail da organização.'
-        : 'Pronto! Abra o link que mandamos para o seu e-mail (veja também o spam).';
+        ? (error.status === 429 ? 'Muitos links pedidos agora. Espere uns minutos e tente de novo.' : 'Não conseguimos enviar o link. Confira se é o e-mail da organização.')
+        : 'Pronto! Abra o link que mandamos para o seu e-mail (veja também o spam) e depois clique em "Criar ou trocar senha".';
+    });
+    $('btn-senha').addEventListener('click', () => { $('conteudo').hidden = true; $('trocar-senha').hidden = false; ($('senha-nova') as HTMLInputElement).focus(); });
+    $('cancelar-senha').addEventListener('click', () => { $('trocar-senha').hidden = true; $('conteudo').hidden = false; });
+    $('form-senha').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const campo = $('senha-nova') as HTMLInputElement;
+      const msg = $('msg-senha');
+      if (campo.value.length < 10) { msg.textContent = 'Use pelo menos 10 caracteres.'; return; }
+      msg.textContent = 'Salvando…';
+      const { error } = await sb.auth.updateUser({ password: campo.value });
+      // Clicar duas vezes em salvar volta "same_password": a senha já está gravada.
+      if (error && error.code !== 'same_password') { msg.textContent = 'Não foi possível salvar. Saia, entre de novo e tente outra vez.'; return; }
+      campo.value = '';
+      msg.textContent = 'Senha salva! Da próxima vez, entre com e-mail e senha.';
     });
     $('sair').addEventListener('click', async () => { await sb.auth.signOut(); location.href = '/painel'; });
 
@@ -303,6 +345,7 @@ import { EVENTO } from '../config/evento';
   .painel .caixa-entrar { max-width: 440px; background: #fff; border: 2px solid var(--verde); padding: 24px; display: grid; gap: 10px; }
   .painel .caixa-entrar p { margin: 0; }
   .painel .caixa-entrar input { font: inherit; padding: 10px 12px; border: 2px solid var(--verde); }
+  .painel .caixa-entrar .btn-link { background: none; color: var(--verde); font-weight: 400; text-decoration: underline; padding: 4px 0; text-align: left; }
   .painel .caixa-entrar button { font: inherit; font-weight: 600; background: var(--verde); color: var(--papel); border: 0; padding: 12px 16px; cursor: pointer; }
 
   .painel .corpo { padding-block: 24px 64px; display: grid; gap: 24px; }
