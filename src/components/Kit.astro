@@ -1,0 +1,23 @@
+---
+import { EVENTO } from '../config/evento';
+// Kit que vem com o passaporte. "faixa" = colado embaixo do ticket da home; "bloco" = página de inscrição.
+const { variante = 'faixa' } = Astro.props as { variante?: 'faixa' | 'bloco' };
+---
+<div class:list={['kit', variante]}>
+  <p class="rotulo">Seu kit</p>
+  <ul>
+    {EVENTO.kit.map((item) => <li>{item}</li>)}
+  </ul>
+</div>
+<style>
+  .kit { color: var(--verde); }
+  .kit .rotulo { margin: 0; }
+  ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  li { border: 2px solid var(--verde); padding: 6px 12px; font-weight: 600; font-size: 15px; background: var(--papel); }
+  /* Home: faixa colada embaixo do ticket, separada pela linha pontilhada de "destacar". */
+  .faixa { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; border: 2px solid var(--verde); border-top: 2px dotted var(--verde); margin-top: -2px; padding: 14px 22px; background: var(--papel); }
+  .faixa .rotulo { font-family: var(--display); font-weight: 900; font-size: 20px; letter-spacing: .03em; }
+  .faixa li { background: transparent; }
+  .bloco { display: grid; gap: 10px; margin: -8px 0 24px; }
+  @media (max-width: 400px) { .faixa { padding: 12px 14px; } li { font-size: 14px; padding: 5px 10px; } }
+</style>

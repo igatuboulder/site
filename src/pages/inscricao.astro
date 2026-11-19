@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Cabecalho from '../components/Cabecalho.astro';
 import FormInscricao from '../components/FormInscricao.astro';
+import Kit from '../components/Kit.astro';
 import { EVENTO } from '../config/evento';
 import { formatarReais, PRECO_PASSAPORTE } from '../lib/preco';
 ---
@@ -12,8 +13,9 @@ import { formatarReais, PRECO_PASSAPORTE } from '../lib/preco';
       <div class="texto">
         <p>O passaporte vale para os 3 dias de festival, de {EVENTO.datas}.</p>
         <dl class="precos">
-          <div><dt>Passaporte</dt><dd class="display">{formatarReais(PRECO_PASSAPORTE)}</dd></div>
+          <div><dt>Passaporte + kit</dt><dd class="display">{formatarReais(PRECO_PASSAPORTE)}</dd></div>
         </dl>
+        <Kit variante="bloco" />
         <p class="nota">Você escolhe Pix ou cartão na hora de pagar. No cartão, a taxa é acrescentada ao valor. O pagamento é feito pela InfinitePay, em ambiente seguro.</p>
         <p class="nota">Dúvidas? <a href="/contato">Fale com a gente</a></p>
       </div>

@@ -3,17 +3,17 @@ import { EVENTO } from '../config/evento';
 const pix = EVENTO.preco / 100;
 const { href = '#inscricao' } = Astro.props;
 ---
-<a class="ticket" href={href} aria-label={`Passaporte: R$ ${pix} no Pix. Garanta o seu`}>
+<a class="ticket" href={href} aria-label={`Passaporte com kit: R$ ${pix} no Pix. Garanta o seu kit e inscreva-se`}>
   <div class="parte canhoto">
     <span class="titulo">Passaporte</span>
-    <span class="rotulo">3 dias de festival</span>
+    <span class="rotulo">3 dias de festival + kit</span>
   </div>
   <div class="parte preco">
     <span class="display valor"><small>R$</small>{pix}<sup>*</sup></span>
     <span class="rotulo">*no Pix</span>
   </div>
   <div class="parte cta">
-    <span class="rotulo">Garanta o seu</span>
+    <span class="rotulo">Garanta o seu kit</span>
     <span class="acao">Inscreva-se →</span>
   </div>
 </a>

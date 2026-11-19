@@ -14,4 +14,6 @@ export const EVENTO = {
   // Feminina tem tamanho único (gravado como FEM); masculina vai de P a GG.
   camisetas: ['FEM', 'P', 'M', 'G', 'GG'] as const,
   camisetasMasc: ['P', 'M', 'G', 'GG'] as const,
+  // O que vem no kit de quem se inscreve (entregue no festival).
+  kit: ['Camiseta', 'Magnésio', 'Paçoca Larikinha', 'Adesivo', 'Pulseira'] as const,
 } as const;
