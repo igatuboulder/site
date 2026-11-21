@@ -1,6 +1,6 @@
 import type { Autor } from '../data/autores';
 
-export type Secao = 'social' | 'escalada' | 'festival' | 'igatu';
+export type Secao = 'social' | 'escalada' | 'festival' | 'igatu' | 'chapada';
 // alt: texto alternativo curto. descricao: audiodescrição completa, lida pelo leitor de tela e mostrada com o botão "Audiodescrição".
 // autor: quem fez a foto (ver src/data/autores.ts); o crédito aparece na foto e na galeria.
 // capa: marque true na foto que abre o álbum (sem marcação, vale a primeira).
@@ -8,7 +8,7 @@ export interface Foto { arquivo: string; secao: Secao; setor?: string; alt: stri
 export interface Grupo { setor: string | null; fotos: Foto[] }
 export interface SecaoFotos { secao: Secao; grupos: Grupo[] }
 
-const ORDEM: Secao[] = ['social', 'escalada', 'festival', 'igatu'];
+const ORDEM: Secao[] = ['social', 'escalada', 'festival', 'igatu', 'chapada'];
 
 export function agruparFotos(fotos: Foto[]): SecaoFotos[] {
   return ORDEM.map((secao) => {
@@ -23,7 +23,7 @@ export function agruparFotos(fotos: Foto[]): SecaoFotos[] {
 
 export interface Album { id: string; titulo: string; secao: Secao; fotos: Foto[]; capa: Foto }
 
-const TITULOS: Record<Secao, string> = { social: 'IgatuBoulder Social', escalada: 'Escalada', festival: 'O festival', igatu: 'Igatu' };
+const TITULOS: Record<Secao, string> = { social: 'IgatuBoulder Social', escalada: 'Escalada', festival: 'O festival', igatu: 'Igatu', chapada: 'Chapada Diamantina' };
 const ancora = (t: string) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 
 // Galerias da página Fotos: uma por seção; na escalada, uma por setor (as sem setor ficam em "Escalada").

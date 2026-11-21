@@ -2,6 +2,7 @@
 // Para cadastrar um fotógrafo novo, acrescente aqui e preencha `autor` em src/data/fotos.ts.
 export const AUTORES = {
   pedro: { nome: 'Pedro P.', instagram: 'pdr.rn' },
+  dilma: { nome: 'Dilma Santos', instagram: 'dilmasantos_igatulands' },
 } as const;
 
 export type Autor = keyof typeof AUTORES;
