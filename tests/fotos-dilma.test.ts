@@ -20,8 +20,11 @@ describe('fotos da Dilma (21/11)', () => {
       expect(existsSync(`src/assets/fotos/${f.arquivo}.jpg`), f.arquivo).toBe(true);
     }
   });
+  it('o bloco à beira do rio entra na versão sem pessoa (dilma-88)', () => {
+    expect(FOTOS.some((f) => f.arquivo === 'dilma-88')).toBe(true);
+  });
   it('não entram as fotos com marca de outro fotógrafo nem o quadro do documentário', () => {
-    for (const n of ['dilma-74', 'dilma-75', 'dilma-83']) expect(FOTOS.some((f) => f.arquivo === n), n).toBe(false);
+    for (const n of ['dilma-74', 'dilma-75', 'dilma-83', 'dilma-87']) expect(FOTOS.some((f) => f.arquivo === n), n).toBe(false);
   });
   it('paisagens fora do distrito ficam na galeria "Chapada Diamantina", depois de Igatu', () => {
     const titulos = montarAlbuns(FOTOS).map((a) => a.titulo);
