@@ -4,7 +4,9 @@ import { FOTOS } from '../src/data/fotos';
 import { AUTORES, creditoDe } from '../src/data/autores';
 import { montarAlbuns } from '../src/lib/fotos';
 
-const daDilma = FOTOS.filter((f) => f.arquivo.startsWith('dilma-'));
+// dilma-45 é do LP e dilma-49 é do Paulinho Fernandes (21/11): ficam sem o crédito da Dilma.
+const DE_OUTROS = ['dilma-45', 'dilma-49'];
+const daDilma = FOTOS.filter((f) => f.arquivo.startsWith('dilma-') && !DE_OUTROS.includes(f.arquivo));
 
 describe('fotos da Dilma (21/11)', () => {
   it('Dilma é autora cadastrada, com o Instagram @dilmasantos_igatulands', () => {
@@ -22,6 +24,9 @@ describe('fotos da Dilma (21/11)', () => {
   });
   it('o bloco à beira do rio entra na versão sem pessoa (dilma-88)', () => {
     expect(FOTOS.some((f) => f.arquivo === 'dilma-88')).toBe(true);
+  });
+  it('as fotos do LP e do Paulinho não levam o crédito da Dilma', () => {
+    for (const n of DE_OUTROS) expect(FOTOS.find((f) => f.arquivo === n)?.autor, n).toBeUndefined();
   });
   it('não entram as fotos com marca de outro fotógrafo nem o quadro do documentário', () => {
     for (const n of ['dilma-74', 'dilma-75', 'dilma-83', 'dilma-87']) expect(FOTOS.some((f) => f.arquivo === n), n).toBe(false);
