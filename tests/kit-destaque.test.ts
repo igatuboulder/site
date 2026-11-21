@@ -46,3 +46,19 @@ describe('links das marcas (19/11)', () => {
     expect(todos.find((p) => p.nome === 'Bendito')?.link).toBe('https://www.instagram.com/benditolencois/');
   });
 });
+
+describe('população de Igatu (21/11)', () => {
+  it('fala em "pouco mais de 400 moradores", não em "cerca de 500"', () => {
+    const sobre = ler('src/pages/sobre.astro');
+    expect(sobre).toContain('pouco mais de 400 moradores');
+    expect(sobre).not.toMatch(/cerca de 500/);
+  });
+});
+
+describe('mutirão de limpeza (21/11)', () => {
+  it('é a união de nativos e colaboradores, sem citar crianças', () => {
+    const sobre = ler('src/pages/sobre.astro');
+    expect(sobre).toContain('O mutirão acontece com a união de nativos e colaboradores para limpar os setores.');
+    expect(sobre).not.toMatch(/crianças de Igatu para limpar/);
+  });
+});
