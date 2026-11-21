@@ -48,9 +48,17 @@ describe('links das marcas (19/11)', () => {
 });
 
 describe('população de Igatu (21/11)', () => {
-  it('fala em 418 moradores, não em "cerca de 500"', () => {
+  it('fala em "pouco mais de 400 moradores", não em "cerca de 500"', () => {
     const sobre = ler('src/pages/sobre.astro');
-    expect(sobre).toContain('418 moradores');
+    expect(sobre).toContain('pouco mais de 400 moradores');
     expect(sobre).not.toMatch(/cerca de 500/);
+  });
+});
+
+describe('mutirão de limpeza (21/11)', () => {
+  it('é a união de nativos e colaboradores, sem citar crianças', () => {
+    const sobre = ler('src/pages/sobre.astro');
+    expect(sobre).toContain('O mutirão acontece com a união de nativos e colaboradores para limpar os setores.');
+    expect(sobre).not.toMatch(/crianças de Igatu para limpar/);
   });
 });
