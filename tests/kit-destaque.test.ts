@@ -46,3 +46,11 @@ describe('links das marcas (19/11)', () => {
     expect(todos.find((p) => p.nome === 'Bendito')?.link).toBe('https://www.instagram.com/benditolencois/');
   });
 });
+
+describe('população de Igatu (21/11)', () => {
+  it('fala em 418 moradores, não em "cerca de 500"', () => {
+    const sobre = ler('src/pages/sobre.astro');
+    expect(sobre).toContain('418 moradores');
+    expect(sobre).not.toMatch(/cerca de 500/);
+  });
+});
