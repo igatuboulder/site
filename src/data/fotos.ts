@@ -269,7 +269,7 @@ export const FOTOS: Foto[] = [
     descricao: 'Um grupo de pessoas se banha num rio largo de água escura, cercado de paredões de pedra e vegetação, sob o céu azul.' },
   { arquivo: 'dilma-63', secao: 'chapada', autor: 'dilma', alt: 'Rio entre rochas sob céu nublado',
     descricao: 'Um rio de água escura com espuma corre entre rochas vermelhas e recortadas, sob um céu cheio de nuvens.' },
-  { arquivo: 'dilma-81', secao: 'chapada', autor: 'dilma', alt: 'Pessoa de mochila olhando o nascer do sol',
+  { arquivo: 'dilma-81', secao: 'chapada', alt: 'Pessoa de mochila olhando o nascer do sol',
     descricao: 'De costas, uma pessoa de cabelo cacheado e mochila laranja, sentada numa pedra alta, olha o sol nascer sobre a serra.' },
 ];
 
