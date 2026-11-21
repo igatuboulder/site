@@ -141,7 +141,7 @@ export const FOTOS: Foto[] = [
     descricao: 'Ao entardecer, um escalador de bermuda vermelha sobe a parede de um bloco alto, com a mão esticada. Embaixo, outro escalador faz o spot, pronto para amparar a queda, ao lado de mochilas e crash pads.' },
   { arquivo: 'dilma-56', secao: 'escalada', autor: 'dilma', alt: 'Escalada à noite ao lado de uma casa de pedra',
     descricao: 'À noite, um grupo de pessoas está ao pé de um grande bloco iluminado por refletores, ao lado de uma casa de pedra com luzes acesas. Uma pessoa sobe o bloco e outras olham, com crash pads no chão.' },
-  { arquivo: 'dilma-60', secao: 'escalada', autor: 'dilma', alt: 'Noite de boulder em frente à casa de pedra',
+  { arquivo: 'dilma-60', secao: 'escalada', alt: 'Noite de boulder em frente à casa de pedra',
     descricao: 'À noite, pessoas sentadas na grama e no chão assistem a quem escala o grande bloco iluminado ao lado da casa de pedra.' },
   { arquivo: 'dilma-72', secao: 'escalada', autor: 'dilma', alt: 'Bloco de pedra em forma de cogumelo',
     descricao: 'Um bloco de pedra alaranjada, largo no alto e mais estreito embaixo, como um cogumelo, sobre uma laje e um gramado, contra o céu azul.' },

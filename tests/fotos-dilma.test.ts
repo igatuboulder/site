@@ -4,8 +4,8 @@ import { FOTOS } from '../src/data/fotos';
 import { AUTORES, creditoDe } from '../src/data/autores';
 import { montarAlbuns } from '../src/lib/fotos';
 
-// dilma-45 é do LP, dilma-49 do Paulinho Fernandes e dilma-81 do Endrius (21/11): ficam sem o crédito da Dilma.
-const DE_OUTROS = ['dilma-45', 'dilma-49', 'dilma-81'];
+// dilma-45 é do LP, dilma-49 do Paulinho Fernandes , dilma-81 do Endrius e dilma-60 sem autor conhecido (21/11): ficam sem o crédito da Dilma.
+const DE_OUTROS = ['dilma-45', 'dilma-49', 'dilma-60', 'dilma-81'];
 const daDilma = FOTOS.filter((f) => f.arquivo.startsWith('dilma-') && !DE_OUTROS.includes(f.arquivo));
 
 describe('fotos da Dilma (21/11)', () => {
