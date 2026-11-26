@@ -17,4 +17,5 @@ export const APOIOS: Parceiro[] = [
   { nome: 'Woodtropia', arquivo: 'woodtropia', link: 'https://www.woodtropia.com/' },
   { nome: 'Gênesis', arquivo: 'genesis', link: 'https://www.instagram.com/genesisclimb/' },
   { nome: 'Bendito', arquivo: 'bendito', link: 'https://www.instagram.com/benditolencois/' },
+  { nome: 'Fullcrimp', arquivo: 'fullcrimp', link: 'https://www.fullcrimp.com.br/' },
 ];

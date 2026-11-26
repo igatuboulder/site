@@ -56,9 +56,15 @@ describe('Km10 com ainda mais destaque e links das marcas', () => {
   });
 });
 
-describe('parceiros em negociação ficam fora do site', () => {
-  it('Fullgrip não aparece por enquanto', () => {
-    expect([...REALIZACAO, ...PATROCINIO, ...APOIOS].map((p) => p.nome)).not.toContain('Fullgrip');
+describe('Fullcrimp entre os apoios', () => {
+  it('Fullcrimp é apoio, com logo e link para o site oficial da marca', () => {
+    const f = APOIOS.find((p) => p.nome === 'Fullcrimp');
+    expect(f?.arquivo).toBe('fullcrimp');
+    expect(f?.link).toBe('https://www.fullcrimp.com.br/');
+  });
+
+  it('Fullcrimp fica só em Apoio', () => {
+    expect([...REALIZACAO, ...PATROCINIO].map((p) => p.nome)).not.toContain('Fullcrimp');
   });
 });
 
